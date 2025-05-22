@@ -5,13 +5,7 @@ import './globals.css';
 
 type AnalysisStatus = 'PENDING' | 'MAPPING' | 'SCRAPING' | 'PROCESSING' | 'COMPLETED' | 'FAILED';
 
-interface AnalysisResult {
-  id: string;
-  url: string;
-  status: AnalysisStatus;
-  createdAt: string;
-  result?: Record<string, unknown>;
-}
+// AnalysisResult interface removed - not used in this component
 
 export default function HomePage() {
   const [url, setUrl] = useState('');

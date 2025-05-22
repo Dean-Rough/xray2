@@ -1,0 +1,67 @@
+Implement a modular MCP (Machine Control Protocol) server architecture for our Website Rebuild Prompt Generator (WRPG) with the following specifications:
+
+## 1. Core Architecture (Immediate Implementation)
+
+Create a pluggable MCP architecture in src/lib/mcp:
+
+1. Create an abstract base class `BaseMcpClient` with:
+   - Standard authentication methods
+   - Request/response handling
+   - Error management
+   - Event subscription patterns
+   - Rate limiting and retry logic
+
+2. Define common interfaces:
+   - `McpClientConfig` interface for configuration
+   - `McpAuthOptions` interface for authentication
+   - `McpResponse` interface for standardized responses
+   - `McpEvent` interface for event handling
+
+3. Implement a factory pattern for MCP client instantiation:
+   - `McpClientFactory` class to create appropriate clients
+   - Registration system for new MCP types
+
+## 2. Priority MCP Implementations (Phase 1)
+
+Implement these MCP clients first:
+
+1. GitHub MCP Client:
+   - Repository scanning and analysis
+   - Issue/PR management
+   - Code review automation
+   - Webhook integration
+
+2. Linear MCP Client:
+   - Project and task management
+   - Timeline coordination
+   - Status reporting
+   - Automated issue creation
+
+3. Google Calendar MCP Client:
+   - Schedule management
+   - Meeting coordination
+   - Availability checking
+   - Event creation/modification
+
+## 3. Integration with Existing System
+
+1. Update src/lib/mcp-utils.ts to use the new MCP architecture
+2. Create a unified MCP manager class to coordinate between different MCP clients
+3. Implement proper error handling and fallback mechanisms
+4. Add configuration options in .env for MCP credentials
+
+## 4. Future-Proofing (Documentation)
+
+Add comments and documentation for future MCP implementations:
+- Notion MCP (Phase 2)
+- Slack MCP (Phase 2)
+- Figma MCP (Phase 2)
+
+## 5. Testing
+
+Create basic test files for:
+- Base MCP client functionality
+- Each specific MCP client
+- Integration tests for the MCP system
+
+Follow the existing project architecture patterns and ensure all code is properly typed with TypeScript.
