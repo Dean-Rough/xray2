@@ -1,16 +1,18 @@
 {
-  "buildCommand": "cd src && npm install && npm run build",
-  "outputDirectory": "src/.next",
-  "installCommand": "cd src && npm install",
-  "framework": "nextjs",
-  "functions": {
-    "src/app/api/**/*.ts": {
-      "runtime": "nodejs18.x"
+  "version": 2,
+  "builds": [
+    {
+      "src": "src/package.json",
+      "use": "@vercel/next",
+      "config": {
+        "distDir": ".next"
+      }
     }
-  },
-  "git": {
-    "deploymentEnabled": {
-      "main": true
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/src/$1"
     }
-  }
+  ]
 }

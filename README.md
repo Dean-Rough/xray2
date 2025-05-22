@@ -21,4 +21,5 @@ A tool for generating comprehensive rebuild prompts for websites using AI analys
 - `FIRECRAWL_API_KEY` - Firecrawl API for web scraping
 
 ## Force Deploy Timestamp
-Last forced deployment: 2025-05-22 22:25:00 UTC
+Last forced deployment: 2025-05-22 22:30:00 UTC
+NUCLEAR OPTION: Complete Vercel config rebuild
