@@ -1,0 +1,11 @@
+{
+  "buildCommand": "cd src && npm install && npm run build",
+  "outputDirectory": "src/.next",
+  "installCommand": "cd src && npm install",
+  "framework": "nextjs",
+  "functions": {
+    "src/app/api/**/*.ts": {
+      "runtime": "nodejs18.x"
+    }
+  }
+}
