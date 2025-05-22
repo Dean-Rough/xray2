@@ -1,0 +1,77 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model WebsiteAnalysis {
+  id             String           @id @default(uuid())
+  url            String
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  status         AnalysisStatus   @default(PENDING)
+  result         Json?
+  error          String?
+  processingTime Float?           // in seconds
+  options        Json?            // scraping options
+  pages          WebsitePage[]
+  assets         WebsiteAsset[]
+  performance    PerformanceData?
+}
+
+model WebsitePage {
+  id              String          @id @default(uuid())
+  url             String
+  title           String?
+  htmlContent     String?
+  markdownContent String?
+  screenshotPath  String?
+  metadata        Json?
+  analysisId      String
+  analysis        WebsiteAnalysis @relation(fields: [analysisId], references: [id], onDelete: Cascade)
+  assets          WebsiteAsset[]
+}
+
+model WebsiteAsset {
+  id         String          @id @default(uuid())
+  url        String
+  type       AssetType
+  content    String?
+  metadata   Json?
+  analysisId String
+  analysis   WebsiteAnalysis @relation(fields: [analysisId], references: [id], onDelete: Cascade)
+  pages      WebsitePage[]
+}
+
+model PerformanceData {
+  id                String          @id @default(uuid())
+  performanceScore  Float?
+  accessibilityScore Float?
+  seoScore          Float?
+  bestPracticesScore Float?
+  lighthouseData    Json?
+  analysisId        String          @unique
+  analysis          WebsiteAnalysis @relation(fields: [analysisId], references: [id], onDelete: Cascade)
+}
+
+enum AnalysisStatus {
+  PENDING
+  MAPPING
+  SCRAPING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+enum AssetType {
+  CSS
+  JAVASCRIPT
+  IMAGE
+  FONT
+  VIDEO
+  AUDIO
+  OTHER
+}
