@@ -5,6 +5,7 @@
 
 import { mapWebsite, scrapeWebpage, extractStructuredData } from './mcp-utils';
 import { createWebsiteAnalysisRequest, updateWebsiteAnalysisStatus } from './prisma-utils';
+import { generateSonnetPrompt } from './generate-docs';
 import { exec } from 'child_process';
 import { promisify } from 'util';
 import * as fs from 'fs';
@@ -532,15 +533,13 @@ export async function deepScrapeWebsite(url: string, options: {
       }
     });
 
-    // Step 5: Generate the final prompt
-    const finalPrompt = generateFinalPrompt(
+    // Step 5: Generate the Claude Sonnet-optimized prompt
+    const finalPrompt = generateSonnetPrompt(
       siteMapData,
       contentResults,
-      performanceData || {}
+      performanceData || {},
+      structuredData
     );
-
-    // Add the structured data to the final prompt
-    finalPrompt.structuredData = structuredData;
 
     // Update status to COMPLETED
     await updateWebsiteAnalysisStatus(analysis.id, 'COMPLETED', finalPrompt);
