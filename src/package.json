@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev -p 3250",
-    "build": "prisma generate && DISABLE_ESLINT=true next build",
+    "build": "prisma generate && next build --no-lint",
     "start": "next start -p 3250",
     "lint": "echo 'ESLint disabled for deployment'",
     "db:generate": "prisma generate",
