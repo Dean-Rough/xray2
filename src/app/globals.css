@@ -242,12 +242,6 @@ h1, h2, h3, h4, h5, h6 {
   mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   mask-composite: xor;
   -webkit-mask-composite: xor;
-  animation: border-rotate 3s linear infinite;
-}
-
-@keyframes border-rotate {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
 }
 
 .xrai-glow {

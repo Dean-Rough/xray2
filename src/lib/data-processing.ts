@@ -102,6 +102,17 @@ export async function processContentData(rawData: unknown) {
 
     for (const cssUrl of cssLinks) {
       try {
+        // Skip invalid URLs (like cid: URLs from MHTML, data: URLs, etc.)
+        if (cssUrl.startsWith('cid:') || cssUrl.startsWith('data:') || cssUrl.startsWith('blob:') || cssUrl.startsWith('javascript:')) {
+          console.log(`⚠️ Skipping invalid CSS URL: ${cssUrl}`);
+          assets.push({
+            url: cssUrl,
+            type: 'css',
+            error: 'Invalid URL format'
+          });
+          continue;
+        }
+
         // Resolve relative URLs
         const absoluteUrl = cssUrl.startsWith('http') ? cssUrl : new URL(cssUrl, data.url || '').href;
 
