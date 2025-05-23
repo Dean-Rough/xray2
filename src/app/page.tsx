@@ -142,58 +142,59 @@ export default function HomePage() {
 
   // Realistic task progression system with stuttering progress
   useEffect(() => {
-    let taskInterval: NodeJS.Timeout;
     let progressInterval: NodeJS.Timeout;
 
-    if (isLoading && analysisStatus !== 'COMPLETED' && analysisStatus !== 'FAILED') {
-      // Start the first task
-      if (taskIndex < analysisTasksSequence.length) {
-        const currentTaskData = analysisTasksSequence[taskIndex];
-        setCurrentTask(`${currentTaskData.icon} ${currentTaskData.name}`);
-        setTaskProgress(0);
+    if (isLoading && analysisStatus !== 'COMPLETED' && analysisStatus !== 'FAILED' && taskIndex < analysisTasksSequence.length) {
+      const currentTaskData = analysisTasksSequence[taskIndex];
+      setCurrentTask(`${currentTaskData.icon} ${currentTaskData.name}`);
+      setTaskProgress(0);
 
-        // Simulate realistic progress with stuttering
-        let progress = 0;
-        const progressIncrement = Math.random() * 3 + 1; // Random increment between 1-4%
-        const stutterChance = 0.15; // 15% chance to stutter
+      // Simulate realistic progress with stuttering
+      let progress = 0;
+      const baseIncrement = Math.random() * 2 + 1; // Random increment between 1-3%
+      const stutterChance = 0.15; // 15% chance to stutter
 
-        progressInterval = setInterval(() => {
-          // Simulate network delays and processing stutters
-          if (Math.random() < stutterChance) {
-            // Stutter - don't increment this time
-            return;
-          }
+      progressInterval = setInterval(() => {
+        // Simulate network delays and processing stutters
+        if (Math.random() < stutterChance) {
+          // Stutter - don't increment this time
+          return;
+        }
 
-          progress += progressIncrement + (Math.random() * 2); // Add some randomness
+        // Variable progress increment
+        let increment = baseIncrement + (Math.random() * 1.5);
 
-          // Slow down near completion (realistic behavior)
-          if (progress > 85) {
-            progress += Math.random() * 0.5;
-          }
+        // Slow down near completion (realistic behavior)
+        if (progress > 85) {
+          increment = Math.random() * 0.8;
+        }
 
-          if (progress >= 100) {
-            progress = 100;
-            clearInterval(progressInterval);
+        progress += increment;
 
-            // Mark task as completed
-            setCompletedTasks(prev => [...prev, currentTaskData.name]);
+        if (progress >= 100) {
+          progress = 100;
+          setTaskProgress(100);
+          clearInterval(progressInterval);
 
-            // Move to next task after a brief pause
-            setTimeout(() => {
+          // Mark task as completed
+          setCompletedTasks(prev => [...prev, currentTaskData.name]);
+
+          // Move to next task after a brief pause
+          setTimeout(() => {
+            if (taskIndex + 1 < analysisTasksSequence.length) {
               setTaskIndex(prev => prev + 1);
-            }, 300);
-          }
-
-          setTaskProgress(Math.min(progress, 100));
-        }, 80 + Math.random() * 120); // Random interval between 80-200ms for realistic feel
-      }
+            }
+          }, 500);
+        } else {
+          setTaskProgress(progress);
+        }
+      }, 100 + Math.random() * 150); // Random interval between 100-250ms for realistic feel
     }
 
     return () => {
-      if (taskInterval) clearInterval(taskInterval);
       if (progressInterval) clearInterval(progressInterval);
     };
-  }, [isLoading, analysisStatus, taskIndex, analysisTasksSequence]);
+  }, [isLoading, analysisStatus, taskIndex]);
 
   // Poll for analysis status updates
   useEffect(() => {
@@ -315,7 +316,7 @@ export default function HomePage() {
     setStartTime(new Date());
 
     // Reset task progression state
-    setCurrentTask('');
+    setCurrentTask('🔍 Initializing scanner');
     setTaskProgress(0);
     setCompletedTasks([]);
     setTaskIndex(0);
