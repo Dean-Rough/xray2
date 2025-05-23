@@ -704,7 +704,7 @@ Generated on: ${new Date().toISOString()}
  * @param contentData - Processed content data for each page
  */
 async function savePageFiles(folder: JSZip, contentData: Record<string, unknown>) {
-  Object.entries(contentData).forEach(([url, data]) => {
+  for (const [url, data] of Object.entries(contentData)) {
     try {
       const pageData = data as Record<string, unknown>;
       const html = (pageData.html as string) || '';
@@ -735,7 +735,7 @@ async function savePageFiles(folder: JSZip, contentData: Record<string, unknown>
     } catch (error) {
       console.warn(`Error saving page file for: ${url}`, error);
     }
-  });
+  }
 }
 
 /**
@@ -746,7 +746,7 @@ async function savePageFiles(folder: JSZip, contentData: Record<string, unknown>
 async function saveScreenshots(folder: JSZip, contentData: Record<string, unknown>) {
   let screenshotCount = 0;
 
-  Object.entries(contentData).forEach(([url, data]) => {
+  for (const [url, data] of Object.entries(contentData)) {
     try {
       const pageData = data as Record<string, unknown>;
 
@@ -809,7 +809,7 @@ async function saveScreenshots(folder: JSZip, contentData: Record<string, unknow
     } catch (error) {
       console.warn(`Error saving screenshot for: ${url}`, error);
     }
-  });
+  }
 
   console.log(`Total screenshots saved: ${screenshotCount}`);
 
