@@ -1,0 +1,961 @@
+{
+  "assets": {
+    "css": [
+      "/s/sk_styles_681b2b0ddc7bac005669ce92_3131.css",
+      "https://definitions.sqspcdn.com/website-component-definition/static-assets/website.components.spacer/3949f1e9-f332-495a-a93b-bdc0630f2917_18/website.components.spacer.styles.css",
+      "https://static1.squarespace.com/static/vta/5c5a519771c10ba3470d8101/versioned-assets/1747670066859-4MQ2ACAI6HS7ADBI0GH1/static.css"
+    ],
+    "fonts": [],
+    "other": [],
+    "images": [
+      "https://images.squarespace-cdn.com/content/v1/618140f0105a240c6406409d/4dc302dd-6607-4e3f-b350-b876a722a215/Comp_2.gif?format=1500w",
+      "https://images.squarespace-cdn.com/content/v1/618140f0105a240c6406409d/6e48ea17-1e97-4b51-be49-3a9fec9b33c1/Marker+Scene+%28Lum+Street+Theatre%29.jpg?format=2500w",
+      "https://images.squarespace-cdn.com/content/v1/618140f0105a240c6406409d/b9bedd9e-a3b1-4b89-97b3-dd1a957e6bd3/Strathwebsize.png?format=2500w",
+      "https://images.squarespace-cdn.com/content/v1/618140f0105a240c6406409d/68af1506-6aec-4836-b912-0f447d81d435/DRGwebsize.png?format=2500w",
+      "https://images.squarespace-cdn.com/content/v1/618140f0105a240c6406409d/3983b5fa-b926-46a7-aca6-7d976655ed56/IGwebsize.png?format=2500w",
+      "https://images.squarespace-cdn.com/content/v1/618140f0105a240c6406409d/16283045-39f1-40d1-8a1e-f772eaf24cd3/Heinekenwebsize.png?format=2500w",
+      "https://images.squarespace-cdn.com/content/v1/618140f0105a240c6406409d/249c29d0-c492-4ac9-9115-21c68fe473c8/G1websize.png?format=2500w",
+      "https://images.squarespace-cdn.com/content/v1/618140f0105a240c6406409d/16047296-0b5b-4db3-8c47-22ee6aa4142a/Punchwebsize.png?format=2500w",
+      "https://images.squarespace-cdn.com/content/v1/618140f0105a240c6406409d/2697198a-9514-4b67-bbe3-5087f421f922/35-sign-mockup.jpg?format=2500w",
+      "https://images.squarespace-cdn.com/content/v1/618140f0105a240c6406409d/19bed601-6bae-4e8a-965c-11ae459a5fa3/coaster-mockup-03-3537.jpg?format=2500w",
+      "https://images.squarespace-cdn.com/content/v1/618140f0105a240c6406409d/4150fdca-20c5-49d6-b4c6-703df2ba5804/Logo-AlabasterOrig.png?format=2500w"
+    ],
+    "videos": [],
+    "javascript": []
+  },
+  "metadata": {
+    "version": "1.0.0",
+    "promptType": "website-reconstruction",
+    "generatedAt": "2025-05-23T11:42:43.314Z",
+    "generatedFor": "Claude Sonnet AI IDE"
+  },
+  "components": {
+    "cards": [],
+    "forms": [],
+    "custom": [],
+    "footer": [
+      {
+        "index": 0,
+        "source": "https://www.rough.ink",
+        "content": "<footer class=\"sections\" id=\"footer-sections\" data-footer-sections=\"\">\n  \n  \n  \n  \n  \n  \n    \n    \n\n\n  \n  \n\n\n<section data-test=\"page-section\" data-section-theme=\"light-bold\" class=\"page-section \n    \n      layout-engine-section\n    \n    background-width--full-bleed\n    \n      section-height--small\n    \n    \n      content-width--wide\n    \n    horizontal-alignment--center\n    vertical-alignment--middle\n    \n      \n    \n    \n    light-bold\" data-section-id=\"6181434399d7a41b86c29530\" data-controller=\"SectionWrapperController\" data-current-styles=\"{\n&quot;imageOverlayOpacity&quot;: 0.15,\n&quot;backgroundWidth&quot;: &quot;background-width--full-bleed&quot;,\n&quot;sectionHeight&quot;: &quot;section-height--small&quot;,\n&quot;customSectionHeight&quot;: 10,\n&quot;horizontalAlignment&quot;: &quot;horizontal-alignment--center&quot;,\n&quot;verticalAlignment&quot;: &quot;vertical-alignment--middle&quot;,\n&quot;contentWidth&quot;: &quot;content-width--wide&quot;,\n&quot;customContentWidth&quot;: 50,\n&quot;sectionTheme&quot;: &quot;light-bold&quot;,\n&quot;sectionAnimation&quot;: &quot;none&quot;,\n&quot;backgroundMode&quot;: &quot;image&quot;\n}\" data-current-context=\"{\n&quot;video&quot;: {\n&quot;playbackSpeed&quot;: 0.5,\n&quot;filter&quot;: 1,\n&quot;filterStrength&quot;: 0,\n&quot;zoom&quot;: 0,\n&quot;videoSourceProvider&quot;: &quot;none&quot;\n},\n&quot;backgroundImageId&quot;: null,\n&quot;backgroundMediaEffect&quot;: null,\n&quot;divider&quot;: null,\n&quot;typeName&quot;: &quot;page&quot;\n}\" data-animation=\"none\" data-controllers-bound=\"SectionWrapperController\" id=\"yui_3_17_2_1_1748000511696_168\">\n  <div class=\"section-border\">\n    <div class=\"section-background\">\n    \n      \n    \n    </div>\n  </div>\n  <div class=\"content-wrapper\" style=\"\n      \n        \n      \n    \" id=\"yui_3_17_2_1_1748000511696_167\">\n    <div class=\"content\" id=\"yui_3_17_2_1_1748000511696_166\">\n      \n      \n      \n      \n      \n      \n      \n      \n      <div class=\"sqs-layout sqs-grid-12 columns-12\" data-type=\"page-section\" id=\"page-section-6181434399d7a41b86c29530\"><div class=\"row sqs-row\" id=\"yui_3_17_2_1_1748000511696_165\"><div class=\"col sqs-col-6 span-6\" id=\"yui_3_17_2_1_1748000511696_164\"><div class=\"sqs-block image-block sqs-block-image sqs-text-ready\" data-block-type=\"5\" id=\"block-yui_3_17_2_1_1646415966796_16869\"><div class=\"sqs-block-content preFade\" id=\"yui_3_17_2_1_1748000511696_163\" style=\"transition-timing-function: ease; transition-duration: 0.9s; transition-delay: 0.490909s;\">\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n  \n\n    \n  \n    <div class=\"image-block-outer-wrapper layout-caption-hidden design-layout-inline combination-animation-site-default individual-animation-site-default individual-text-animation-site-default\" data-test=\"image-block-inline-outer-wrapper\" id=\"yui_3_17_2_1_1748000511696_162\">\n\n      \n\n      \n        <figure class=\"\n              sqs-block-image-figure\n              intrinsic\n            \" style=\"max-width:9576px;\" id=\"yui_3_17_2_1_1748000511696_161\">\n          \n        \n        \n\n        \n          \n            \n          <div class=\"image-block-wrapper preFade\" data-animation-role=\"image\" id=\"yui_3_17_2_1_1748000511696_160\" style=\"transition-timing-function: ease; transition-duration: 0.9s; transition-delay: 0.501818s;\">\n            <div class=\"sqs-image-shape-container-element\n              \n          \n        \n              has-aspect-ratio\n            \" style=\"\n                position: relative;\n                \n                  padding-bottom:34.012115478515625%;\n                \n                overflow: hidden;-webkit-mask-image: -webkit-radial-gradient(white, black);\n              \" id=\"yui_3_17_2_1_1748000511696_159\">\n                \n                \n                \n                \n                \n                \n                \n                <img data-stretch=\"false\" data-src=\"https://images.squarespace-cdn.com/content/v1/618140f0105a240c6406409d/4150fdca-20c5-49d6-b4c6-703df2ba5804/Logo-AlabasterOrig.png\" data-image=\"https://images.squarespace-cdn.com/content/v1/618140f0105a240c6406409d/4150fdca-20c5-49d6-b4c6-703df2ba5804/Logo-AlabasterOrig.png\" data-image-dimensions=\"9576x3257\" data-image-focal-point=\"0.5,0.5\" alt=\"\" data-load=\"false\" elementtiming=\"system-image-block\" src=\"https://images.squarespace-cdn.com/content/v1/618140f0105a240c6406409d/4150fdca-20c5-49d6-b4c6-703df2ba5804/Logo-AlabasterOrig.png?format=2500w\" width=\"9576\" height=\"3257\" sizes=\"(max-width: 640px) 100vw, (max-width: 767px) 50vw, 50vw\" style=\"display:block;object-fit: cover; width: 100%; height: 100%; object-position: 50% 50%\" onload=\"this.classList.add(&quot;loaded&quot;)\" srcset=\"https://images.squarespace-cdn.com/content/v1/618140f0105a240c6406409d/4150fdca-20c5-49d6-b4c6-703df2ba5804/Logo-AlabasterOrig.png?format=100w 100w, https://images.squarespace-cdn.com/content/v1/618140f0105a240c6406409d/4150fdca-20c5-49d6-b4c6-703df2ba5804/Logo-AlabasterOrig.png?format=300w 300w, https://images.squarespace-cdn.com/content/v1/618140f0105a240c6406409d/4150fdca-20c5-49d6-b4c6-703df2ba5804/Logo-AlabasterOrig.png?format=500w 500w, https://images.squarespace-cdn.com/content/v1/618140f0105a240c6406409d/4150fdca-20c5-49d6-b4c6-703df2ba5804/Logo-AlabasterOrig.png?format=750w 750w, https://images.squarespace-cdn.com/content/v1/618140f0105a240c6406409d/4150fdca-20c5-49d6-b4c6-703df2ba5804/Logo-AlabasterOrig.png?format=1000w 1000w, https://images.squarespace-cdn.com/content/v1/618140f0105a240c6406409d/4150fdca-20c5-49d6-b4c6-703df2ba5804/Logo-AlabasterOrig.png?format=1500w 1500w, https://images.squarespace-cdn.com/content/v1/618140f0105a240c6406409d/4150fdca-20c5-49d6-b4c6-703df2ba5804/Logo-AlabasterOrig.png?format=2500w 2500w\" loading=\"lazy\" decoding=\"async\" data-loader=\"sqs\">\n\n            </div>\n          </div>\n        \n          \n        \n\n        \n      \n        </figure>\n      \n\n    </div>\n  \n\n\n  \n\n\n</div></div><div class=\"sqs-block html-block sqs-block-html\" data-block-type=\"2\" id=\"block-yui_3_17_2_1_1646415585654_16946\"><div class=\"sqs-block-content preFade\" style=\"transition-timing-function: ease; transition-duration: 0.9s; transition-delay: 0.512727s;\">\n\n<div class=\"sqs-html-content\">\n  <p class=\"preFade\" style=\"white-space: pre-wrap; transition-timing-function: ease; transition-duration: 0.9s; transition-delay: 0.523636s;\">38 Buccleuch Street,<br>Edinburgh,<br>EH8 9LP<br><br><a href=\"mailto:contact@rough.ink\">contact@rough.ink</a><br><a href=\"tel:+4401316684411\">(0131) 668 4411</a></p>\n</div>\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n</div></div></div><div class=\"col sqs-col-3 span-3\"><div class=\"sqs-block html-block sqs-block-html\" data-block-type=\"2\" id=\"block-d22c6f940e3ea16c2970\"><div class=\"sqs-block-content preFade\" style=\"transition-timing-function: ease; transition-duration: 0.9s; transition-delay: 0.534545s;\">\n\n<div class=\"sqs-html-content\">\n  <h4 style=\"white-space: pre-wrap; transition-timing-function: ease; transition-duration: 0.9s; transition-delay: 0.545455s;\" class=\"preFade\">Hours</h4><p class=\"preFade\" style=\"white-space: pre-wrap; transition-timing-function: ease; transition-duration: 0.9s; transition-delay: 0.556364s;\">Monday – Friday<br>10am – 6pm</p>\n</div>\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n</div></div></div><div class=\"col sqs-col-3 span-3\"><div class=\"sqs-block html-block sqs-block-html\" data-block-type=\"2\" id=\"block-dce3aaeb63a92cc99af2\"><div class=\"sqs-block-content preFade\" style=\"transition-timing-function: ease; transition-duration: 0.9s; transition-delay: 0.567273s;\">\n\n<div class=\"sqs-html-content\">\n  <h4 style=\"white-space: pre-wrap; transition-timing-function: ease; transition-duration: 0.9s; transition-delay: 0.578182s;\" class=\"preFade\">Follow</h4><p class=\"preFade\" style=\"white-space: pre-wrap; transition-timing-function: ease; transition-duration: 0.9s; transition-delay: 0.589091s;\"><a href=\"http://instagram.com/roughdesignstudio\" target=\"_blank\">Instagram</a></p>\n</div>\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n</div></div></div></div></div>\n    </div>\n  \n  </div>\n  \n</section>\n\n  \n</footer>"
+      }
+    ],
+    "header": [
+      {
+        "index": 0,
+        "source": "https://www.rough.ink",
+        "content": "<header data-test=\"header\" id=\"header\" class=\"header theme-col--primary\" data-section-theme=\"\" data-controller=\"Header\" data-current-styles=\"{\n&quot;layout&quot;: &quot;navRight&quot;,\n&quot;action&quot;: {\n&quot;href&quot;: &quot;https://calendar.app.google/GsxvCyQPcUodNSTF8&quot;,\n&quot;buttonText&quot;: &quot;Free Consultation&quot;,\n&quot;newWindow&quot;: true\n},\n&quot;showSocial&quot;: true,\n&quot;socialOptions&quot;: {\n&quot;socialBorderShape&quot;: &quot;circle&quot;,\n&quot;socialBorderStyle&quot;: &quot;solid&quot;,\n&quot;socialBorderThickness&quot;: {\n&quot;unit&quot;: &quot;px&quot;,\n&quot;value&quot;: 1.0\n}\n},\n&quot;menuOverlayTheme&quot;: &quot;light-bold&quot;,\n&quot;menuOverlayAnimation&quot;: &quot;fade&quot;,\n&quot;cartStyle&quot;: &quot;cart&quot;,\n&quot;cartText&quot;: &quot;Cart&quot;,\n&quot;showEmptyCartState&quot;: true,\n&quot;cartOptions&quot;: {\n&quot;iconType&quot;: &quot;stroke-1&quot;,\n&quot;cartBorderShape&quot;: &quot;none&quot;,\n&quot;cartBorderStyle&quot;: &quot;outline&quot;,\n&quot;cartBorderThickness&quot;: {\n&quot;unit&quot;: &quot;px&quot;,\n&quot;value&quot;: 1.0\n}\n},\n&quot;showButton&quot;: true,\n&quot;showCart&quot;: false,\n&quot;showAccountLogin&quot;: true,\n&quot;headerStyle&quot;: &quot;theme&quot;,\n&quot;languagePicker&quot;: {\n&quot;enabled&quot;: false,\n&quot;iconEnabled&quot;: false,\n&quot;iconType&quot;: &quot;globe&quot;,\n&quot;flagShape&quot;: &quot;shiny&quot;,\n&quot;languageFlags&quot;: [ ]\n},\n&quot;iconOptions&quot;: {\n&quot;desktopDropdownIconOptions&quot;: {\n&quot;endcapType&quot;: &quot;square&quot;,\n&quot;folderDropdownIcon&quot;: &quot;none&quot;,\n&quot;languagePickerIcon&quot;: &quot;openArrowHead&quot;\n},\n&quot;mobileDropdownIconOptions&quot;: {\n&quot;endcapType&quot;: &quot;square&quot;,\n&quot;folderDropdownIcon&quot;: &quot;openArrowHead&quot;,\n&quot;languagePickerIcon&quot;: &quot;openArrowHead&quot;\n}\n},\n&quot;mobileOptions&quot;: {\n&quot;layout&quot;: &quot;logoLeftNavRight&quot;,\n&quot;menuIconOptions&quot;: {\n&quot;style&quot;: &quot;tripleLineHamburger&quot;,\n&quot;thickness&quot;: {\n&quot;unit&quot;: &quot;px&quot;,\n&quot;value&quot;: 1.0\n}\n}\n},\n&quot;solidOptions&quot;: {\n&quot;headerOpacity&quot;: {\n&quot;unit&quot;: &quot;%&quot;,\n&quot;value&quot;: 100.0\n},\n&quot;blurBackground&quot;: {\n&quot;enabled&quot;: false,\n&quot;blurRadius&quot;: {\n&quot;unit&quot;: &quot;px&quot;,\n&quot;value&quot;: 12.0\n}\n},\n&quot;backgroundColor&quot;: {\n&quot;type&quot;: &quot;SITE_PALETTE_COLOR&quot;,\n&quot;sitePaletteColor&quot;: {\n&quot;colorName&quot;: &quot;white&quot;,\n&quot;alphaModifier&quot;: 1.0\n}\n},\n&quot;navigationColor&quot;: {\n&quot;type&quot;: &quot;SITE_PALETTE_COLOR&quot;,\n&quot;sitePaletteColor&quot;: {\n&quot;colorName&quot;: &quot;black&quot;,\n&quot;alphaModifier&quot;: 1.0\n}\n}\n},\n&quot;gradientOptions&quot;: {\n&quot;gradientType&quot;: &quot;faded&quot;,\n&quot;headerOpacity&quot;: {\n&quot;unit&quot;: &quot;%&quot;,\n&quot;value&quot;: 90.0\n},\n&quot;blurBackground&quot;: {\n&quot;enabled&quot;: false,\n&quot;blurRadius&quot;: {\n&quot;unit&quot;: &quot;px&quot;,\n&quot;value&quot;: 12.0\n}\n},\n&quot;backgroundColor&quot;: {\n&quot;type&quot;: &quot;SITE_PALETTE_COLOR&quot;,\n&quot;sitePaletteColor&quot;: {\n&quot;colorName&quot;: &quot;white&quot;,\n&quot;alphaModifier&quot;: 1.0\n}\n},\n&quot;navigationColor&quot;: {\n&quot;type&quot;: &quot;SITE_PALETTE_COLOR&quot;,\n&quot;sitePaletteColor&quot;: {\n&quot;colorName&quot;: &quot;black&quot;,\n&quot;alphaModifier&quot;: 1.0\n}\n}\n},\n&quot;dropShadowOptions&quot;: {\n&quot;enabled&quot;: false,\n&quot;blur&quot;: {\n&quot;unit&quot;: &quot;px&quot;,\n&quot;value&quot;: 12.0\n},\n&quot;spread&quot;: {\n&quot;unit&quot;: &quot;px&quot;,\n&quot;value&quot;: 0.0\n},\n&quot;distance&quot;: {\n&quot;unit&quot;: &quot;px&quot;,\n&quot;value&quot;: 12.0\n}\n},\n&quot;borderOptions&quot;: {\n&quot;enabled&quot;: false,\n&quot;position&quot;: &quot;bottom&quot;,\n&quot;thickness&quot;: {\n&quot;unit&quot;: &quot;px&quot;,\n&quot;value&quot;: 4.0\n}\n},\n&quot;showPromotedElement&quot;: false,\n&quot;buttonVariant&quot;: &quot;primary&quot;,\n&quot;blurBackground&quot;: {\n&quot;enabled&quot;: false,\n&quot;blurRadius&quot;: {\n&quot;unit&quot;: &quot;px&quot;,\n&quot;value&quot;: 12.0\n}\n},\n&quot;headerOpacity&quot;: {\n&quot;unit&quot;: &quot;%&quot;,\n&quot;value&quot;: 100.0\n}\n}\" data-section-id=\"header\" data-header-style=\"theme\" data-language-picker=\"{\n&quot;enabled&quot;: false,\n&quot;iconEnabled&quot;: false,\n&quot;iconType&quot;: &quot;globe&quot;,\n&quot;flagShape&quot;: &quot;shiny&quot;,\n&quot;languageFlags&quot;: [ ]\n}\" data-first-focusable-element=\"\" tabindex=\"-1\" style=\"\n      \n      \n      \n        --solidHeaderBackgroundColor: hsla(var(--white-hsl), 1);\n      \n      \n        --solidHeaderNavigationColor: hsla(var(--black-hsl), 1);\n      \n      \n        --gradientHeaderBackgroundColor: hsla(var(--white-hsl), 1);\n      \n      \n        --gradientHeaderNavigationColor: hsla(var(--black-hsl), 1);\n      \n    \" data-controllers-bound=\"Header\">\n    <svg style=\"display:none\" viewBox=\"0 0 22 22\" xmlns=\"http://www.w3.org/2000/svg\">\n  <symbol id=\"circle\">\n    <path d=\"M11.5 17C14.5376 17 17 14.5376 17 11.5C17 8.46243 14.5376 6 11.5 6C8.46243 6 6 8.46243 6 11.5C6 14.5376 8.46243 17 11.5 17Z\" fill=\"none\"></path>\n  </symbol>\n\n  <symbol id=\"circleFilled\">\n    <path d=\"M11.5 17C14.5376 17 17 14.5376 17 11.5C17 8.46243 14.5376 6 11.5 6C8.46243 6 6 8.46243 6 11.5C6 14.5376 8.46243 17 11.5 17Z\"></path>\n  </symbol>\n\n  <symbol id=\"dash\">\n    <path d=\"M11 11H19H3\"></path>\n  </symbol>\n\n  <symbol id=\"squareFilled\">\n    <rect x=\"6\" y=\"6\" width=\"11\" height=\"11\"></rect>\n  </symbol>\n\n  <symbol id=\"square\">\n    <rect x=\"7\" y=\"7\" width=\"9\" height=\"9\" fill=\"none\" stroke=\"inherit\"></rect>\n  </symbol>\n  \n  <symbol id=\"plus\">\n    <path d=\"M11 3V19\"></path>\n    <path d=\"M19 11L3 11\"></path>\n  </symbol>\n  \n  <symbol id=\"closedArrow\">\n    <path d=\"M11 11V2M11 18.1797L17 11.1477L5 11.1477L11 18.1797Z\" fill=\"none\"></path>\n  </symbol>\n  \n  <symbol id=\"closedArrowFilled\">\n    <path d=\"M11 11L11 2\" stroke=\"inherit\" fill=\"none\"></path>\n    <path fill-rule=\"evenodd\" clip-rule=\"evenodd\" d=\"M2.74695 9.38428L19.038 9.38428L10.8925 19.0846L2.74695 9.38428Z\" stroke-width=\"1\"></path>\n  </symbol>\n  \n  <symbol id=\"closedArrowHead\" viewBox=\"0 0 22 22\" xmlns=\"http://www.w3.org/2000/symbol\">\n    <path d=\"M18 7L11 15L4 7L18 7Z\" fill=\"none\" stroke=\"inherit\"></path>\n  </symbol>\n  \n  \n  <symbol id=\"closedArrowHeadFilled\" viewBox=\"0 0 22 22\" xmlns=\"http://www.w3.org/2000/symbol\">\n    <path d=\"M18.875 6.5L11 15.5L3.125 6.5L18.875 6.5Z\"></path>\n  </symbol>\n  \n  <symbol id=\"openArrow\">\n    <path d=\"M11 18.3591L11 3\" stroke=\"inherit\" fill=\"none\"></path>\n    <path d=\"M18 11.5L11 18.5L4 11.5\" stroke=\"inherit\" fill=\"none\"></path>\n  </symbol>\n  \n  <symbol id=\"openArrowHead\">\n    <path d=\"M18 7L11 14L4 7\" fill=\"none\"></path>\n  </symbol>\n\n  <symbol id=\"pinchedArrow\">\n    <path d=\"M11 17.3591L11 2\" fill=\"none\"></path>\n    <path d=\"M2 11C5.85455 12.2308 8.81818 14.9038 11 18C13.1818 14.8269 16.1455 12.1538 20 11\" fill=\"none\"></path>\n  </symbol>\n\n  <symbol id=\"pinchedArrowFilled\">\n    <path d=\"M11.05 10.4894C7.04096 8.73759 1.05005 8 1.05005 8C6.20459 11.3191 9.41368 14.1773 11.05 21C12.6864 14.0851 15.8955 11.227 21.05 8C21.05 8 15.0591 8.73759 11.05 10.4894Z\" stroke-width=\"1\"></path>\n    <path d=\"M11 11L11 1\" fill=\"none\"></path>\n  </symbol>\n\n  <symbol id=\"pinchedArrowHead\">\n    <path d=\"M2 7.24091C5.85455 8.40454 8.81818 10.9318 11 13.8591C13.1818 10.8591 16.1455 8.33181 20 7.24091\" fill=\"none\"></path>\n  </symbol>\n  \n  <symbol id=\"pinchedArrowHeadFilled\">\n    <path d=\"M11.05 7.1591C7.04096 5.60456 1.05005 4.95001 1.05005 4.95001C6.20459 7.89547 9.41368 10.4318 11.05 16.4864C12.6864 10.35 15.8955 7.81365 21.05 4.95001C21.05 4.95001 15.0591 5.60456 11.05 7.1591Z\"></path>\n  </symbol>\n\n</svg>\n    \n<div class=\"sqs-announcement-bar-dropzone\"></div>\n\n    <div class=\"header-announcement-bar-wrapper\">\n      \n      <a href=\"https://www.rough.ink/#page\" class=\"header-skip-link sqs-button-element--primary\">\n        Skip to Content\n      </a>\n      \n\n\n\n      <div class=\"header-border\" data-header-style=\"theme\" data-header-border=\"false\" data-test=\"header-border\" style=\"\n\n\n\n\n\"></div>\n      <div class=\"header-dropshadow\" data-header-style=\"theme\" data-header-dropshadow=\"false\" data-test=\"header-dropshadow\" style=\"\"></div>\n      \n      \n\n      <div class=\"header-inner container--fluid\n        \n        \n        \n         header-mobile-layout-logo-left-nav-right\n        \n        \n        \n        \n        \n        \n         header-layout-nav-right\n        \n        \n        \n        \n        \n        \n        \n        \n        \" data-test=\"header-inner\">\n        <!-- Background -->\n        <div class=\"header-background theme-bg--primary\"></div>\n\n        <div class=\"header-display-desktop\" data-content-field=\"site-title\">\n          \n\n          \n\n          \n\n          \n\n          \n\n          \n          \n            \n            <!-- Social -->\n            \n              \n            \n          \n            \n            <!-- Title and nav wrapper -->\n            <div class=\"header-title-nav-wrapper\">\n              \n\n              \n\n              \n                \n                <!-- Title -->\n                \n                  <div class=\"header-title preFade fadeIn\" data-animation-role=\"header-element\" style=\"transition-timing-function: ease; transition-duration: 0.9s; transition-delay: 0s;\">\n                    \n                      <div class=\"header-title-logo\">\n                        <a href=\"https://www.rough.ink/\" data-animation-role=\"header-element\" class=\"preFade fadeIn\" style=\"transition-timing-function: ease; transition-duration: 0.9s; transition-delay: 0.0109091s;\">\n                        \n<img elementtiming=\"nbf-header-logo-desktop\" src=\"https://images.squarespace-cdn.com/content/v1/618140f0105a240c6406409d/4dc302dd-6607-4e3f-b350-b876a722a215/Comp_2.gif?format=1500w\" alt=\"Rough\" style=\"display:block\" fetchpriority=\"high\" loading=\"eager\" decoding=\"async\" data-loader=\"raw\">\n\n                        </a>\n                      </div>\n\n                    \n                    \n                  </div>\n                \n              \n                \n                <!-- Nav -->\n                <div class=\"header-nav\">\n                  <div class=\"header-nav-wrapper\">\n                    <nav class=\"header-nav-list\">\n                      \n\n\n  \n    <div class=\"header-nav-item header-nav-item--collection header-nav-item--active header-nav-item--homepage\">\n      <a href=\"https://www.rough.ink/\" data-animation-role=\"header-element\" aria-current=\"page\" class=\"preFade\" style=\"transition-timing-function: ease; transition-duration: 0.9s; transition-delay: 0.0218182s;\">\n        Home\n      </a>\n    </div>\n  \n  \n  \n\n\n  \n    <div class=\"header-nav-item header-nav-item--collection\">\n      <a href=\"https://www.rough.ink/about\" data-animation-role=\"header-element\" class=\"preFade\" style=\"transition-timing-function: ease; transition-duration: 0.9s; transition-delay: 0.0327273s;\">\n        About\n      </a>\n    </div>\n  \n  \n  \n\n\n  \n    <div class=\"header-nav-item header-nav-item--collection\">\n      <a href=\"https://www.rough.ink/our-work\" data-animation-role=\"header-element\" class=\"preFade\" style=\"transition-timing-function: ease; transition-duration: 0.9s; transition-delay: 0.0436364s;\">\n        Portfolio\n      </a>\n    </div>\n  \n  \n  \n\n\n  \n    <div class=\"header-nav-item header-nav-item--collection\">\n      <a href=\"https://www.rough.ink/details\" data-animation-role=\"header-element\" class=\"preFade\" style=\"transition-timing-function: ease; transition-duration: 0.9s; transition-delay: 0.0545455s;\">\n        Our Feed\n      </a>\n    </div>\n  \n  \n  \n\n\n  \n    <div class=\"header-nav-item header-nav-item--collection\">\n      <a href=\"https://www.rough.ink/blog\" data-animation-role=\"header-element\" class=\"preFade\" style=\"transition-timing-function: ease; transition-duration: 0.9s; transition-delay: 0.0654545s;\">\n        Blog\n      </a>\n    </div>\n  \n  \n  \n\n\n  \n    <div class=\"header-nav-item header-nav-item--collection\">\n      <a href=\"https://www.rough.ink/contact\" data-animation-role=\"header-element\" class=\"preFade\" style=\"transition-timing-function: ease; transition-duration: 0.9s; transition-delay: 0.0763636s;\">\n        Contact\n      </a>\n    </div>\n  \n  \n  \n\n\n    <div class=\"header-nav-item header-nav-item--external\">\n      <a href=\"https://www.roughdash.online/\" target=\"_blank\" data-animation-role=\"header-element\" class=\"preFade\" style=\"transition-timing-function: ease; transition-duration: 0.9s; transition-delay: 0.0872727s;\">Dash</a>\n    </div>\n  \n\n\n\n\n                    </nav>\n                  </div>\n                </div>\n              \n              \n            </div>\n          \n            \n            <!-- Actions -->\n            <div class=\"header-actions header-actions--right\">\n              \n              \n                \n                  <div class=\"header-actions-action header-actions-action--social\">\n                    \n                      \n                        <a class=\"icon icon--fill  header-icon header-icon-border-shape-circle header-icon-border-style-solid\" href=\"https://www.instagram.com/roughdesignstudio/\" target=\"_blank\" aria-label=\"Instagram\">\n                          <svg viewBox=\"23 23 64 64\">\n                            <use xlink:href=\"#instagram-unauth-icon\" width=\"110\" height=\"110\"></use>\n                          </svg>\n                        </a>\n                      \n                        <a class=\"icon icon--fill  header-icon header-icon-border-shape-circle header-icon-border-style-solid\" href=\"mailto:hey@rough.ink\" target=\"_blank\" aria-label=\"hey@rough.ink\">\n                          <svg viewBox=\"23 23 64 64\">\n                            <use xlink:href=\"#email-icon\" width=\"110\" height=\"110\"></use>\n                          </svg>\n                        </a>\n                      \n                    \n                  </div>\n                \n              \n\n              \n\n            \n            \n\n              \n              <div class=\"showOnMobile\">\n                \n              </div>\n\n              \n              <div class=\"showOnDesktop\">\n                \n              </div>\n\n              \n                <div class=\"header-actions-action header-actions-action--cta preFade fadeIn\" data-animation-role=\"header-element\" style=\"transition-timing-function: ease; transition-duration: 0.9s; transition-delay: 0.0981818s;\">\n                  <a class=\"btn btn--border theme-btn--primary-inverse sqs-button-element--primary\" href=\"https://calendar.app.google/GsxvCyQPcUodNSTF8\" target=\"_blank\">\n                    Free Consultation\n                  </a>\n                </div>\n              \n            </div>\n          \n            \n\n\n\n\n<!-- Burger -->\n<div class=\"header-burger menu-overlay-has-visible-non-navigation-items preFade fadeIn\" data-animation-role=\"header-element\" style=\"transition-timing-function: ease; transition-duration: 0.9s; transition-delay: 0.109091s;\">\n  <button class=\"header-burger-btn burger\" data-test=\"header-burger\">\n    <span class=\"js-header-burger-open-title visually-hidden\">Open Menu</span>\n    <span hidden=\"\" class=\"js-header-burger-close-title visually-hidden\">Close Menu</span>\n    <div class=\"burger-box\">\n      <div class=\"burger-inner header-menu-icon-tripleLineHamburger\">\n        <div class=\"top-bun\"></div>\n        <div class=\"patty\"></div>\n        <div class=\"bottom-bun\"></div>\n      </div>\n    </div>\n  </button>\n</div>\n\n          \n          \n          \n          \n          \n\n        </div>\n        <div class=\"header-display-mobile\" data-content-field=\"site-title\">\n          \n            \n            <!-- Social -->\n            \n              \n            \n          \n            \n            <!-- Title and nav wrapper -->\n            <div class=\"header-title-nav-wrapper\">\n              \n\n              \n\n              \n                \n                <!-- Title -->\n                \n                  <div class=\"header-title preFade\" data-animation-role=\"header-element\" style=\"transition-timing-function: ease; transition-duration: 0.9s; transition-delay: 0.12s;\">\n                    \n                      <div class=\"header-title-logo\">\n                        <a href=\"https://www.rough.ink/\" data-animation-role=\"header-element\" class=\"preFade\" style=\"transition-timing-function: ease; transition-duration: 0.9s; transition-delay: 0.130909s;\">\n                        \n<img elementtiming=\"nbf-header-logo-desktop\" src=\"https://images.squarespace-cdn.com/content/v1/618140f0105a240c6406409d/4dc302dd-6607-4e3f-b350-b876a722a215/Comp_2.gif?format=1500w\" alt=\"Rough\" style=\"display:block\" fetchpriority=\"high\" loading=\"eager\" decoding=\"async\" data-loader=\"raw\">\n\n                        </a>\n                      </div>\n\n                    \n                    \n                  </div>\n                \n              \n                \n                <!-- Nav -->\n                <div class=\"header-nav\">\n                  <div class=\"header-nav-wrapper\">\n                    <nav class=\"header-nav-list\">\n                      \n\n\n  \n    <div class=\"header-nav-item header-nav-item--collection header-nav-item--active header-nav-item--homepage\">\n      <a href=\"https://www.rough.ink/\" data-animation-role=\"header-element\" aria-current=\"page\" class=\"preFade\" style=\"transition-timing-function: ease; transition-duration: 0.9s; transition-delay: 0.141818s;\">\n        Home\n      </a>\n    </div>\n  \n  \n  \n\n\n  \n    <div class=\"header-nav-item header-nav-item--collection\">\n      <a href=\"https://www.rough.ink/about\" data-animation-role=\"header-element\" class=\"preFade\" style=\"transition-timing-function: ease; transition-duration: 0.9s; transition-delay: 0.152727s;\">\n        About\n      </a>\n    </div>\n  \n  \n  \n\n\n  \n    <div class=\"header-nav-item header-nav-item--collection\">\n      <a href=\"https://www.rough.ink/our-work\" data-animation-role=\"header-element\" class=\"preFade\" style=\"transition-timing-function: ease; transition-duration: 0.9s; transition-delay: 0.163636s;\">\n        Portfolio\n      </a>\n    </div>\n  \n  \n  \n\n\n  \n    <div class=\"header-nav-item header-nav-item--collection\">\n      <a href=\"https://www.rough.ink/details\" data-animation-role=\"header-element\" class=\"preFade\" style=\"transition-timing-function: ease; transition-duration: 0.9s; transition-delay: 0.174545s;\">\n        Our Feed\n      </a>\n    </div>\n  \n  \n  \n\n\n  \n    <div class=\"header-nav-item header-nav-item--collection\">\n      <a href=\"https://www.rough.ink/blog\" data-animation-role=\"header-element\" class=\"preFade\" style=\"transition-timing-function: ease; transition-duration: 0.9s; transition-delay: 0.185455s;\">\n        Blog\n      </a>\n    </div>\n  \n  \n  \n\n\n  \n    <div class=\"header-nav-item header-nav-item--collection\">\n      <a href=\"https://www.rough.ink/contact\" data-animation-role=\"header-element\" class=\"preFade\" style=\"transition-timing-function: ease; transition-duration: 0.9s; transition-delay: 0.196364s;\">\n        Contact\n      </a>\n    </div>\n  \n  \n  \n\n\n    <div class=\"header-nav-item header-nav-item--external\">\n      <a href=\"https://www.roughdash.online/\" target=\"_blank\" data-animation-role=\"header-element\" class=\"preFade\" style=\"transition-timing-function: ease; transition-duration: 0.9s; transition-delay: 0.207273s;\">Dash</a>\n    </div>\n  \n\n\n\n\n                    </nav>\n                  </div>\n                </div>\n              \n              \n            </div>\n          \n            \n            <!-- Actions -->\n            <div class=\"header-actions header-actions--right\">\n              \n              \n                \n                  <div class=\"header-actions-action header-actions-action--social\">\n                    \n                      \n                        <a class=\"icon icon--fill  header-icon header-icon-border-shape-circle header-icon-border-style-solid\" href=\"https://www.instagram.com/roughdesignstudio/\" target=\"_blank\" aria-label=\"Instagram\">\n                          <svg viewBox=\"23 23 64 64\">\n                            <use xlink:href=\"#instagram-unauth-icon\" width=\"110\" height=\"110\"></use>\n                          </svg>\n                        </a>\n                      \n                        <a class=\"icon icon--fill  header-icon header-icon-border-shape-circle header-icon-border-style-solid\" href=\"mailto:hey@rough.ink\" target=\"_blank\" aria-label=\"hey@rough.ink\">\n                          <svg viewBox=\"23 23 64 64\">\n                            <use xlink:href=\"#email-icon\" width=\"110\" height=\"110\"></use>\n                          </svg>\n                        </a>\n                      \n                    \n                  </div>\n                \n              \n\n              \n\n            \n            \n\n              \n              <div class=\"showOnMobile\">\n                \n              </div>\n\n              \n              <div class=\"showOnDesktop\">\n                \n              </div>\n\n              \n                <div class=\"header-actions-action header-actions-action--cta preFade\" data-animation-role=\"header-element\" style=\"transition-timing-function: ease; transition-duration: 0.9s; transition-delay: 0.218182s;\">\n                  <a class=\"btn btn--border theme-btn--primary-inverse sqs-button-element--primary\" href=\"https://calendar.app.google/GsxvCyQPcUodNSTF8\" target=\"_blank\">\n                    Free Consultation\n                  </a>\n                </div>\n              \n            </div>\n          \n            \n\n\n\n\n<!-- Burger -->\n<div class=\"header-burger menu-overlay-has-visible-non-navigation-items preFade\" data-animation-role=\"header-element\" style=\"transition-timing-function: ease; transition-duration: 0.9s; transition-delay: 0.229091s;\">\n  <button class=\"header-burger-btn burger\" data-test=\"header-burger\">\n    <span class=\"js-header-burger-open-title visually-hidden\">Open Menu</span>\n    <span hidden=\"\" class=\"js-header-burger-close-title visually-hidden\">Close Menu</span>\n    <div class=\"burger-box\">\n      <div class=\"burger-inner header-menu-icon-tripleLineHamburger\">\n        <div class=\"top-bun\"></div>\n        <div class=\"patty\"></div>\n        <div class=\"bottom-bun\"></div>\n      </div>\n    </div>\n  </button>\n</div>\n\n          \n          \n          \n          \n          \n        </div>\n      </div>\n    </div>\n    <!-- (Mobile) Menu Navigation -->\n    <div class=\"header-menu header-menu--folder-list\n      light-bold\n      \n      \n      \n      \n      \" data-section-theme=\"light-bold\" data-current-styles=\"{\n&quot;layout&quot;: &quot;navRight&quot;,\n&quot;action&quot;: {\n&quot;href&quot;: &quot;https://calendar.app.google/GsxvCyQPcUodNSTF8&quot;,\n&quot;buttonText&quot;: &quot;Free Consultation&quot;,\n&quot;newWindow&quot;: true\n},\n&quot;showSocial&quot;: true,\n&quot;socialOptions&quot;: {\n&quot;socialBorderShape&quot;: &quot;circle&quot;,\n&quot;socialBorderStyle&quot;: &quot;solid&quot;,\n&quot;socialBorderThickness&quot;: {\n&quot;unit&quot;: &quot;px&quot;,\n&quot;value&quot;: 1.0\n}\n},\n&quot;menuOverlayTheme&quot;: &quot;light-bold&quot;,\n&quot;menuOverlayAnimation&quot;: &quot;fade&quot;,\n&quot;cartStyle&quot;: &quot;cart&quot;,\n&quot;cartText&quot;: &quot;Cart&quot;,\n&quot;showEmptyCartState&quot;: true,\n&quot;cartOptions&quot;: {\n&quot;iconType&quot;: &quot;stroke-1&quot;,\n&quot;cartBorderShape&quot;: &quot;none&quot;,\n&quot;cartBorderStyle&quot;: &quot;outline&quot;,\n&quot;cartBorderThickness&quot;: {\n&quot;unit&quot;: &quot;px&quot;,\n&quot;value&quot;: 1.0\n}\n},\n&quot;showButton&quot;: true,\n&quot;showCart&quot;: false,\n&quot;showAccountLogin&quot;: true,\n&quot;headerStyle&quot;: &quot;theme&quot;,\n&quot;languagePicker&quot;: {\n&quot;enabled&quot;: false,\n&quot;iconEnabled&quot;: false,\n&quot;iconType&quot;: &quot;globe&quot;,\n&quot;flagShape&quot;: &quot;shiny&quot;,\n&quot;languageFlags&quot;: [ ]\n},\n&quot;iconOptions&quot;: {\n&quot;desktopDropdownIconOptions&quot;: {\n&quot;endcapType&quot;: &quot;square&quot;,\n&quot;folderDropdownIcon&quot;: &quot;none&quot;,\n&quot;languagePickerIcon&quot;: &quot;openArrowHead&quot;\n},\n&quot;mobileDropdownIconOptions&quot;: {\n&quot;endcapType&quot;: &quot;square&quot;,\n&quot;folderDropdownIcon&quot;: &quot;openArrowHead&quot;,\n&quot;languagePickerIcon&quot;: &quot;openArrowHead&quot;\n}\n},\n&quot;mobileOptions&quot;: {\n&quot;layout&quot;: &quot;logoLeftNavRight&quot;,\n&quot;menuIconOptions&quot;: {\n&quot;style&quot;: &quot;tripleLineHamburger&quot;,\n&quot;thickness&quot;: {\n&quot;unit&quot;: &quot;px&quot;,\n&quot;value&quot;: 1.0\n}\n}\n},\n&quot;solidOptions&quot;: {\n&quot;headerOpacity&quot;: {\n&quot;unit&quot;: &quot;%&quot;,\n&quot;value&quot;: 100.0\n},\n&quot;blurBackground&quot;: {\n&quot;enabled&quot;: false,\n&quot;blurRadius&quot;: {\n&quot;unit&quot;: &quot;px&quot;,\n&quot;value&quot;: 12.0\n}\n},\n&quot;backgroundColor&quot;: {\n&quot;type&quot;: &quot;SITE_PALETTE_COLOR&quot;,\n&quot;sitePaletteColor&quot;: {\n&quot;colorName&quot;: &quot;white&quot;,\n&quot;alphaModifier&quot;: 1.0\n}\n},\n&quot;navigationColor&quot;: {\n&quot;type&quot;: &quot;SITE_PALETTE_COLOR&quot;,\n&quot;sitePaletteColor&quot;: {\n&quot;colorName&quot;: &quot;black&quot;,\n&quot;alphaModifier&quot;: 1.0\n}\n}\n},\n&quot;gradientOptions&quot;: {\n&quot;gradientType&quot;: &quot;faded&quot;,\n&quot;headerOpacity&quot;: {\n&quot;unit&quot;: &quot;%&quot;,\n&quot;value&quot;: 90.0\n},\n&quot;blurBackground&quot;: {\n&quot;enabled&quot;: false,\n&quot;blurRadius&quot;: {\n&quot;unit&quot;: &quot;px&quot;,\n&quot;value&quot;: 12.0\n}\n},\n&quot;backgroundColor&quot;: {\n&quot;type&quot;: &quot;SITE_PALETTE_COLOR&quot;,\n&quot;sitePaletteColor&quot;: {\n&quot;colorName&quot;: &quot;white&quot;,\n&quot;alphaModifier&quot;: 1.0\n}\n},\n&quot;navigationColor&quot;: {\n&quot;type&quot;: &quot;SITE_PALETTE_COLOR&quot;,\n&quot;sitePaletteColor&quot;: {\n&quot;colorName&quot;: &quot;black&quot;,\n&quot;alphaModifier&quot;: 1.0\n}\n}\n},\n&quot;dropShadowOptions&quot;: {\n&quot;enabled&quot;: false,\n&quot;blur&quot;: {\n&quot;unit&quot;: &quot;px&quot;,\n&quot;value&quot;: 12.0\n},\n&quot;spread&quot;: {\n&quot;unit&quot;: &quot;px&quot;,\n&quot;value&quot;: 0.0\n},\n&quot;distance&quot;: {\n&quot;unit&quot;: &quot;px&quot;,\n&quot;value&quot;: 12.0\n}\n},\n&quot;borderOptions&quot;: {\n&quot;enabled&quot;: false,\n&quot;position&quot;: &quot;bottom&quot;,\n&quot;thickness&quot;: {\n&quot;unit&quot;: &quot;px&quot;,\n&quot;value&quot;: 4.0\n}\n},\n&quot;showPromotedElement&quot;: false,\n&quot;buttonVariant&quot;: &quot;primary&quot;,\n&quot;blurBackground&quot;: {\n&quot;enabled&quot;: false,\n&quot;blurRadius&quot;: {\n&quot;unit&quot;: &quot;px&quot;,\n&quot;value&quot;: 12.0\n}\n},\n&quot;headerOpacity&quot;: {\n&quot;unit&quot;: &quot;%&quot;,\n&quot;value&quot;: 100.0\n}\n}\" data-section-id=\"overlay-nav\" data-show-account-login=\"true\" data-test=\"header-menu\" style=\"padding-top: 98.3594px;\">\n      <div class=\"header-menu-bg theme-bg--primary\"></div>\n      <div class=\"header-menu-nav\">\n        <nav class=\"header-menu-nav-list\">\n          \n        <div data-folder=\"root\" class=\"header-menu-nav-folder header-menu-nav-folder--active\">\n            <div class=\"header-menu-nav-folder-content\">\n              <!-- Menu Navigation -->\n<div class=\"header-menu-nav-wrapper\">\n  \n    \n      \n        \n          \n            <div class=\"container header-menu-nav-item header-menu-nav-item--collection header-menu-nav-item--active header-menu-nav-item--homepage\">\n              <a href=\"https://www.rough.ink/\" aria-current=\"page\">\n                <div class=\"header-menu-nav-item-content\">\n                  Home\n                </div>\n              </a>\n            </div>\n          \n        \n      \n    \n      \n        \n          \n            <div class=\"container header-menu-nav-item header-menu-nav-item--collection\">\n              <a href=\"https://www.rough.ink/about\">\n                <div class=\"header-menu-nav-item-content\">\n                  About\n                </div>\n              </a>\n            </div>\n          \n        \n      \n    \n      \n        \n          \n            <div class=\"container header-menu-nav-item header-menu-nav-item--collection\">\n              <a href=\"https://www.rough.ink/our-work\">\n                <div class=\"header-menu-nav-item-content\">\n                  Portfolio\n                </div>\n              </a>\n            </div>\n          \n        \n      \n    \n      \n        \n          \n            <div class=\"container header-menu-nav-item header-menu-nav-item--collection\">\n              <a href=\"https://www.rough.ink/details\">\n                <div class=\"header-menu-nav-item-content\">\n                  Our Feed\n                </div>\n              </a>\n            </div>\n          \n        \n      \n    \n      \n        \n          \n            <div class=\"container header-menu-nav-item header-menu-nav-item--collection\">\n              <a href=\"https://www.rough.ink/blog\">\n                <div class=\"header-menu-nav-item-content\">\n                  Blog\n                </div>\n              </a>\n            </div>\n          \n        \n      \n    \n      \n        \n          \n            <div class=\"container header-menu-nav-item header-menu-nav-item--collection\">\n              <a href=\"https://www.rough.ink/contact\">\n                <div class=\"header-menu-nav-item-content\">\n                  Contact\n                </div>\n              </a>\n            </div>\n          \n        \n      \n    \n      \n        \n          <div class=\"container header-menu-nav-item header-menu-nav-item--external\">\n            <a href=\"https://www.roughdash.online/\" target=\"_blank\">Dash</a>\n          </div>\n        \n      \n    \n  \n</div>\n\n              \n            </div>\n            \n              <div class=\"header-menu-actions social-accounts\">\n                \n                  \n                    <div class=\"header-menu-actions-action header-menu-actions-action--social mobile\">\n                      <a class=\"icon icon--lg icon--fill  header-icon header-icon-border-shape-circle header-icon-border-style-solid\" href=\"https://www.instagram.com/roughdesignstudio/\" target=\"_blank\" aria-label=\"Instagram\">\n                        <svg viewBox=\"23 23 64 64\">\n                          <use xlink:href=\"#instagram-unauth-icon\" width=\"110\" height=\"110\"></use>\n                        </svg>\n                      </a>\n                    </div>\n                  \n                    <div class=\"header-menu-actions-action header-menu-actions-action--social mobile\">\n                      <a class=\"icon icon--lg icon--fill  header-icon header-icon-border-shape-circle header-icon-border-style-solid\" href=\"mailto:hey@rough.ink\" target=\"_blank\" aria-label=\"hey@rough.ink\">\n                        <svg viewBox=\"23 23 64 64\">\n                          <use xlink:href=\"#email-icon\" width=\"110\" height=\"110\"></use>\n                        </svg>\n                      </a>\n                    </div>\n                  \n                \n              </div>\n            \n            \n            \n            <div class=\"header-menu-cta\">\n              <a class=\"theme-btn--primary btn sqs-button-element--primary\" href=\"https://calendar.app.google/GsxvCyQPcUodNSTF8\" target=\"_blank\">\n                Free Consultation\n              </a>\n            </div>\n            \n          </div></nav>\n      </div>\n    </div>\n  </header>"
+      }
+    ],
+    "sidebar": [],
+    "navigation": [
+      {
+        "index": 0,
+        "source": "https://www.rough.ink",
+        "content": "<nav class=\"header-nav-list\">\n                      \n\n\n  \n    <div class=\"header-nav-item header-nav-item--collection header-nav-item--active header-nav-item--homepage\">\n      <a href=\"https://www.rough.ink/\" data-animation-role=\"header-element\" aria-current=\"page\" class=\"preFade\" style=\"transition-timing-function: ease; transition-duration: 0.9s; transition-delay: 0.0218182s;\">\n        Home\n      </a>\n    </div>\n  \n  \n  \n\n\n  \n    <div class=\"header-nav-item header-nav-item--collection\">\n      <a href=\"https://www.rough.ink/about\" data-animation-role=\"header-element\" class=\"preFade\" style=\"transition-timing-function: ease; transition-duration: 0.9s; transition-delay: 0.0327273s;\">\n        About\n      </a>\n    </div>\n  \n  \n  \n\n\n  \n    <div class=\"header-nav-item header-nav-item--collection\">\n      <a href=\"https://www.rough.ink/our-work\" data-animation-role=\"header-element\" class=\"preFade\" style=\"transition-timing-function: ease; transition-duration: 0.9s; transition-delay: 0.0436364s;\">\n        Portfolio\n      </a>\n    </div>\n  \n  \n  \n\n\n  \n    <div class=\"header-nav-item header-nav-item--collection\">\n      <a href=\"https://www.rough.ink/details\" data-animation-role=\"header-element\" class=\"preFade\" style=\"transition-timing-function: ease; transition-duration: 0.9s; transition-delay: 0.0545455s;\">\n        Our Feed\n      </a>\n    </div>\n  \n  \n  \n\n\n  \n    <div class=\"header-nav-item header-nav-item--collection\">\n      <a href=\"https://www.rough.ink/blog\" data-animation-role=\"header-element\" class=\"preFade\" style=\"transition-timing-function: ease; transition-duration: 0.9s; transition-delay: 0.0654545s;\">\n        Blog\n      </a>\n    </div>\n  \n  \n  \n\n\n  \n    <div class=\"header-nav-item header-nav-item--collection\">\n      <a href=\"https://www.rough.ink/contact\" data-animation-role=\"header-element\" class=\"preFade\" style=\"transition-timing-function: ease; transition-duration: 0.9s; transition-delay: 0.0763636s;\">\n        Contact\n      </a>\n    </div>\n  \n  \n  \n\n\n    <div class=\"header-nav-item header-nav-item--external\">\n      <a href=\"https://www.roughdash.online/\" target=\"_blank\" data-animation-role=\"header-element\" class=\"preFade\" style=\"transition-timing-function: ease; transition-duration: 0.9s; transition-delay: 0.0872727s;\">Dash</a>\n    </div>\n  \n\n\n\n\n                    </nav>"
+      },
+      {
+        "index": 2,
+        "source": "https://www.rough.ink",
+        "content": "<nav class=\"header-menu-nav-list\">\n          \n        <div data-folder=\"root\" class=\"header-menu-nav-folder header-menu-nav-folder--active\">\n            <div class=\"header-menu-nav-folder-content\">\n              <!-- Menu Navigation -->\n<div class=\"header-menu-nav-wrapper\">\n  \n    \n      \n        \n          \n            <div class=\"container header-menu-nav-item header-menu-nav-item--collection header-menu-nav-item--active header-menu-nav-item--homepage\">\n              <a href=\"https://www.rough.ink/\" aria-current=\"page\">\n                <div class=\"header-menu-nav-item-content\">\n                  Home\n                </div>\n              </a>\n            </div>\n          \n        \n      \n    \n      \n        \n          \n            <div class=\"container header-menu-nav-item header-menu-nav-item--collection\">\n              <a href=\"https://www.rough.ink/about\">\n                <div class=\"header-menu-nav-item-content\">\n                  About\n                </div>\n              </a>\n            </div>\n          \n        \n      \n    \n      \n        \n          \n            <div class=\"container header-menu-nav-item header-menu-nav-item--collection\">\n              <a href=\"https://www.rough.ink/our-work\">\n                <div class=\"header-menu-nav-item-content\">\n                  Portfolio\n                </div>\n              </a>\n            </div>\n          \n        \n      \n    \n      \n        \n          \n            <div class=\"container header-menu-nav-item header-menu-nav-item--collection\">\n              <a href=\"https://www.rough.ink/details\">\n                <div class=\"header-menu-nav-item-content\">\n                  Our Feed\n                </div>\n              </a>\n            </div>\n          \n        \n      \n    \n      \n        \n          \n            <div class=\"container header-menu-nav-item header-menu-nav-item--collection\">\n              <a href=\"https://www.rough.ink/blog\">\n                <div class=\"header-menu-nav-item-content\">\n                  Blog\n                </div>\n              </a>\n            </div>\n          \n        \n      \n    \n      \n        \n          \n            <div class=\"container header-menu-nav-item header-menu-nav-item--collection\">\n              <a href=\"https://www.rough.ink/contact\">\n                <div class=\"header-menu-nav-item-content\">\n                  Contact\n                </div>\n              </a>\n            </div>\n          \n        \n      \n    \n      \n        \n          <div class=\"container header-menu-nav-item header-menu-nav-item--external\">\n            <a href=\"https://www.roughdash.online/\" target=\"_blank\">Dash</a>\n          </div>\n        \n      \n    \n  \n</div>\n\n              \n            </div>\n            \n              <div class=\"header-menu-actions social-accounts\">\n                \n                  \n                    <div class=\"header-menu-actions-action header-menu-actions-action--social mobile\">\n                      <a class=\"icon icon--lg icon--fill  header-icon header-icon-border-shape-circle header-icon-border-style-solid\" href=\"https://www.instagram.com/roughdesignstudio/\" target=\"_blank\" aria-label=\"Instagram\">\n                        <svg viewBox=\"23 23 64 64\">\n                          <use xlink:href=\"#instagram-unauth-icon\" width=\"110\" height=\"110\"></use>\n                        </svg>\n                      </a>\n                    </div>\n                  \n                    <div class=\"header-menu-actions-action header-menu-actions-action--social mobile\">\n                      <a class=\"icon icon--lg icon--fill  header-icon header-icon-border-shape-circle header-icon-border-style-solid\" href=\"mailto:hey@rough.ink\" target=\"_blank\" aria-label=\"hey@rough.ink\">\n                        <svg viewBox=\"23 23 64 64\">\n                          <use xlink:href=\"#email-icon\" width=\"110\" height=\"110\"></use>\n                        </svg>\n                      </a>\n                    </div>\n                  \n                \n              </div>\n            \n            \n            \n            <div class=\"header-menu-cta\">\n              <a class=\"theme-btn--primary btn sqs-button-element--primary\" href=\"https://calendar.app.google/GsxvCyQPcUodNSTF8\" target=\"_blank\">\n                Free Consultation\n              </a>\n            </div>\n            \n          </div></nav>"
+      }
+    ]
+  },
+  "pageDetails": {
+    "https://www.rough.ink": {
+      "path": "/",
+      "links": [
+        "https://www.rough.ink/cart",
+        "https://www.rough.ink/#page",
+        "https://www.rough.ink/",
+        "https://www.rough.ink/about",
+        "https://www.rough.ink/our-work",
+        "https://www.rough.ink/details",
+        "https://www.rough.ink/blog",
+        "https://www.rough.ink/contact",
+        "https://www.roughdash.online/",
+        "https://www.instagram.com/roughdesignstudio/",
+        "mailto:hey@rough.ink",
+        "https://calendar.app.google/GsxvCyQPcUodNSTF8",
+        "mailto:contact@rough.ink",
+        "tel:+4401316684411",
+        "http://instagram.com/roughdesignstudio"
+      ],
+      "title": "Homepage",
+      "assets": [
+        {
+          "url": "/s/sk_styles_681b2b0ddc7bac005669ce92_3131.css",
+          "type": "CSS"
+        },
+        {
+          "url": "https://definitions.sqspcdn.com/website-component-definition/static-assets/website.components.spacer/3949f1e9-f332-495a-a93b-bdc0630f2917_18/website.components.spacer.styles.css",
+          "type": "CSS"
+        },
+        {
+          "url": "https://static1.squarespace.com/static/vta/5c5a519771c10ba3470d8101/versioned-assets/1747670066859-4MQ2ACAI6HS7ADBI0GH1/static.css",
+          "type": "CSS"
+        },
+        {
+          "url": "https://images.squarespace-cdn.com/content/v1/618140f0105a240c6406409d/4dc302dd-6607-4e3f-b350-b876a722a215/Comp_2.gif?format=1500w",
+          "type": "IMAGE"
+        },
+        {
+          "url": "https://images.squarespace-cdn.com/content/v1/618140f0105a240c6406409d/4dc302dd-6607-4e3f-b350-b876a722a215/Comp_2.gif?format=1500w",
+          "type": "IMAGE"
+        },
+        {
+          "url": "https://images.squarespace-cdn.com/content/v1/618140f0105a240c6406409d/6e48ea17-1e97-4b51-be49-3a9fec9b33c1/Marker+Scene+%28Lum+Street+Theatre%29.jpg?format=2500w",
+          "type": "IMAGE"
+        },
+        {
+          "url": "https://images.squarespace-cdn.com/content/v1/618140f0105a240c6406409d/b9bedd9e-a3b1-4b89-97b3-dd1a957e6bd3/Strathwebsize.png?format=2500w",
+          "type": "IMAGE"
+        },
+        {
+          "url": "https://images.squarespace-cdn.com/content/v1/618140f0105a240c6406409d/68af1506-6aec-4836-b912-0f447d81d435/DRGwebsize.png?format=2500w",
+          "type": "IMAGE"
+        },
+        {
+          "url": "https://images.squarespace-cdn.com/content/v1/618140f0105a240c6406409d/3983b5fa-b926-46a7-aca6-7d976655ed56/IGwebsize.png?format=2500w",
+          "type": "IMAGE"
+        },
+        {
+          "url": "https://images.squarespace-cdn.com/content/v1/618140f0105a240c6406409d/16283045-39f1-40d1-8a1e-f772eaf24cd3/Heinekenwebsize.png?format=2500w",
+          "type": "IMAGE"
+        },
+        {
+          "url": "https://images.squarespace-cdn.com/content/v1/618140f0105a240c6406409d/249c29d0-c492-4ac9-9115-21c68fe473c8/G1websize.png?format=2500w",
+          "type": "IMAGE"
+        },
+        {
+          "url": "https://images.squarespace-cdn.com/content/v1/618140f0105a240c6406409d/16047296-0b5b-4db3-8c47-22ee6aa4142a/Punchwebsize.png?format=2500w",
+          "type": "IMAGE"
+        },
+        {
+          "url": "https://images.squarespace-cdn.com/content/v1/618140f0105a240c6406409d/2697198a-9514-4b67-bbe3-5087f421f922/35-sign-mockup.jpg?format=2500w",
+          "type": "IMAGE"
+        },
+        {
+          "url": "https://images.squarespace-cdn.com/content/v1/618140f0105a240c6406409d/19bed601-6bae-4e8a-965c-11ae459a5fa3/coaster-mockup-03-3537.jpg?format=2500w",
+          "type": "IMAGE"
+        },
+        {
+          "url": "https://images.squarespace-cdn.com/content/v1/618140f0105a240c6406409d/4150fdca-20c5-49d6-b4c6-703df2ba5804/Logo-AlabasterOrig.png?format=2500w",
+          "type": "IMAGE"
+        }
+      ],
+      "metadata": {},
+      "cssClasses": [
+        "yui3-js-enabled",
+        "js",
+        "flexbox",
+        "canvas",
+        "canvastext",
+        "webgl",
+        "no-touch",
+        "hashchange",
+        "history",
+        "draganddrop",
+        "rgba",
+        "hsla",
+        "multiplebgs",
+        "backgroundsize",
+        "borderimage",
+        "borderradius",
+        "boxshadow",
+        "textshadow",
+        "opacity",
+        "cssanimations",
+        "csscolumns",
+        "cssgradients",
+        "cssreflections",
+        "csstransforms",
+        "no-csstransforms3d",
+        "csstransitions",
+        "video",
+        "audio",
+        "svg",
+        "inlinesvg",
+        "svgclippaths",
+        "wf-rocgroteskwide-n6-active",
+        "wf-rocgroteskwide-n7-active",
+        "wf-active",
+        "primary-button-style-solid",
+        "primary-button-shape-pill",
+        "secondary-button-style-solid",
+        "secondary-button-shape-square",
+        "tertiary-button-style-solid",
+        "tertiary-button-shape-square",
+        "form-field-style-solid",
+        "form-field-shape-square",
+        "form-field-border-all",
+        "form-field-checkbox-type-icon",
+        "form-field-checkbox-fill-solid",
+        "form-field-checkbox-color-inverted",
+        "form-field-checkbox-shape-square",
+        "form-field-checkbox-layout-stack",
+        "form-field-radio-type-icon",
+        "form-field-radio-fill-solid",
+        "form-field-radio-color-normal",
+        "form-field-radio-shape-pill",
+        "form-field-radio-layout-stack",
+        "form-field-survey-fill-solid",
+        "form-field-survey-color-normal",
+        "form-field-survey-shape-pill",
+        "form-field-hover-focus-outline",
+        "form-submit-button-style-label",
+        "header-overlay-alignment-center",
+        "header-width-inset",
+        "tweak-fixed-header",
+        "tweak-fixed-header-style-scroll-back",
+        "tweak-blog-alternating-side-by-side-width-inset",
+        "tweak-blog-alternating-side-by-side-image-aspect-ratio-11-square",
+        "tweak-blog-alternating-side-by-side-text-alignment-left",
+        "tweak-blog-alternating-side-by-side-read-more-style-show",
+        "tweak-blog-alternating-side-by-side-image-text-alignment-middle",
+        "tweak-blog-alternating-side-by-side-delimiter-bullet",
+        "tweak-blog-alternating-side-by-side-meta-position-top",
+        "tweak-blog-alternating-side-by-side-primary-meta-categories",
+        "tweak-blog-alternating-side-by-side-secondary-meta-date",
+        "tweak-blog-alternating-side-by-side-excerpt-show",
+        "tweak-blog-basic-grid-width-inset",
+        "tweak-blog-basic-grid-image-aspect-ratio-32-standard",
+        "tweak-blog-basic-grid-text-alignment-center",
+        "tweak-blog-basic-grid-delimiter-bullet",
+        "tweak-blog-basic-grid-image-placement-above",
+        "tweak-blog-basic-grid-read-more-style-show",
+        "tweak-blog-basic-grid-primary-meta-categories",
+        "tweak-blog-basic-grid-secondary-meta-date",
+        "tweak-blog-basic-grid-excerpt-show",
+        "tweak-blog-item-width-medium",
+        "tweak-blog-item-text-alignment-left",
+        "tweak-blog-item-meta-position-above-title",
+        "tweak-blog-item-delimiter-dash",
+        "tweak-blog-masonry-width-full",
+        "tweak-blog-masonry-text-alignment-center",
+        "tweak-blog-masonry-primary-meta-categories",
+        "tweak-blog-masonry-secondary-meta-date",
+        "tweak-blog-masonry-meta-position-top",
+        "tweak-blog-masonry-read-more-style-show",
+        "tweak-blog-masonry-delimiter-space",
+        "tweak-blog-masonry-image-placement-above",
+        "tweak-blog-masonry-excerpt-show",
+        "tweak-blog-side-by-side-width-inset",
+        "tweak-blog-side-by-side-image-placement-left",
+        "tweak-blog-side-by-side-image-aspect-ratio-11-square",
+        "tweak-blog-side-by-side-primary-meta-categories",
+        "tweak-blog-side-by-side-secondary-meta-date",
+        "tweak-blog-side-by-side-meta-position-top",
+        "tweak-blog-side-by-side-text-alignment-left",
+        "tweak-blog-side-by-side-image-text-alignment-middle",
+        "tweak-blog-side-by-side-read-more-style-show",
+        "tweak-blog-side-by-side-delimiter-bullet",
+        "tweak-blog-side-by-side-excerpt-show",
+        "tweak-blog-single-column-width-inset",
+        "tweak-blog-single-column-text-alignment-center",
+        "tweak-blog-single-column-image-placement-above",
+        "tweak-blog-single-column-delimiter-bullet",
+        "tweak-blog-single-column-read-more-style-show",
+        "tweak-blog-single-column-primary-meta-categories",
+        "tweak-blog-single-column-secondary-meta-date",
+        "tweak-blog-single-column-meta-position-top",
+        "tweak-blog-single-column-content-excerpt-and-title",
+        "tweak-events-stacked-width-inset",
+        "tweak-events-stacked-height-small",
+        "tweak-events-stacked-show-past-events",
+        "tweak-events-stacked-show-thumbnails",
+        "tweak-events-stacked-thumbnail-size-32-standard",
+        "tweak-events-stacked-date-style-side-tag",
+        "tweak-events-stacked-show-time",
+        "tweak-events-stacked-show-location",
+        "tweak-events-stacked-ical-gcal-links",
+        "tweak-events-stacked-show-excerpt",
+        "tweak-global-animations-enabled",
+        "tweak-global-animations-complexity-level-basic",
+        "tweak-global-animations-animation-style-fade",
+        "tweak-global-animations-animation-type-fade",
+        "tweak-global-animations-animation-curve-ease",
+        "tweak-portfolio-grid-basic-width-full",
+        "tweak-portfolio-grid-basic-height-small",
+        "tweak-portfolio-grid-basic-image-aspect-ratio-43-four-three",
+        "tweak-portfolio-grid-basic-text-alignment-left",
+        "tweak-portfolio-grid-basic-hover-effect-zoom",
+        "tweak-portfolio-grid-overlay-width-full",
+        "tweak-portfolio-grid-overlay-height-large",
+        "tweak-portfolio-grid-overlay-image-aspect-ratio-43-four-three",
+        "tweak-portfolio-grid-overlay-text-placement-bottom-left",
+        "tweak-portfolio-grid-overlay-show-text-after-hover",
+        "tweak-portfolio-index-background-link-format-inline",
+        "tweak-portfolio-index-background-width-full-bleed",
+        "tweak-portfolio-index-background-height-large",
+        "tweak-portfolio-index-background-vertical-alignment-top",
+        "tweak-portfolio-index-background-horizontal-alignment-left",
+        "tweak-portfolio-index-background-delimiter-hyphen",
+        "tweak-portfolio-index-background-animation-type-fade",
+        "tweak-portfolio-index-background-animation-duration-medium",
+        "tweak-portfolio-hover-follow-layout-stacked",
+        "tweak-portfolio-hover-follow-front",
+        "tweak-portfolio-hover-follow-delimiter-backslash",
+        "tweak-portfolio-hover-follow-animation-type-fade",
+        "tweak-portfolio-hover-follow-animation-duration-slow",
+        "tweak-portfolio-hover-static-layout-inline",
+        "tweak-portfolio-hover-static-front",
+        "tweak-portfolio-hover-static-delimiter-bullet",
+        "tweak-portfolio-hover-static-animation-type-scale-up",
+        "tweak-portfolio-hover-static-animation-duration-fast",
+        "image-block-poster-text-alignment-center",
+        "image-block-card-content-position-center",
+        "image-block-card-text-alignment-left",
+        "image-block-overlap-content-position-center",
+        "image-block-overlap-text-alignment-left",
+        "image-block-collage-content-position-top",
+        "image-block-collage-text-alignment-left",
+        "image-block-stack-text-alignment-left",
+        "hide-opentable-icons",
+        "opentable-style-dark",
+        "tweak-product-quick-view-button-style-floating",
+        "tweak-product-quick-view-button-position-bottom",
+        "tweak-product-quick-view-lightbox-excerpt-display-truncate",
+        "tweak-product-quick-view-lightbox-show-arrows",
+        "tweak-product-quick-view-lightbox-show-close-button",
+        "tweak-product-quick-view-lightbox-controls-weight-light",
+        "native-currency-code-usd",
+        "collection-6181426c074762341283bc6c",
+        "collection-type-page",
+        "collection-layout-default",
+        "homepage",
+        "mobile-style-available",
+        "sqs-seven-one",
+        "seven-one-global-animations",
+        "SKSmoothScroll",
+        "speed",
+        "offset",
+        "SKSplitPaddingFunction",
+        "SKHorizontalScrollFunction",
+        "SKHorizontalScroll",
+        "clearfix",
+        "site-wrapper",
+        "floating-cart",
+        "hidden",
+        "icon",
+        "icon--stroke",
+        "icon--fill",
+        "icon--cart",
+        "sqs-custom-cart",
+        "sqs-template-integrated-shopping-cart",
+        "Cart-inner",
+        "svg-icon",
+        "cart-icon--odd",
+        "legacy-cart",
+        "icon-cart-quantity",
+        "sqs-cart-quantity",
+        "header",
+        "theme-col--primary",
+        "sqs-announcement-bar-dropzone",
+        "header-announcement-bar-wrapper",
+        "header-skip-link",
+        "sqs-button-element--primary",
+        "header-border",
+        "header-dropshadow",
+        "header-inner",
+        "container--fluid",
+        "header-mobile-layout-logo-left-nav-right",
+        "header-layout-nav-right",
+        "header-background",
+        "theme-bg--primary",
+        "header-display-desktop",
+        "header-title-nav-wrapper",
+        "header-title",
+        "preFade",
+        "fadeIn",
+        "header-title-logo",
+        "header-nav",
+        "header-nav-wrapper",
+        "header-nav-list",
+        "header-nav-item",
+        "header-nav-item--collection",
+        "header-nav-item--active",
+        "header-nav-item--homepage",
+        "header-nav-item--external",
+        "header-actions",
+        "header-actions--right",
+        "header-actions-action",
+        "header-actions-action--social",
+        "header-icon",
+        "header-icon-border-shape-circle",
+        "header-icon-border-style-solid",
+        "showOnMobile",
+        "showOnDesktop",
+        "header-actions-action--cta",
+        "btn",
+        "btn--border",
+        "theme-btn--primary-inverse",
+        "header-burger",
+        "menu-overlay-has-visible-non-navigation-items",
+        "header-burger-btn",
+        "burger",
+        "js-header-burger-open-title",
+        "visually-hidden",
+        "js-header-burger-close-title",
+        "burger-box",
+        "burger-inner",
+        "header-menu-icon-tripleLineHamburger",
+        "top-bun",
+        "patty",
+        "bottom-bun",
+        "header-display-mobile",
+        "header-menu",
+        "header-menu--folder-list",
+        "light-bold",
+        "header-menu-bg",
+        "header-menu-nav",
+        "header-menu-nav-list",
+        "header-menu-nav-folder",
+        "header-menu-nav-folder--active",
+        "header-menu-nav-folder-content",
+        "header-menu-nav-wrapper",
+        "container",
+        "header-menu-nav-item",
+        "header-menu-nav-item--collection",
+        "header-menu-nav-item--active",
+        "header-menu-nav-item--homepage",
+        "header-menu-nav-item-content",
+        "header-menu-nav-item--external",
+        "header-menu-actions",
+        "social-accounts",
+        "header-menu-actions-action",
+        "header-menu-actions-action--social",
+        "mobile",
+        "icon--lg",
+        "header-menu-cta",
+        "theme-btn--primary",
+        "sections",
+        "page-section",
+        "layout-engine-section",
+        "background-width--full-bleed",
+        "section-height--large",
+        "content-width--medium",
+        "horizontal-alignment--left",
+        "vertical-alignment--bottom",
+        "black",
+        "section-border",
+        "section-background",
+        "section-background-content",
+        "section-background-canvas",
+        "background-fx-canvas",
+        "content-wrapper",
+        "content",
+        "sqs-layout",
+        "sqs-grid-12",
+        "columns-12",
+        "row",
+        "sqs-row",
+        "col",
+        "sqs-col-12",
+        "span-12",
+        "sqs-block",
+        "html-block",
+        "sqs-block-html",
+        "sqs-block-content",
+        "sqs-html-content",
+        "button-block",
+        "sqs-block-button",
+        "sqs-block-button-container",
+        "sqs-block-button-container--left",
+        "sqs-block-button-element--medium",
+        "sqs-block-button-element",
+        "background-pause-button",
+        "paused",
+        "section-height--medium",
+        "content-width--wide",
+        "horizontal-alignment--center",
+        "sqs-video-background-native",
+        "content-fill",
+        "sqs-video-background-native__video-player",
+        "video-player",
+        "video-player--medium",
+        "video-player--large",
+        "plyr",
+        "plyr--full-ui",
+        "plyr--video",
+        "plyr--html5",
+        "plyr--pip-supported",
+        "plyr--hide-controls",
+        "plyr--playing",
+        "plyr__controls",
+        "plyr__video-wrapper",
+        "plyr__poster",
+        "plyr__captions",
+        "empty",
+        "vertical-alignment--middle",
+        "dark-bold",
+        "sqsrte-text-color--black",
+        "light",
+        "has-background",
+        "section-background-overlay",
+        "sqs-col-1",
+        "span-1",
+        "website-component-block",
+        "sqs-block-website-component",
+        "spacer-block",
+        "sqs-block-spacer",
+        "sized",
+        "vsize-1",
+        "sqs-col-5",
+        "span-5",
+        "sqs-col-4",
+        "span-4",
+        "accordion-block",
+        "sqs-block-accordion",
+        "accordion-items-container",
+        "accordion-item",
+        "accordion-divider",
+        "accordion-divider--top",
+        "accordion-item__title-wrapper",
+        "accordion-item__click-target",
+        "accordion-item__title",
+        "accordion-icon-container",
+        "arrow-container",
+        "arrow",
+        "accordion-item__dropdown",
+        "accordion-item__description",
+        "section-height--custom",
+        "sqs-col-8",
+        "span-8",
+        "image-block",
+        "sqs-block-image",
+        "sqs-text-ready",
+        "image-block-outer-wrapper",
+        "layout-caption-hidden",
+        "design-layout-inline",
+        "combination-animation-slide-up",
+        "individual-animation-none",
+        "individual-text-animation-none",
+        "sqs-narrow-width",
+        "sqs-block-image-figure",
+        "intrinsic",
+        "image-block-wrapper",
+        "sqs-image-shape-container-element",
+        "has-aspect-ratio",
+        "combination-animation-site-default",
+        "individual-animation-site-default",
+        "individual-text-animation-site-default",
+        "dark",
+        "section-height--small",
+        "sqs-col-6",
+        "span-6",
+        "sqs-col-3",
+        "span-3"
+      ],
+      "htmlStructure": {
+        "doctype": "<!DOCTYPE html>",
+        "headElements": {
+          "title": "",
+          "scripts": 0,
+          "metaTags": 0,
+          "styleSheets": 0
+        },
+        "bodyStructure": {
+          "asides": 0,
+          "hasMain": true,
+          "articles": 1,
+          "navMenus": 3,
+          "sections": 14,
+          "hasFooter": true,
+          "hasHeader": true
+        },
+        "elementCounts": {
+          "a": 38,
+          "g": 1,
+          "p": 19,
+          "br": 8,
+          "h1": 1,
+          "h2": 1,
+          "h4": 2,
+          "li": 4,
+          "ul": 1,
+          "div": 330,
+          "img": 12,
+          "nav": 3,
+          "svg": 9,
+          "use": 6,
+          "body": 1,
+          "html": 1,
+          "link": 3,
+          "main": 1,
+          "path": 24,
+          "rect": 2,
+          "span": 11,
+          "video": 2,
+          "button": 8,
+          "circle": 2,
+          "figure": 7,
+          "footer": 1,
+          "header": 1,
+          "strong": 1,
+          "symbol": 20,
+          "article": 1,
+          "section": 14
+        }
+      }
+    }
+  },
+  "siteOverview": {
+    "title": "Site Overview",
+    "structure": {
+      "blog": {
+        "__url": "https://www.rough.ink/blog",
+        "the-art-of-commercial-interior-design": {
+          "__url": "https://www.rough.ink/blog/the-art-of-commercial-interior-design"
+        }
+      },
+      "calc": {
+        "__url": "https://www.rough.ink/calc"
+      },
+      "home": {
+        "__url": "https://www.rough.ink/home"
+      },
+      "about": {
+        "__url": "https://www.rough.ink/about"
+      },
+      "contact": {
+        "__url": "https://www.rough.ink/contact"
+      },
+      "details": {
+        "__url": "https://www.rough.ink/details"
+      },
+      "our-work": {
+        "gost": {
+          "__url": "https://www.rough.ink/our-work/gost"
+        },
+        "__url": "https://www.rough.ink/our-work",
+        "barolo": {
+          "__url": "https://www.rough.ink/our-work/barolo"
+        },
+        "embargo": {
+          "__url": "https://www.rough.ink/our-work/embargo"
+        },
+        "crescent": {
+          "__url": "https://www.rough.ink/our-work/crescent"
+        },
+        "black-fox": {
+          "__url": "https://www.rough.ink/our-work/black-fox"
+        },
+        "barologist": {
+          "__url": "https://www.rough.ink/our-work/barologist"
+        },
+        "nonna-said": {
+          "__url": "https://www.rough.ink/our-work/nonna-said"
+        },
+        "portoleith": {
+          "__url": "https://www.rough.ink/our-work/portoleith"
+        },
+        "dukes-umbrella": {
+          "__url": "https://www.rough.ink/our-work/dukes-umbrella"
+        },
+        "strathclyde-student-union": {
+          "__url": "https://www.rough.ink/our-work/strathclyde-student-union"
+        }
+      },
+      "calculator": {
+        "__url": "https://www.rough.ink/calculator"
+      },
+      "dash-privacy-policy": {
+        "__url": "https://www.rough.ink/dash-privacy-policy"
+      },
+      "dash-terms-of-service": {
+        "__url": "https://www.rough.ink/dash-terms-of-service"
+      }
+    },
+    "description": "This website consists of 22 pages with the following structure and characteristics:",
+    "keyFeatures": [],
+    "colorPalette": [],
+    "fontFamilies": [],
+    "technologies": [],
+    "pageHierarchy": {
+      "0": [
+        {
+          "url": "https://www.rough.ink",
+          "path": "/",
+          "segments": []
+        }
+      ],
+      "1": [
+        {
+          "url": "https://www.rough.ink/blog",
+          "path": "/blog",
+          "segments": [
+            "blog"
+          ]
+        },
+        {
+          "url": "https://www.rough.ink/home",
+          "path": "/home",
+          "segments": [
+            "home"
+          ]
+        },
+        {
+          "url": "https://www.rough.ink/contact",
+          "path": "/contact",
+          "segments": [
+            "contact"
+          ]
+        },
+        {
+          "url": "https://www.rough.ink/about",
+          "path": "/about",
+          "segments": [
+            "about"
+          ]
+        },
+        {
+          "url": "https://www.rough.ink/details",
+          "path": "/details",
+          "segments": [
+            "details"
+          ]
+        },
+        {
+          "url": "https://www.rough.ink/calculator",
+          "path": "/calculator",
+          "segments": [
+            "calculator"
+          ]
+        },
+        {
+          "url": "https://www.rough.ink/calc",
+          "path": "/calc",
+          "segments": [
+            "calc"
+          ]
+        },
+        {
+          "url": "https://www.rough.ink/dash-privacy-policy",
+          "path": "/dash-privacy-policy",
+          "segments": [
+            "dash-privacy-policy"
+          ]
+        },
+        {
+          "url": "https://www.rough.ink/dash-terms-of-service",
+          "path": "/dash-terms-of-service",
+          "segments": [
+            "dash-terms-of-service"
+          ]
+        },
+        {
+          "url": "https://www.rough.ink/our-work",
+          "path": "/our-work",
+          "segments": [
+            "our-work"
+          ]
+        }
+      ],
+      "2": [
+        {
+          "url": "https://www.rough.ink/blog/the-art-of-commercial-interior-design",
+          "path": "/blog/the-art-of-commercial-interior-design",
+          "segments": [
+            "blog",
+            "the-art-of-commercial-interior-design"
+          ]
+        },
+        {
+          "url": "https://www.rough.ink/our-work/strathclyde-student-union",
+          "path": "/our-work/strathclyde-student-union",
+          "segments": [
+            "our-work",
+            "strathclyde-student-union"
+          ]
+        },
+        {
+          "url": "https://www.rough.ink/our-work/barologist",
+          "path": "/our-work/barologist",
+          "segments": [
+            "our-work",
+            "barologist"
+          ]
+        },
+        {
+          "url": "https://www.rough.ink/our-work/embargo",
+          "path": "/our-work/embargo",
+          "segments": [
+            "our-work",
+            "embargo"
+          ]
+        },
+        {
+          "url": "https://www.rough.ink/our-work/nonna-said",
+          "path": "/our-work/nonna-said",
+          "segments": [
+            "our-work",
+            "nonna-said"
+          ]
+        },
+        {
+          "url": "https://www.rough.ink/our-work/dukes-umbrella",
+          "path": "/our-work/dukes-umbrella",
+          "segments": [
+            "our-work",
+            "dukes-umbrella"
+          ]
+        },
+        {
+          "url": "https://www.rough.ink/our-work/crescent",
+          "path": "/our-work/crescent",
+          "segments": [
+            "our-work",
+            "crescent"
+          ]
+        },
+        {
+          "url": "https://www.rough.ink/our-work/gost",
+          "path": "/our-work/gost",
+          "segments": [
+            "our-work",
+            "gost"
+          ]
+        },
+        {
+          "url": "https://www.rough.ink/our-work/portoleith",
+          "path": "/our-work/portoleith",
+          "segments": [
+            "our-work",
+            "portoleith"
+          ]
+        },
+        {
+          "url": "https://www.rough.ink/our-work/barolo",
+          "path": "/our-work/barolo",
+          "segments": [
+            "our-work",
+            "barolo"
+          ]
+        },
+        {
+          "url": "https://www.rough.ink/our-work/black-fox",
+          "path": "/our-work/black-fox",
+          "segments": [
+            "our-work",
+            "black-fox"
+          ]
+        }
+      ]
+    },
+    "designPatterns": []
+  },
+  "performanceConsiderations": {
+    "title": "Performance Considerations",
+    "scores": {
+      "seo": 1,
+      "performance": 0.29,
+      "accessibility": 0.96,
+      "bestPractices": 1
+    },
+    "metrics": {
+      "totalBlockingTime": {
+        "score": 0.03,
+        "value": 2692
+      },
+      "firstContentfulPaint": {
+        "score": 0.24,
+        "value": 3940.315
+      },
+      "cumulativeLayoutShift": {
+        "score": 1,
+        "value": 0
+      },
+      "largestContentfulPaint": {
+        "score": 0,
+        "value": 28104.75900000001
+      }
+    },
+    "description": "Consider these performance metrics when rebuilding the website:",
+    "recommendations": [
+      "Optimize page load performance to improve user experience",
+      "Reduce First Contentful Paint time to under 1 second",
+      "Optimize Largest Contentful Paint to under 2.5 seconds",
+      "Reduce Total Blocking Time to improve interactivity"
+    ]
+  },
+  "reconstructionInstructions": {
+    "steps": [
+      {
+        "tasks": [
+          "Create a new project directory",
+          "Initialize the project with HTML, CSS, and JavaScript files",
+          "Set up the folder structure for assets, components, and pages",
+          "Install necessary dependencies"
+        ],
+        "title": "1. Project Setup",
+        "description": "Set up the development environment and project structure"
+      },
+      {
+        "tasks": [
+          "Download or recreate all CSS files",
+          "Download or recreate all JavaScript files",
+          "Collect all images, fonts, and other media assets",
+          "Organize assets in the appropriate directories"
+        ],
+        "title": "2. Asset Collection",
+        "description": "Gather and organize all required assets"
+      },
+      {
+        "tasks": [
+          "Create the header component",
+          "Create the navigation component",
+          "Create the footer component",
+          "Develop any sidebar components",
+          "Build card and form components",
+          "Implement any custom components specific to the site"
+        ],
+        "title": "3. Component Development",
+        "description": "Build reusable components identified in the analysis"
+      },
+      {
+        "tasks": [
+          "Create the homepage with appropriate layout and components",
+          "Develop secondary pages following the site hierarchy",
+          "Implement responsive design for all pages",
+          "Ensure consistent styling across the site"
+        ],
+        "title": "4. Page Construction",
+        "description": "Build individual pages using the components"
+      },
+      {
+        "tasks": [
+          "Implement navigation and routing",
+          "Add form validation and submission handling",
+          "Implement any interactive elements (sliders, accordions, etc.)",
+          "Add any required API integrations or data fetching"
+        ],
+        "title": "5. Functionality Implementation",
+        "description": "Add interactive features and functionality"
+      },
+      {
+        "tasks": [
+          "Test the site across different browsers and devices",
+          "Optimize images and assets for performance",
+          "Implement performance best practices",
+          "Ensure accessibility compliance",
+          "Validate HTML and CSS"
+        ],
+        "title": "6. Testing and Optimization",
+        "description": "Test the site and optimize performance"
+      },
+      {
+        "tasks": [
+          "Bundle and minify assets",
+          "Configure appropriate caching strategies",
+          "Set up any required server configurations",
+          "Deploy the site to the hosting environment"
+        ],
+        "title": "7. Deployment",
+        "description": "Prepare the site for deployment"
+      }
+    ],
+    "title": "Reconstruction Instructions",
+    "description": "Follow these steps to rebuild the website with maximum fidelity:"
+  }
+}
