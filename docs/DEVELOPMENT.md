@@ -1,6 +1,6 @@
 # Development Guide: Website Rebuild Prompt Generator (WRPG)
 
-## 🚀 DEPLOYMENT STATUS (Updated: May 22, 2025)
+## 🚀 DEPLOYMENT STATUS (Updated: May 23, 2025)
 
 ### ✅ COMPLETED SETUP:
 - **Database**: NeonDB PostgreSQL configured and synced
@@ -8,14 +8,19 @@
   - DATABASE_URL: ✅ Connected to NeonDB
   - OPENAI_API_KEY: ✅ Configured
   - FIRECRAWL_API_KEY: ✅ Active (fc-9aa5cec432c84d8686b5dfa4bdb906ac)
-- **Vercel Deployment**: ✅ Connected to GitHub repo
-- **Build Configuration**: ✅ Fixed ESLint issues for production
+- **Vercel Deployment**: ✅ Connected to GitHub repo & locally linked
+- **Build Configuration**: ✅ Fixed ESLint issues and async/await errors
 
 ### 🔧 CURRENT STATUS:
-- **Local Development**: Had Next.js version conflicts (bypassed for deployment)
-- **Production Deployment**: Ready for testing at Vercel URL
-- **Repository**: https://github.com/Dean-Rough/xray
-- **Vercel Project**: xray2-aujvnagps-dean-roughs-projects.vercel.app
+- **Local Development**: Vercel CLI linked to project
+- **Production Deployment**: ✅ WORKING at xray2-git-main-dean-roughs-projects.vercel.app
+- **Repository**: https://github.com/Dean-Rough/xray2
+- **Vercel Project**: Linked to `xray` project in dean-rough's scope
+
+### 🐛 RECENT FIXES (May 23, 2025):
+- **Async/Await Build Error**: Fixed forEach loops with async operations in `lib/generate-docs.ts`
+  - Converted to `for...of` loops to properly handle async/await
+  - Affected functions: `savePageFiles` and `saveScreenshots`
 
 ## 1. Getting Started
 

@@ -1,10 +1,10 @@
 # 🔄 HANDOVER: Website Rebuild Prompt Generator (WRPG)
 
-**Date**: May 22, 2025
+**Date**: May 23, 2025 (Updated)
 **Previous Agent**: Terry (Claude 3.7 Sonnet)
-**Current Agent**: Augment Agent (Claude Sonnet 4)
+**Current Agent**: Kilo Code (Debug Mode)
 **User**: Dean (@Dean-Rough)
-**Status**: 🚀 DEPLOYED & READY FOR TESTING
+**Status**: 🚀 DEPLOYED & WORKING
 
 ---
 
@@ -25,7 +25,8 @@
 - **Primary URL**: `xray2-git-main-dean-roughs-projects.vercel.app`
 - **Secondary URL**: `xray2-aujvnagps-dean-roughs-projects.vercel.app`
 - **Repository**: `https://github.com/Dean-Rough/xray2.git` (NEW)
-- **Vercel Project ID**: `prj_gF6t9JD4XQwRSKt0F8bs3li0KxSu`
+- **Vercel Project**: Linked locally to `xray` project
+- **Last Deploy**: May 23, 2025 - Fixed async/await build errors
 
 ### 🔧 **INFRASTRUCTURE COMPLETE**
 - ✅ **Database**: NeonDB PostgreSQL (synced with Prisma)
@@ -71,6 +72,7 @@ FIRECRAWL_API_KEY=[CONFIGURED_IN_VERCEL]
 - ✅ **Prisma Client**: Added `prisma generate` to build script
 - ✅ **Git Sync**: Created fresh xray2 repository, reconnected Vercel
 - ✅ **Build Process**: All compilation errors resolved
+- ✅ **Async/Await in forEach**: Fixed non-async function errors in `generate-docs.ts` (May 23)
 
 ### **Repository Migration**
 - **Old**: `https://github.com/Dean-Rough/xray` (abandoned due to git sync issues)

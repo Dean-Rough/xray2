@@ -480,8 +480,12 @@ export async function deepScrapeWebsite(url: string, options: {
   maxPages?: number;
 } = {}) {
   try {
+    console.log('Starting deepScrapeWebsite for:', url);
+    console.log('Environment check - FIRECRAWL_API_KEY exists:', !!process.env.FIRECRAWL_API_KEY);
+    
     // Create a database record for the analysis
     const analysis = await createWebsiteAnalysisRequest(url);
+    console.log('Created analysis record:', analysis.id);
 
     // Update status to MAPPING
     await updateWebsiteAnalysisStatus(analysis.id, 'MAPPING');
@@ -492,9 +496,11 @@ export async function deepScrapeWebsite(url: string, options: {
       includeSubdomains: false,
       limit: options.maxPages || 100
     });
+    console.log('Site map result:', Array.isArray(siteMapResult) ? `Array with ${siteMapResult.length} URLs` : 'Not an array');
 
     // Process the site map data
     const siteMapData = processSiteMap(siteMapResult);
+    console.log('Processed site map data - pages:', siteMapData.pages?.length || 0);
 
     // Update status to SCRAPING
     await updateWebsiteAnalysisStatus(analysis.id, 'SCRAPING', { siteMap: siteMapData });
@@ -639,6 +645,13 @@ export async function deepScrapeWebsite(url: string, options: {
     };
   } catch (error) {
     console.error('Error performing deep scraping:', error);
-    throw error;
+    console.error('Error stack:', error instanceof Error ? error.stack : 'No stack trace');
+    console.error('Environment variables check:', {
+      hasFirecrawlKey: !!process.env.FIRECRAWL_API_KEY,
+      hasOpenAIKey: !!process.env.OPENAI_API_KEY,
+      hasDatabaseUrl: !!process.env.DATABASE_URL
+    });
+    
+    throw new Error(`Deep scrape failed: ${error instanceof Error ? error.message : String(error)}`);
   }
 }

@@ -10,6 +10,10 @@ All notable changes to this project will be documented in this file. This projec
 
 ## [Unreleased]
 
+### Fixed
+- Async/await in forEach loops causing Vercel build failures in `generate-docs.ts`
+- Local Vercel project linking for manual deployments
+
 ### Added
 - Initial project setup and configuration
 - Basic Next.js application structure
@@ -25,6 +29,17 @@ All notable changes to this project will be documented in this file. This projec
 - Project name from generic "AI Website Analyzer" to "Website Rebuild Prompt Generator (WRPG)"
 - Unified documentation style across all files
 - Improved versioning scheme to better reflect development phases
+
+## 0.1.1 - 2025-05-23
+
+### Fixed
+- **Build Error**: Fixed async/await usage in non-async forEach callbacks in `lib/generate-docs.ts`
+  - Converted `forEach` loops to `for...of` loops in `savePageFiles` and `saveScreenshots` functions
+  - This was preventing successful Vercel deployments
+- **Vercel Deployment**: Linked local project to Vercel for manual deployment capability
+
+### Updated
+- Documentation to reflect current deployment status and fixes
 
 ## 0.1.0 - 2025-05-22
 
