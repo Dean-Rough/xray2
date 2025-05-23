@@ -103,16 +103,18 @@ The Website Rebuild Prompt Generator (WRPG) is a specialized Next.js application
 
 ## 5. Data Flow
 
-1. **User Input:** User provides single target URL through minimalist frontend form
-2. **Request Handling:** Frontend sends URL to `/api/generate-prompt` API route
-3. **Comprehensive Site Mapping:** API route calls `firecrawl-mcp-server`'s `map` tool to exhaustively discover entire site structure
-4. **Exhaustive Content Extraction:**
-   - API route calls `firecrawl-mcp-server`'s `scrape` tool to capture EVERY possible page detail
-   - Runs comprehensive Lighthouse CLI for in-depth performance metrics
-   - Uses advanced screenshot capture to document visual state
-5. **Deep Data Processing:**
-   - Processes raw data with Claude Sonnet AI prompt engineering in mind
-   - Extracts granular HTML structure, CSS, JS, assets, and performance metrics
+1. **User Input:** User provides single target URL through retro CRT-style interface
+2. **Request Handling:** Frontend sends URL with `fullSite: true` to `/api/generate-prompt` API route
+3. **Comprehensive Site Mapping:** Firecrawl API discovers ALL indexed pages (typically 20-100+ pages)
+4. **Full-Site Content Extraction:**
+   - Scrapes EVERY discovered page with full-page screenshot capture
+   - Downloads actual screenshot images from Firecrawl URLs (not just references)
+   - Runs comprehensive Lighthouse CLI for performance metrics on main page
+   - Extracts HTML, Markdown, assets, and metadata from all pages
+5. **Enhanced Data Processing:**
+   - Processes raw data optimized for Claude Sonnet AI reconstruction
+   - Handles relative URLs and asset references properly
+   - Creates comprehensive ZIP packages with organized folder structure
 6. **Claude Sonnet-Optimized Documentation Generation:**
    - Structures data in a format precisely engineered for Claude Sonnet AI IDEs
    - Creates meticulously detailed Markdown files for each page and component

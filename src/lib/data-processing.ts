@@ -5,7 +5,7 @@
 
 import { mapWebsite, scrapeWebpage, extractStructuredData } from './mcp-utils';
 import { createWebsiteAnalysisRequest, updateWebsiteAnalysisStatus } from './prisma-utils';
-import { generateSonnetPrompt } from './generate-docs';
+import { generateSonnetPrompt, generateWebsiteRebuildPackage } from './generate-docs';
 import { exec } from 'child_process';
 import { promisify } from 'util';
 import * as fs from 'fs';
@@ -132,6 +132,7 @@ export function processContentData(rawData: unknown) {
       links,
       assets,
       metadata,
+      screenshot: (rawData as any).screenshot || null, // Preserve screenshot data
       createdAt: new Date().toISOString(),
       version: '1.0.0'
     };
@@ -143,6 +144,7 @@ export function processContentData(rawData: unknown) {
       links: [],
       assets: [],
       metadata: {},
+      screenshot: null,
       createdAt: new Date().toISOString(),
       version: '1.0.0',
       error: error instanceof Error ? error.message : String(error)
@@ -386,6 +388,49 @@ export function generateFinalPrompt(
 }
 
 /**
+ * Perform AI audit of scraped data for quality assurance
+ * @param siteMapData - Site mapping data
+ * @param contentData - Content scraping data
+ * @param performanceData - Performance analysis data
+ * @returns Audited and cleaned data
+ */
+async function performAIAudit(
+  siteMapData: Record<string, unknown>,
+  contentData: Record<string, unknown>,
+  performanceData: Record<string, unknown>
+) {
+  // TODO: Implement AI audit functionality
+  // This would use OpenAI API to:
+  // 1. Review scraped content for completeness
+  // 2. Identify missing critical elements
+  // 3. Suggest improvements to the rebuild package
+  // 4. Clean up any inconsistencies in the data
+  // 5. Enhance the AI prompt with better instructions
+
+  console.log('AI audit phase would analyze:', {
+    pages: Object.keys(contentData).length,
+    siteStructure: Object.keys(siteMapData).length,
+    performanceMetrics: Object.keys(performanceData).length
+  });
+
+  // For now, return the data unchanged
+  return {
+    siteMapData,
+    contentData,
+    performanceData,
+    auditReport: {
+      completeness: 'high',
+      suggestions: [
+        'Consider adding more detailed component analysis',
+        'Include accessibility audit results',
+        'Add mobile responsiveness analysis'
+      ],
+      timestamp: new Date().toISOString()
+    }
+  };
+}
+
+/**
  * Run Lighthouse CLI for a URL and return the results
  * @param url - The URL to analyze
  * @returns Lighthouse audit results
@@ -454,15 +499,17 @@ export async function deepScrapeWebsite(url: string, options: {
     // Update status to SCRAPING
     await updateWebsiteAnalysisStatus(analysis.id, 'SCRAPING', { siteMap: siteMapData });
 
-    // Step 2: Scrape each URL for content
-    console.log(`Scraping ${siteMapData.pages.length} pages...`);
+    // Step 2: Scrape each URL for content WITH FULL-PAGE SCREENSHOTS
+    console.log(`Scraping ${siteMapData.pages.length} pages with full-page screenshots...`);
     const contentResults: Record<string, any> = {};
 
     // If fullSite is true, scrape all pages; otherwise, just scrape the main URL
     const pagesToScrape = options.fullSite ? siteMapData.pages : [url];
 
+    console.log(`DEBUG: fullSite=${options.fullSite}, mapped pages=${siteMapData.pages.length}, pages to scrape=${pagesToScrape.length}`);
+
     for (const pageUrl of pagesToScrape) {
-      console.log(`Scraping page: ${pageUrl}`);
+      console.log(`Scraping page with full screenshot: ${pageUrl}`);
 
       const formats = ['markdown', 'html', 'rawHtml', 'links'];
       if (options.includeScreenshots) {
@@ -472,10 +519,18 @@ export async function deepScrapeWebsite(url: string, options: {
       const pageResult = await scrapeWebpage(pageUrl, {
         formats,
         onlyMainContent: false,
-        waitFor: 2000
+        waitFor: 3000 // Extra time for full page load
       });
 
-      contentResults[pageUrl] = processContentData(pageResult);
+      const processedData = processContentData(pageResult);
+      contentResults[pageUrl] = processedData;
+
+      // Debug screenshot data for each page
+      console.log(`Screenshot data for ${pageUrl}:`, {
+        hasScreenshot: !!(processedData as any)?.screenshot,
+        screenshotType: typeof (processedData as any)?.screenshot,
+        screenshotLength: (processedData as any)?.screenshot?.length || 0
+      });
     }
 
     // Update status to PROCESSING
@@ -533,20 +588,54 @@ export async function deepScrapeWebsite(url: string, options: {
       }
     });
 
-    // Step 5: Generate the Claude Sonnet-optimized prompt
-    const finalPrompt = generateSonnetPrompt(
+    // Step 5: Optional AI audit phase for quality check
+    // Note: This could be enabled as a feature flag in the future
+    // const auditedData = await performAIAudit(siteMapData, contentResults, performanceData);
+
+    // Step 6: Generate the comprehensive website rebuild package
+    const rebuildPackage = await generateWebsiteRebuildPackage(
       siteMapData,
       contentResults,
       performanceData || {},
-      structuredData
+      structuredData as Record<string, unknown>,
+      analysis.id
     );
 
-    // Update status to COMPLETED
-    await updateWebsiteAnalysisStatus(analysis.id, 'COMPLETED', finalPrompt);
+    // Save the package as a ZIP file
+    const tempDir = path.join(process.cwd(), 'temp');
+    if (!fs.existsSync(tempDir)) {
+      fs.mkdirSync(tempDir);
+    }
+
+    const zipBuffer = await rebuildPackage.zip.generateAsync({ type: 'nodebuffer' });
+    const zipPath = path.join(tempDir, `${rebuildPackage.packageName}.zip`);
+    fs.writeFileSync(zipPath, zipBuffer);
+
+    // Also generate the legacy JSON format for backward compatibility
+    const legacyPrompt = generateSonnetPrompt(
+      siteMapData,
+      contentResults,
+      performanceData || {},
+      structuredData as Record<string, unknown>
+    );
+
+    // Update status to COMPLETED with both formats
+    const finalResult = {
+      package: {
+        name: rebuildPackage.packageName,
+        zipPath,
+        manifest: rebuildPackage.manifest
+      },
+      legacy: legacyPrompt
+    };
+
+    await updateWebsiteAnalysisStatus(analysis.id, 'COMPLETED', finalResult);
 
     return {
       id: analysis.id,
-      prompt: finalPrompt
+      package: rebuildPackage,
+      zipPath,
+      prompt: legacyPrompt
     };
   } catch (error) {
     console.error('Error performing deep scraping:', error);

@@ -1,26 +1,177 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@900&family=Inter:wght@300&display=swap');
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #000000;
+  --foreground: #ffffff;
+  --crt-green: #00ff41;
+  --crt-amber: #ffb000;
+  --scan-line: rgba(255, 255, 255, 0.1);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: 'Inter', system-ui, sans-serif;
   --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Inter', system-ui, sans-serif;
+  font-weight: 300;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Geist', system-ui, sans-serif;
+  font-weight: 900;
+}
+
+/* CRT Screen Effects */
+@keyframes scanlines {
+  0% {
+    transform: translateY(-100vh);
+  }
+  100% {
+    transform: translateY(100vh);
+  }
+}
+
+@keyframes flicker {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.98; }
+}
+
+@keyframes noise {
+  0%, 100% { transform: translate(0); opacity: 1; }
+  5% { transform: translate(-2px, -1px); opacity: 0.9; }
+  10% { transform: translate(1px, 2px); opacity: 1; }
+  15% { transform: translate(-1px, 1px); opacity: 0.95; }
+  20% { transform: translate(2px, -2px); opacity: 0.85; }
+  25% { transform: translate(-2px, -1px); opacity: 1; }
+  30% { transform: translate(1px, 1px); opacity: 0.9; }
+  35% { transform: translate(-1px, 2px); opacity: 0.95; }
+  40% { transform: translate(2px, -1px); opacity: 0.8; }
+  45% { transform: translate(-1px, -2px); opacity: 1; }
+  50% { transform: translate(1px, 1px); opacity: 0.9; }
+  55% { transform: translate(-2px, 1px); opacity: 0.95; }
+  60% { transform: translate(1px, -1px); opacity: 0.85; }
+  65% { transform: translate(-1px, 2px); opacity: 1; }
+  70% { transform: translate(2px, 1px); opacity: 0.9; }
+  75% { transform: translate(-1px, -1px); opacity: 0.95; }
+  80% { transform: translate(1px, 2px); opacity: 0.8; }
+  85% { transform: translate(-2px, -1px); opacity: 1; }
+  90% { transform: translate(1px, -2px); opacity: 0.9; }
+  95% { transform: translate(-1px, 1px); opacity: 0.95; }
+}
+
+@keyframes vhsStatic {
+  0% {
+    background-position: 0% 0%, 100% 100%, 50% 50%;
+    opacity: 0.03;
+  }
+  25% {
+    background-position: 20% 30%, 80% 70%, 30% 80%;
+    opacity: 0.08;
+  }
+  50% {
+    background-position: 80% 20%, 20% 80%, 70% 30%;
+    opacity: 0.05;
+  }
+  75% {
+    background-position: 30% 70%, 70% 30%, 20% 60%;
+    opacity: 0.09;
+  }
+  100% {
+    background-position: 0% 0%, 100% 100%, 50% 50%;
+    opacity: 0.03;
+  }
+}
+
+@keyframes bgFloat {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  25% { transform: translate(-10px, -5px) scale(1.02); }
+  50% { transform: translate(5px, 10px) scale(0.98); }
+  75% { transform: translate(10px, -5px) scale(1.01); }
+}
+
+.crt-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.crt-bg {
+  position: absolute;
+  inset: 0;
+  background-image:
+    url('/xrayBG.jpg'),
+    url('/xrayBG-reversed.jpg');
+  background-size: cover, cover;
+  background-position: center, center;
+  background-blend-mode: overlay;
+  filter: blur(8px) grayscale(100%) contrast(1.2);
+  opacity: 0.15;
+  animation: bgFloat 20s ease-in-out infinite;
+}
+
+.crt-scanlines {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    var(--scan-line) 2px,
+    var(--scan-line) 4px
+  );
+  pointer-events: none;
+  animation: scanlines 15s linear infinite;
+}
+
+.crt-noise {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.02) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.02) 0%, transparent 50%);
+  animation: noise 0.1s infinite;
+  pointer-events: none;
+}
+
+.crt-static {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 20%),
+    radial-gradient(circle at 90% 80%, rgba(255, 255, 255, 0.08) 0%, transparent 25%),
+    radial-gradient(circle at 40% 60%, rgba(255, 255, 255, 0.06) 0%, transparent 30%),
+    radial-gradient(circle at 70% 30%, rgba(255, 255, 255, 0.04) 0%, transparent 35%);
+  background-size: 200px 200px, 150px 150px, 300px 300px, 250px 250px;
+  animation: vhsStatic 0.3s infinite;
+  pointer-events: none;
+  mix-blend-mode: overlay;
+}
+
+.crt-flicker {
+  animation: flicker 0.15s infinite linear alternate;
+}
+
+.vhs-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 1000;
+  mix-blend-mode: lighten;
+  opacity: 0.75;
+}
+
+.vhs-overlay video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }

@@ -11,7 +11,7 @@ export async function POST(request: NextRequest) {
     // Parse request body
     const {
       url,
-      fullSite = false,
+      fullSite = true, // Default to TRUE - we want full site crawling with screenshots of ALL pages
       includeScreenshots = true,
       includeLighthouse = true,
       maxPages = 100
@@ -40,7 +40,7 @@ export async function POST(request: NextRequest) {
       status: 'processing_started',
       url,
       fullSite,
-      message: 'Rebuild prompt generation has started. Use the returned ID to check status or cancel the operation.'
+      message: 'Website rebuild package generation has started. This will create a comprehensive package with screenshots, HTML files, assets, and AI prompts. Use the returned ID to check status.'
     });
   } catch (error) {
     console.error('Error processing request:', error);

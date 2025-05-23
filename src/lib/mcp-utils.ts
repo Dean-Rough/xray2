@@ -124,23 +124,30 @@ export async function scrapeWebpage(url: string, options?: {
       // Use Firecrawl if available
       const scrapeOptions: Record<string, unknown> = {
         onlyMainContent: options?.onlyMainContent || false,
-        waitFor: options?.waitFor || 1000,
+        waitFor: options?.waitFor || 3000, // Extra wait time for full page load and screenshots
         mobile: options?.mobile || false,
         actions: options?.actions || []
       };
 
-      // Add format-specific options
+      // Set formats - in Firecrawl v1, screenshot is a format, not a separate parameter
       const formats = options?.formats || ['markdown', 'html', 'rawHtml', 'screenshot', 'links'];
-
-      if (formats.includes('screenshot')) {
-        scrapeOptions.screenshot = true;
-      }
+      scrapeOptions.formats = formats;
 
       const scrapeResult = await app.scrapeUrl(url, scrapeOptions);
 
       if (!scrapeResult.success) {
         throw new Error(`Firecrawl scraping failed: ${scrapeResult.error}`);
       }
+
+      // Debug: Log what Firecrawl actually returns
+      console.log(`Firecrawl result for ${url}:`, {
+        success: scrapeResult.success,
+        dataKeys: Object.keys(scrapeResult.data || {}),
+        hasScreenshot: !!(scrapeResult.data as any)?.screenshot,
+        screenshotType: typeof (scrapeResult.data as any)?.screenshot,
+        dataStructure: scrapeResult.data ? Object.keys(scrapeResult.data) : 'no data',
+        screenshotData: (scrapeResult.data as any)?.screenshot ? 'present' : 'missing'
+      });
 
       return scrapeResult;
     } else {
