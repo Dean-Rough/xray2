@@ -185,7 +185,7 @@ async function scrapeWebpageWithFallback(url: string, options?: {
 
     // Try to capture screenshot with Puppeteer if requested
     let screenshot = null;
-    if (options?.formats?.includes('screenshot')) {
+    if (options?.formats?.includes('screenshot') || options?.formats?.includes('screenshot@fullPage')) {
       screenshot = await captureScreenshotWithPuppeteer(url);
     }
 
@@ -282,7 +282,8 @@ export async function scrapeWebpage(url: string, options?: {
         };
 
         // Set formats - in Firecrawl v1, screenshot is a format, not a separate parameter
-        const formats = options?.formats || ['markdown', 'html', 'rawHtml', 'screenshot', 'links'];
+        // Use full-page screenshots by default for complete website capture
+        const formats = options?.formats || ['markdown', 'html', 'rawHtml', 'screenshot@fullPage', 'links'];
         scrapeOptions.formats = formats;
 
         const scrapeResult = await app.scrapeUrl(url, scrapeOptions);
@@ -302,14 +303,15 @@ export async function scrapeWebpage(url: string, options?: {
         });
 
         // If screenshot was requested but not captured by Firecrawl, try Puppeteer fallback
-        if (options?.formats?.includes('screenshot') && !(scrapeResult.data as any)?.screenshot) {
-          console.log('🔄 Firecrawl failed to capture screenshot, trying Puppeteer fallback...');
+        const screenshotRequested = options?.formats?.includes('screenshot') || options?.formats?.includes('screenshot@fullPage');
+        if (screenshotRequested && !(scrapeResult.data as any)?.screenshot) {
+          console.log('🔄 Firecrawl failed to capture full-page screenshot, trying Puppeteer fallback...');
           const puppeteerScreenshot = await captureScreenshotWithPuppeteer(url);
           if (puppeteerScreenshot) {
             (scrapeResult.data as any).screenshot = puppeteerScreenshot;
-            console.log('✅ Puppeteer fallback screenshot successful');
+            console.log('✅ Puppeteer fallback full-page screenshot successful');
           } else {
-            console.log('❌ Both Firecrawl and Puppeteer screenshot capture failed');
+            console.log('❌ Both Firecrawl and Puppeteer full-page screenshot capture failed');
           }
         }
 

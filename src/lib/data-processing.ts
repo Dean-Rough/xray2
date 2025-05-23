@@ -586,7 +586,7 @@ export async function deepScrapeWebsite(url: string, options: {
 
       const formats = ['markdown', 'html', 'rawHtml', 'links'];
       if (options.includeScreenshots) {
-        formats.push('screenshot');
+        formats.push('screenshot@fullPage'); // Use full-page screenshots instead of viewport-only
       }
 
       const pageResult = await scrapeWebpage(pageUrl, {
