@@ -1,12 +1,30 @@
 @import "tailwindcss";
-@import url('https://fonts.googleapis.com/css2?family=Geist:wght@900&family=Inter:wght@300&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&family=Geist:wght@100;200;300;400;500;600;700;800;900&display=swap');
 
 :root {
-  --background: #000000;
-  --foreground: #ffffff;
-  --crt-green: #00ff41;
-  --crt-amber: #ffb000;
-  --scan-line: rgba(255, 255, 255, 0.1);
+  /* Xrai Color System */
+  --xrai-primary: #00ff88;
+  --xrai-accent: #ff6b35;
+  --xrai-neutral: #8892b0;
+  --xrai-bg: #0a0e1a;
+  --xrai-surface: #1a1f2e;
+  --xrai-border: rgba(255, 255, 255, 0.1);
+  --xrai-glow: rgba(0, 255, 136, 0.1);
+
+  /* Legacy support */
+  --background: var(--xrai-bg);
+  --foreground: #e2e8f0;
+  --crt-green: var(--xrai-primary);
+  --crt-amber: var(--xrai-accent);
+  --scan-line: rgba(0, 255, 136, 0.05);
+
+  /* Tailwind custom properties */
+  --color-primary: var(--xrai-primary);
+  --color-accent: var(--xrai-accent);
+  --color-neutral-300: #d1d5db;
+  --color-neutral-400: #9ca3af;
+  --color-neutral-500: #6b7280;
+  --color-neutral-600: #4b5563;
 }
 
 @theme inline {
@@ -17,16 +35,46 @@
 }
 
 body {
-  background: var(--background);
+  background: linear-gradient(135deg, var(--xrai-bg) 0%, var(--xrai-surface) 100%);
   color: var(--foreground);
-  font-family: 'Inter', system-ui, sans-serif;
-  font-weight: 300;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-weight: 400;
   overflow-x: hidden;
+  letter-spacing: -0.01em;
+  line-height: 1.6;
+}
+
+/* Xrai Typography System */
+.text-hero {
+  font-family: 'Geist', sans-serif;
+  font-weight: 900;
+  font-size: clamp(3rem, 10vw, 6rem);
+  line-height: 0.9;
+  letter-spacing: -0.03em;
+  background: linear-gradient(135deg, var(--xrai-primary), #00d4ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.text-section {
+  font-family: 'Geist', sans-serif;
+  font-weight: 700;
+  font-size: clamp(1.5rem, 4vw, 2.5rem);
+  letter-spacing: -0.02em;
+  color: var(--foreground);
+}
+
+.text-mono {
+  font-family: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+  font-weight: 500;
+  letter-spacing: 0.025em;
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Geist', system-ui, sans-serif;
-  font-weight: 900;
+  font-family: 'Geist', sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.02em;
 }
 
 /* CRT Screen Effects */
@@ -158,20 +206,131 @@ h1, h2, h3, h4, h5, h6 {
   animation: flicker 0.15s infinite linear alternate;
 }
 
-.vhs-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  pointer-events: none;
-  z-index: 1000;
-  mix-blend-mode: lighten;
-  opacity: 0.75;
+
+
+/* Xrai Component System */
+.xrai-panel {
+  background: rgba(26, 31, 46, 0.8);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--xrai-border);
+  border-radius: 12px;
+  box-shadow:
+    0 0 20px var(--xrai-glow),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
-.vhs-overlay video {
+.xrai-card {
+  position: relative;
+  background: var(--xrai-surface);
+  border-radius: 8px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.xrai-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px var(--xrai-glow);
+}
+
+.xrai-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: 1px;
+  background: linear-gradient(45deg, var(--xrai-primary), transparent, var(--xrai-accent));
+  border-radius: inherit;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: xor;
+  -webkit-mask-composite: xor;
+  animation: border-rotate 3s linear infinite;
+}
+
+@keyframes border-rotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.xrai-glow {
+  box-shadow:
+    0 0 20px var(--xrai-glow),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.xrai-button {
+  background: linear-gradient(135deg, var(--xrai-primary), #00d4ff);
+  color: var(--xrai-bg);
+  font-family: 'Geist', sans-serif;
+  font-weight: 600;
+  padding: 12px 24px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.875rem;
+}
+
+.xrai-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 32px rgba(0, 255, 136, 0.3);
+}
+
+.xrai-button:active {
+  transform: translateY(0);
+}
+
+/* Xrai Status Indicators */
+.xrai-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.xrai-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--xrai-primary);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(1.2);
+  }
+}
+
+/* X-ray Scanner Effect */
+.xray-scanner {
+  position: absolute;
   width: 100%;
-  height: 100%;
-  object-fit: cover;
+  height: 3px;
+  background: linear-gradient(90deg,
+    transparent,
+    rgba(0, 255, 136, 0.8),
+    rgba(255, 255, 255, 0.9),
+    rgba(0, 255, 136, 0.8),
+    transparent
+  );
+  animation: xray-scan 3s ease-in-out infinite;
+  box-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+  z-index: 10;
+}
+
+@keyframes xray-scan {
+  0% { top: 0; opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { top: 100%; opacity: 0; }
 }

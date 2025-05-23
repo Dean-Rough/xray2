@@ -41,6 +41,10 @@ export async function generateWebsiteRebuildPackage(
   const assetsFolder = zip.folder(`${packageName}/assets`);
   await saveAssets(assetsFolder!, contentData);
 
+  // 4.5. Save extracted CSS files
+  const cssFolder = assetsFolder!.folder('css');
+  await saveCSSFiles(cssFolder!, contentData);
+
   // 5. Generate technical documentation
   const docsFolder = zip.folder(`${packageName}/docs`);
   await generateTechnicalDocs(docsFolder!, siteMapData, contentData, performanceData, structuredData);
@@ -229,6 +233,52 @@ function generateHtmlStructureSummary(html: string) {
     },
     elementCounts
   };
+}
+
+/**
+ * Clean component content for better AI consumption
+ * @param content - Raw HTML component content
+ * @returns Cleaned and formatted component content
+ */
+function cleanComponentContent(content: string): string {
+  if (!content) return 'No content available';
+
+  // Remove excessive whitespace but preserve structure
+  let cleaned = content
+    .replace(/\s+/g, ' ')
+    .replace(/>\s+</g, '><')
+    .trim();
+
+  // If content is very long, provide a meaningful preview with key attributes
+  if (cleaned.length > 1000) {
+    // Extract key information: tag name, classes, IDs, and first level of content
+    const tagMatch = cleaned.match(/^<(\w+)([^>]*)>/);
+    if (tagMatch) {
+      const tagName = tagMatch[1];
+      const attributes = tagMatch[2];
+
+      // Extract class and id attributes
+      const classMatch = attributes.match(/class=["']([^"']*)["']/);
+      const idMatch = attributes.match(/id=["']([^"']*)["']/);
+
+      let summary = `<${tagName}`;
+      if (classMatch) summary += ` class="${classMatch[1]}"`;
+      if (idMatch) summary += ` id="${idMatch[1]}"`;
+      summary += '>';
+
+      // Add first level content preview
+      const contentMatch = cleaned.match(/>([^<]{0,200})/);
+      if (contentMatch && contentMatch[1].trim()) {
+        summary += contentMatch[1].trim();
+        if (contentMatch[1].length > 200) summary += '...';
+      }
+
+      summary += `</${tagName}>`;
+      return summary + '\n\n**Note**: Full component content available in pages/ folder';
+    }
+  }
+
+  return cleaned;
 }
 
 /**
@@ -592,12 +642,136 @@ function generateReconstructionInstructions(_siteMapData: Record<string, unknown
 }
 
 /**
- * Generate the main AI prompt as Markdown
+ * Generate Claude Sonnet-specific reconstruction instructions
+ * @param siteMapData - Processed site map data
+ * @param structuredData - Extracted structured data about the website
+ * @param components - Identified components
+ * @param assets - Asset references
+ * @returns Claude Sonnet-optimized instructions
+ */
+function generateClaudeSonnetInstructions(
+  siteMapData: Record<string, unknown>,
+  structuredData: Record<string, unknown>,
+  components: Record<string, unknown[]>,
+  assets: Record<string, string[]>
+) {
+  const technologies = (structuredData?.technologies as string[]) || [];
+  const pageCount = (siteMapData.pages as unknown[])?.length || 0;
+  const componentCount = Object.values(components).reduce((sum, items) => sum + items.length, 0);
+  const assetCount = Object.values(assets).reduce((sum, items) => sum + items.length, 0);
+
+  // Determine recommended tech stack based on analysis
+  const recommendedFramework = technologies.some(t => /react|next/i.test(t)) ? 'Next.js' :
+                               technologies.some(t => /vue|nuxt/i.test(t)) ? 'Nuxt.js' :
+                               technologies.some(t => /svelte|sveltekit/i.test(t)) ? 'SvelteKit' :
+                               'Vite + vanilla JS';
+
+  const recommendedStyling = technologies.some(t => /tailwind/i.test(t)) ? 'Tailwind CSS' :
+                            technologies.some(t => /styled-components/i.test(t)) ? 'Styled Components' :
+                            technologies.some(t => /emotion/i.test(t)) ? 'Emotion' :
+                            'CSS Modules';
+
+  return {
+    title: 'Claude Sonnet Reconstruction Protocol',
+    description: `Optimized workflow for rebuilding ${pageCount} pages with ${componentCount} components and ${assetCount} assets`,
+    framework: recommendedFramework,
+    styling: recommendedStyling,
+    workflow: [
+      {
+        phase: 'Analysis & Planning',
+        duration: '15-30 minutes',
+        tasks: [
+          'Review all screenshots to understand visual hierarchy',
+          'Analyze component patterns across pages',
+          'Identify responsive breakpoints and layout systems',
+          'Plan component architecture and reusability',
+          'Document color palette and typography system'
+        ]
+      },
+      {
+        phase: 'Environment Setup',
+        duration: '10-15 minutes',
+        tasks: [
+          `Initialize ${recommendedFramework} project`,
+          `Configure ${recommendedStyling} for styling`,
+          'Set up development tools (ESLint, Prettier, TypeScript)',
+          'Create folder structure for components and pages',
+          'Install additional dependencies as needed'
+        ]
+      },
+      {
+        phase: 'Asset Integration',
+        duration: '20-30 minutes',
+        tasks: [
+          'Run asset download script from assets/ folder',
+          'Optimize images for web (WebP conversion, compression)',
+          'Set up font loading strategy',
+          'Configure asset bundling and optimization',
+          'Test asset loading in development environment'
+        ]
+      },
+      {
+        phase: 'Component Development',
+        duration: '60-90 minutes',
+        tasks: [
+          'Build layout components (Header, Footer, Navigation)',
+          'Create UI components (Buttons, Cards, Forms)',
+          'Implement interactive components (Modals, Dropdowns)',
+          'Add responsive behavior and mobile optimization',
+          'Test component isolation and reusability'
+        ]
+      },
+      {
+        phase: 'Page Assembly',
+        duration: '45-60 minutes',
+        tasks: [
+          'Construct homepage using components',
+          'Build remaining pages following hierarchy',
+          'Implement routing and navigation',
+          'Add page-specific functionality',
+          'Ensure consistent layout and styling'
+        ]
+      },
+      {
+        phase: 'Quality Assurance',
+        duration: '30-45 minutes',
+        tasks: [
+          'Cross-browser testing (Chrome, Firefox, Safari)',
+          'Responsive testing across device sizes',
+          'Accessibility audit and WCAG compliance',
+          'Performance optimization and Lighthouse scoring',
+          'Code review and refactoring'
+        ]
+      }
+    ],
+    bestPractices: [
+      'Use semantic HTML5 elements for better accessibility',
+      'Implement mobile-first responsive design',
+      'Optimize images and use modern formats (WebP, AVIF)',
+      'Minimize JavaScript bundle size and use code splitting',
+      'Follow component composition patterns for reusability',
+      'Use CSS custom properties for consistent theming',
+      'Implement proper error boundaries and loading states',
+      'Add proper meta tags for SEO optimization'
+    ],
+    qualityChecks: [
+      'Visual comparison with original screenshots',
+      'Lighthouse performance score > 90',
+      'Accessibility score > 95',
+      'Cross-browser compatibility verified',
+      'Mobile responsiveness tested',
+      'Code quality and maintainability reviewed'
+    ]
+  };
+}
+
+/**
+ * Generate Claude Sonnet-optimized AI prompt as Markdown
  * @param siteMapData - Processed site map data
  * @param contentData - Processed content data for each page
  * @param performanceData - Processed performance metrics
  * @param structuredData - Extracted structured data about the website
- * @returns Markdown content for the AI prompt
+ * @returns Claude Sonnet-optimized Markdown content
  */
 function generatePromptMarkdown(
   siteMapData: Record<string, unknown>,
@@ -610,91 +784,154 @@ function generatePromptMarkdown(
   const components = identifyComponents(contentData);
   const assets = extractAssetReferences(contentData);
   const performance = generatePerformanceGuidelines(performanceData);
-  const instructions = generateReconstructionInstructions(siteMapData, structuredData);
+  const instructions = generateClaudeSonnetInstructions(siteMapData, structuredData, components, assets);
 
   const pageCount = (siteMapData.pages as unknown[])?.length || 0;
   const technologies = (structuredData?.technologies as string[]) || [];
   const designPatterns = (structuredData?.designPatterns as string[]) || [];
+  const primaryUrl = (siteMapData.pages as any[])?.[0] || Object.keys(contentData)[0] || 'Target Website';
 
-  return `# Elite Website Rebuild Package
+  return `# 🎯 CLAUDE SONNET WEBSITE RECONSTRUCTION PROMPT
 
-## Mission Brief
-You're an elite web developer tasked with rebuilding the website: **${(siteMapData.pages as any[])?.[0] || Object.keys(contentData)[0] || 'Target Website'}**
+## 🚀 MISSION CONTEXT
+You are Claude Sonnet, an elite AI developer with access to a comprehensive website analysis package. Your task is to rebuild the website **${primaryUrl}** with pixel-perfect accuracy using modern web development practices.
 
-This package contains everything you need for pixel-perfect reconstruction. The analysis includes ${pageCount} pages, complete code extraction, high-resolution screenshots, and performance metrics.
+## 📦 PACKAGE CONTENTS
+This analysis package contains:
+- **${pageCount} pages** with full-page screenshots and extracted code
+- **${Object.values(components).reduce((sum, items) => sum + (items as unknown[]).length, 0)} identified components** across ${Object.keys(components).length} categories
+- **${Object.values(assets).reduce((sum, items) => sum + (items as string[]).length, 0)} assets** categorized and ready for download
+- **Performance benchmarks** from Lighthouse analysis
+- **Technical specifications** and component documentation
 
-## Deployment Instructions
-1. **Visual Reference**: Review screenshots in \`screenshots/\` folder for exact visual targets
-2. **Code Analysis**: Examine HTML/CSS in \`pages/\` folder for structure and styling
-3. **Asset Inventory**: Check \`assets/\` folder for all required resources
-4. **Performance Targets**: Use metrics below to match or exceed original performance
-5. **Reconstruction Protocol**: Follow the detailed instructions below
+## 🎨 VISUAL ANALYSIS WORKFLOW
 
-## Site Overview
-- **Pages**: ${pageCount}
-- **Technologies**: ${technologies.join(', ') || 'Standard HTML/CSS/JS'}
-- **Design Patterns**: ${designPatterns.join(', ') || 'Standard web patterns'}
+### Step 1: Screenshot Review Protocol
+1. **Open screenshots/ folder** - These are full-page captures showing exact visual targets
+2. **Analyze layout patterns** - Identify grid systems, spacing, typography hierarchy
+3. **Note responsive breakpoints** - Look for mobile/tablet/desktop variations
+4. **Catalog interactive elements** - Buttons, forms, navigation, animations
+5. **Document color palette** - Extract exact colors from visual elements
 
-## Key Components Identified
-${Object.entries(components).map(([type, items]) =>
-  `- **${type.charAt(0).toUpperCase() + type.slice(1)}**: ${(items as unknown[]).length} unique components`
-).join('\n')}
+### Step 2: Code Structure Analysis
+1. **Review pages/ folder** - Contains extracted HTML/CSS for each page
+2. **Identify semantic structure** - Headers, main content, sidebars, footers
+3. **Extract CSS patterns** - Classes, IDs, styling approaches
+4. **Note JavaScript functionality** - Interactive elements and behaviors
 
-## Assets Summary
-${Object.entries(assets).map(([type, items]) =>
-  `- **${type.charAt(0).toUpperCase() + type.slice(1)}**: ${(items as string[]).length} files`
-).join('\n')}
+## 🏗️ CLAUDE SONNET RECONSTRUCTION STRATEGY
 
-## Performance Considerations
-${performance.recommendations.map((rec: string) => `- ${rec}`).join('\n')}
-
-## Reconstruction Instructions
-
-${instructions.steps.map((step: any) => `
-### ${step.title}
-${step.description}
-
-${step.tasks.map((task: string) => `- ${task}`).join('\n')}
-`).join('\n')}
-
-## File Structure
-\`\`\`
-website-rebuild-package/
-├── README.md                 # This file - main AI prompt
-├── package.json             # Package manifest and metadata
-├── pages/                   # Individual page HTML files
-│   ├── homepage.html
-│   ├── about.html
-│   └── ...
-├── screenshots/             # Full-page screenshots
-│   ├── homepage.png
-│   ├── about.png
-│   └── ...
-├── assets/                  # Downloaded website assets
-│   ├── images/
-│   ├── css/
-│   ├── js/
-│   └── fonts/
-└── docs/                    # Technical documentation
-    ├── components.md        # Component analysis
-    ├── performance.md       # Performance metrics
-    └── technical-specs.md   # Technical specifications
+### Phase 1: Foundation Setup
+\`\`\`bash
+# Create project structure optimized for modern development
+mkdir website-rebuild && cd website-rebuild
+npm init -y
+npm install -D tailwindcss postcss autoprefixer vite
+# OR use your preferred framework (Next.js, Nuxt, SvelteKit)
 \`\`\`
 
-## Usage Instructions for AI
-1. Start by examining the screenshots to understand the visual design and layout
-2. Review the HTML files to understand the structure and content
-3. Use the component analysis to identify reusable elements
-4. Follow the reconstruction instructions step by step
-5. Refer to the performance guidelines to optimize the rebuild
+### Phase 2: Component-First Development
+Based on the analysis, implement these components in order:
 
-## Notes
-- All screenshots are full-page captures showing the complete design
-- HTML files contain the exact markup from the original site
-- Assets have been downloaded and organized for easy access
-- Performance metrics provide optimization targets for the rebuild
+${Object.entries(components).map(([type, items]) => `
+#### ${type.charAt(0).toUpperCase() + type.slice(1)} Components (${(items as unknown[]).length} identified)
+- **Priority**: ${type === 'header' || type === 'navigation' ? 'HIGH' : type === 'footer' ? 'MEDIUM' : 'LOW'}
+- **Implementation**: Create reusable ${type} component(s)
+- **Files**: Check docs/components.md for detailed analysis
+`).join('')}
 
-Generated on: ${new Date().toISOString()}
+### Phase 3: Page Assembly
+Reconstruct pages in this order:
+1. **Homepage** (primary entry point)
+2. **Navigation pages** (main menu items)
+3. **Content pages** (secondary pages)
+4. **Utility pages** (404, contact, etc.)
+
+## 🎯 CLAUDE SONNET SPECIFIC INSTRUCTIONS
+
+### Code Quality Standards
+- **Use semantic HTML5** - Proper heading hierarchy, landmarks, ARIA labels
+- **Implement responsive design** - Mobile-first approach with progressive enhancement
+- **Optimize performance** - Meet or exceed original Lighthouse scores
+- **Follow accessibility guidelines** - WCAG 2.1 AA compliance
+- **Use modern CSS** - Flexbox, Grid, custom properties, logical properties
+
+### Technology Recommendations
+Based on analysis, the original site uses: **${technologies.join(', ') || 'Standard HTML/CSS/JS'}**
+
+**Recommended modern stack:**
+- **Framework**: ${technologies.some(t => /react|next/i.test(t)) ? 'Next.js' : technologies.some(t => /vue|nuxt/i.test(t)) ? 'Nuxt.js' : 'Vite + vanilla JS'}
+- **Styling**: ${technologies.some(t => /tailwind/i.test(t)) ? 'Tailwind CSS' : 'CSS Modules or Styled Components'}
+- **Build tool**: Vite for optimal development experience
+
+### Performance Targets
+${performance.recommendations.length > 0 ? performance.recommendations.map((rec: string) => `- ${rec}`).join('\n') : '- Achieve 90+ Lighthouse scores across all metrics'}
+
+## 📋 IMPLEMENTATION CHECKLIST
+
+### ✅ Visual Fidelity
+- [ ] Layout matches screenshots exactly
+- [ ] Typography hierarchy preserved
+- [ ] Color palette accurate
+- [ ] Spacing and proportions correct
+- [ ] Interactive states implemented
+
+### ✅ Technical Excellence
+- [ ] Semantic HTML structure
+- [ ] Responsive design working
+- [ ] Performance optimized
+- [ ] Accessibility compliant
+- [ ] Cross-browser compatible
+
+### ✅ Functionality
+- [ ] Navigation working
+- [ ] Forms functional
+- [ ] Interactive elements responsive
+- [ ] Loading states implemented
+- [ ] Error handling in place
+
+## 🔧 DEBUGGING RESOURCES
+
+### File References
+- **Visual targets**: \`screenshots/\` folder
+- **Code examples**: \`pages/\` folder
+- **Component analysis**: \`docs/components.md\`
+- **Performance data**: \`docs/performance.md\`
+- **Asset inventory**: \`assets/manifest.json\`
+
+### Common Issues & Solutions
+1. **Missing assets**: Use \`assets/download-assets.sh\` script
+2. **Layout differences**: Compare with screenshots pixel by pixel
+3. **Performance issues**: Reference original Lighthouse scores
+4. **Responsive problems**: Test across all device sizes
+
+## 🎨 DESIGN SYSTEM EXTRACTION
+
+### Colors Identified
+${(structuredData?.colorPalette as string[])?.map(color => `- \`${color}\``).join('\n') || '- Extract from screenshots'}
+
+### Typography
+${(structuredData?.fontFamilies as string[])?.map(font => `- ${font}`).join('\n') || '- Analyze from page HTML'}
+
+### Design Patterns
+${designPatterns.map(pattern => `- ${pattern}`).join('\n') || '- Standard web patterns identified'}
+
+## 🚀 DEPLOYMENT READINESS
+
+When reconstruction is complete:
+1. **Test thoroughly** across devices and browsers
+2. **Validate HTML/CSS** using W3C validators
+3. **Run Lighthouse audit** to verify performance
+4. **Deploy to staging** for final review
+5. **Go live** with confidence
+
+---
+
+**Generated**: ${new Date().toISOString()}
+**Package Version**: 2.0.0 (Claude Sonnet Optimized)
+**Analysis ID**: ${Math.random().toString(36).substr(2, 9)}
+
+> 💡 **Claude Sonnet Tip**: Start with the homepage screenshot and work systematically through each component. Your attention to detail and modern development practices will ensure a superior rebuild.
 `;
 }
 
@@ -736,6 +973,74 @@ async function savePageFiles(folder: JSZip, contentData: Record<string, unknown>
       console.warn(`Error saving page file for: ${url}`, error);
     }
   }
+}
+
+/**
+ * Save extracted CSS files
+ * @param folder - JSZip folder for CSS files
+ * @param contentData - Processed content data for each page
+ */
+async function saveCSSFiles(folder: JSZip, contentData: Record<string, unknown>) {
+  let cssFileCount = 0;
+
+  for (const [url, data] of Object.entries(contentData)) {
+    try {
+      const pageData = data as Record<string, unknown>;
+      const cssContents = (pageData.cssContents as Record<string, string>) || {};
+
+      // Save each CSS file with content
+      for (const [cssUrl, cssContent] of Object.entries(cssContents)) {
+        if (cssContent && cssContent.trim()) {
+          // Generate a clean filename from the CSS URL
+          const urlObj = new URL(cssUrl, url);
+          const pathname = urlObj.pathname;
+          let filename = pathname.split('/').pop() || 'style.css';
+
+          // Ensure .css extension
+          if (!filename.endsWith('.css')) {
+            filename += '.css';
+          }
+
+          // Avoid filename conflicts
+          let finalFilename = filename;
+          let counter = 1;
+          while (folder.file(finalFilename)) {
+            const baseName = filename.replace('.css', '');
+            finalFilename = `${baseName}-${counter}.css`;
+            counter++;
+          }
+
+          // Save CSS file with content
+          folder.file(finalFilename, cssContent);
+          cssFileCount++;
+
+          console.log(`✅ Saved CSS file: ${finalFilename} (${cssContent.length} chars)`);
+        }
+      }
+    } catch (error) {
+      console.warn(`Error saving CSS files for: ${url}`, error);
+    }
+  }
+
+  // Create a README if no CSS files were saved
+  if (cssFileCount === 0) {
+    folder.file('README.txt', `No CSS files were extracted during the scan.
+
+This could be due to:
+1. Website uses inline styles only
+2. CSS files are loaded dynamically via JavaScript
+3. CSS URLs are relative and couldn't be resolved
+4. Network issues during CSS content fetching
+5. CSS files are protected or require authentication
+
+To get CSS files:
+- Check the original website's developer tools
+- Look for CSS links in the HTML files in pages/ folder
+- Use the asset manifest to download CSS files manually
+`);
+  }
+
+  console.log(`💾 Saved ${cssFileCount} CSS files`);
 }
 
 /**
@@ -955,7 +1260,7 @@ Found ${(items as unknown[]).length} unique ${type} components:
 ${(items as any[]).map((item, index) => `
 ### ${type.charAt(0).toUpperCase() + type.slice(1)} ${index + 1}
 - **Source**: ${item.source}
-- **Content Preview**: ${(item.content as string).substring(0, 200)}...
+- **Content Preview**: ${cleanComponentContent(item.content as string)}
 
 `).join('')}
 `).join('')}

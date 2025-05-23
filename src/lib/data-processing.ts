@@ -4,7 +4,7 @@
  */
 
 import { mapWebsite, scrapeWebpage, extractStructuredData } from './mcp-utils';
-import { createWebsiteAnalysisRequest, updateWebsiteAnalysisStatus } from './prisma-utils';
+import { createWebsiteAnalysisRequest, updateWebsiteAnalysisStatus, markAnalysisAsFailed } from './prisma-utils';
 import { generateSonnetPrompt, generateWebsiteRebuildPackage } from './generate-docs';
 import { exec } from 'child_process';
 import { promisify } from 'util';
@@ -76,7 +76,7 @@ export function processSiteMap(rawData: unknown) {
  * @param rawData - Raw data from Firecrawl content scraping
  * @returns Processed content data
  */
-export function processContentData(rawData: unknown) {
+export async function processContentData(rawData: unknown) {
   try {
     if (!rawData) {
       throw new Error('No content data provided');
@@ -96,21 +96,43 @@ export function processContentData(rawData: unknown) {
     // Extract assets (CSS, JS, images, etc.)
     const assets: Record<string, unknown>[] = [];
 
-    // Process CSS links
+    // Process CSS links and extract actual CSS content
     const cssLinks = extractResourceLinks(html, 'link[rel="stylesheet"]', 'href');
-    cssLinks.forEach(url => {
-      assets.push({
-        url,
-        type: 'CSS'
-      });
-    });
+    const cssContents: Record<string, string> = {};
+
+    for (const cssUrl of cssLinks) {
+      try {
+        // Resolve relative URLs
+        const absoluteUrl = cssUrl.startsWith('http') ? cssUrl : new URL(cssUrl, data.url || '').href;
+
+        // Fetch CSS content
+        const cssContent = await fetchCSSContent(absoluteUrl);
+        if (cssContent) {
+          cssContents[cssUrl] = cssContent;
+          console.log(`✅ Extracted CSS content from: ${cssUrl} (${cssContent.length} chars)`);
+        }
+
+        assets.push({
+          url: cssUrl,
+          type: 'css', // Use lowercase for consistency
+          content: cssContent || undefined
+        });
+      } catch (error) {
+        console.error(`❌ Failed to fetch CSS from ${cssUrl}:`, error);
+        assets.push({
+          url: cssUrl,
+          type: 'css', // Use lowercase for consistency
+          error: 'Failed to fetch content'
+        });
+      }
+    }
 
     // Process JS links
     const jsLinks = extractResourceLinks(html, 'script[src]', 'src');
     jsLinks.forEach(url => {
       assets.push({
         url,
-        type: 'JAVASCRIPT'
+        type: 'javascript' // Use lowercase for consistency
       });
     });
 
@@ -119,7 +141,7 @@ export function processContentData(rawData: unknown) {
     imageLinks.forEach(url => {
       assets.push({
         url,
-        type: 'IMAGE'
+        type: 'image' // Use lowercase for consistency
       });
     });
 
@@ -132,6 +154,7 @@ export function processContentData(rawData: unknown) {
       links,
       assets,
       metadata,
+      cssContents, // Include extracted CSS contents
       screenshot: (rawData as any).screenshot || null, // Preserve screenshot data
       createdAt: new Date().toISOString(),
       version: '1.0.0'
@@ -149,6 +172,36 @@ export function processContentData(rawData: unknown) {
       version: '1.0.0',
       error: error instanceof Error ? error.message : String(error)
     };
+  }
+}
+
+/**
+ * Fetch CSS content from a URL
+ * @param url - CSS file URL
+ * @returns CSS content as string
+ */
+async function fetchCSSContent(url: string): Promise<string | null> {
+  try {
+    const response = await fetch(url, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+      },
+      timeout: 10000
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    }
+
+    const contentType = response.headers.get('content-type') || '';
+    if (!contentType.includes('text/css') && !contentType.includes('text/plain')) {
+      console.warn(`Warning: CSS URL returned unexpected content-type: ${contentType}`);
+    }
+
+    return await response.text();
+  } catch (error) {
+    console.error(`Failed to fetch CSS from ${url}:`, error);
+    return null;
   }
 }
 
@@ -479,12 +532,15 @@ export async function deepScrapeWebsite(url: string, options: {
   includeLighthouse?: boolean;
   maxPages?: number;
 } = {}) {
+  const startTime = Date.now();
+  let analysis: any = null;
+
   try {
     console.log('Starting deepScrapeWebsite for:', url);
     console.log('Environment check - FIRECRAWL_API_KEY exists:', !!process.env.FIRECRAWL_API_KEY);
-    
+
     // Create a database record for the analysis
-    const analysis = await createWebsiteAnalysisRequest(url);
+    analysis = await createWebsiteAnalysisRequest(url, options);
     console.log('Created analysis record:', analysis.id);
 
     // Update status to MAPPING
@@ -528,7 +584,7 @@ export async function deepScrapeWebsite(url: string, options: {
         waitFor: 3000 // Extra time for full page load
       });
 
-      const processedData = processContentData(pageResult);
+      const processedData = await processContentData(pageResult);
       contentResults[pageUrl] = processedData;
 
       // Debug screenshot data for each page
@@ -644,6 +700,9 @@ export async function deepScrapeWebsite(url: string, options: {
       prompt: legacyPrompt
     };
   } catch (error) {
+    const processingTime = (Date.now() - startTime) / 1000;
+    const errorMessage = error instanceof Error ? error.message : String(error);
+
     console.error('Error performing deep scraping:', error);
     console.error('Error stack:', error instanceof Error ? error.stack : 'No stack trace');
     console.error('Environment variables check:', {
@@ -651,7 +710,110 @@ export async function deepScrapeWebsite(url: string, options: {
       hasOpenAIKey: !!process.env.OPENAI_API_KEY,
       hasDatabaseUrl: !!process.env.DATABASE_URL
     });
-    
-    throw new Error(`Deep scrape failed: ${error instanceof Error ? error.message : String(error)}`);
+
+    // Mark analysis as failed in database if we have an analysis ID
+    if (analysis?.id) {
+      try {
+        await markAnalysisAsFailed(analysis.id, errorMessage, processingTime);
+        console.log(`Marked analysis ${analysis.id} as failed in database`);
+      } catch (dbError) {
+        console.error('Failed to update database with error status:', dbError);
+      }
+    }
+
+    // Provide structured error information
+    const structuredError = {
+      type: 'SCRAPING_ERROR',
+      message: errorMessage,
+      url,
+      processingTime,
+      analysisId: analysis?.id,
+      canResume: !!analysis?.id,
+      timestamp: new Date().toISOString(),
+      suggestions: [
+        'Check if the website is accessible',
+        'Verify Firecrawl API key is valid',
+        'Try resuming the failed analysis',
+        'Contact support if the issue persists'
+      ]
+    };
+
+    throw structuredError;
+  }
+}
+
+/**
+ * Resume a failed website analysis from the last successful step
+ * @param analysisId - The ID of the failed analysis to resume
+ * @returns Comprehensive scraping results
+ */
+export async function resumeFailedAnalysis(analysisId: string) {
+  const startTime = Date.now();
+
+  try {
+    console.log('Resuming failed analysis:', analysisId);
+
+    // Get the existing analysis record
+    const { getWebsiteAnalysisById } = await import('./prisma-utils');
+    const analysis = await getWebsiteAnalysisById(analysisId);
+
+    if (!analysis) {
+      throw new Error(`Analysis with ID ${analysisId} not found`);
+    }
+
+    if (analysis.status === 'COMPLETED') {
+      throw new Error(`Analysis ${analysisId} is already completed`);
+    }
+
+    console.log(`Resuming analysis for URL: ${analysis.url}, current status: ${analysis.status}`);
+
+    // Extract options from the original analysis
+    const options = (analysis.result as any)?.options || {};
+
+    // Determine where to resume based on current status and available data
+    const existingResult = analysis.result as any || {};
+
+    // Resume from the appropriate step
+    if (analysis.status === 'FAILED' || analysis.status === 'PENDING') {
+      // Start from the beginning
+      console.log('Restarting analysis from the beginning');
+      return await deepScrapeWebsite(analysis.url, options);
+    } else if (analysis.status === 'MAPPING') {
+      // Resume from mapping step
+      console.log('Resuming from mapping step');
+      await updateWebsiteAnalysisStatus(analysisId, 'MAPPING');
+      return await deepScrapeWebsite(analysis.url, options);
+    } else if (analysis.status === 'SCRAPING' && existingResult.siteMap) {
+      // Resume from scraping step with existing site map
+      console.log('Resuming from scraping step with existing site map');
+      // This would require more complex logic to resume mid-scraping
+      // For now, restart the scraping process
+      return await deepScrapeWebsite(analysis.url, options);
+    } else if (analysis.status === 'PROCESSING' && existingResult.content) {
+      // Resume from processing step with existing content
+      console.log('Resuming from processing step with existing content');
+      // This would require extracting the processing logic into a separate function
+      // For now, restart from the beginning
+      return await deepScrapeWebsite(analysis.url, options);
+    }
+
+    // Default: restart from the beginning
+    console.log('Defaulting to restart from the beginning');
+    return await deepScrapeWebsite(analysis.url, options);
+
+  } catch (error) {
+    const processingTime = (Date.now() - startTime) / 1000;
+    const errorMessage = error instanceof Error ? error.message : String(error);
+
+    console.error('Error resuming failed analysis:', error);
+
+    // Mark as failed again
+    try {
+      await markAnalysisAsFailed(analysisId, `Resume failed: ${errorMessage}`, processingTime);
+    } catch (dbError) {
+      console.error('Failed to update database with resume error:', dbError);
+    }
+
+    throw new Error(`Failed to resume analysis ${analysisId}: ${errorMessage}`);
   }
 }

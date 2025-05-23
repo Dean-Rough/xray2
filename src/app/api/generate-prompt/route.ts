@@ -45,6 +45,23 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Error processing request:', error);
 
+    // Check if it's a structured error from our scraping process
+    if (typeof error === 'object' && error !== null && 'type' in error) {
+      const structuredError = error as any;
+      return NextResponse.json(
+        {
+          error: structuredError.message,
+          type: structuredError.type,
+          canResume: structuredError.canResume,
+          suggestions: structuredError.suggestions,
+          analysisId: structuredError.analysisId,
+          processingTime: structuredError.processingTime,
+          timestamp: structuredError.timestamp
+        },
+        { status: 500 }
+      );
+    }
+
     return NextResponse.json(
       { error: error instanceof Error ? error.message : 'Failed to process request' },
       { status: 500 }

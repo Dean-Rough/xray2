@@ -48,25 +48,30 @@ export async function getWebsiteAnalysisById(id: string) {
  * @param id - The analysis ID
  * @param status - The new status
  * @param result - Optional result data
+ * @param error - Optional error message
+ * @param processingTime - Optional processing time in seconds
  * @returns The updated analysis record
  */
 export async function updateWebsiteAnalysisStatus(
   id: string,
   status: 'PENDING' | 'MAPPING' | 'SCRAPING' | 'PROCESSING' | 'COMPLETED' | 'FAILED',
-  result?: Record<string, unknown>
+  result?: Record<string, unknown>,
+  error?: string,
+  processingTime?: number
 ) {
   try {
     return await prisma.websiteAnalysis.update({
       where: { id },
       data: {
         status,
-        result: result ? JSON.parse(JSON.stringify(result)) : undefined
-        // Note: error and processingTime fields are not in the current schema yet
+        result: result ? JSON.parse(JSON.stringify(result)) : undefined,
+        error,
+        processingTime
       }
     })
-  } catch (error) {
-    console.error('Error updating website analysis:', error)
-    throw error
+  } catch (dbError) {
+    console.error('Error updating website analysis:', dbError)
+    throw dbError
   }
 }
 
@@ -102,6 +107,69 @@ export async function deleteWebsiteAnalysisRequest(id: string) {
   } catch (error) {
     console.error('Error deleting website analysis:', error)
     throw error
+  }
+}
+
+/**
+ * Get failed analysis requests that can be resumed
+ * @param limit - Maximum number of records to return
+ * @returns List of failed analysis records
+ */
+export async function getFailedAnalysisRequests(limit = 10) {
+  try {
+    return await prisma.websiteAnalysis.findMany({
+      where: { status: 'FAILED' },
+      take: limit,
+      orderBy: { createdAt: 'desc' }
+    })
+  } catch (error) {
+    console.error('Error fetching failed analysis requests:', error)
+    throw error
+  }
+}
+
+/**
+ * Get analysis requests that can be resumed (failed or incomplete)
+ * @param url - Optional URL filter
+ * @returns List of resumable analysis records
+ */
+export async function getResumableAnalysisRequests(url?: string) {
+  try {
+    const where: any = {
+      status: { in: ['FAILED', 'MAPPING', 'SCRAPING', 'PROCESSING'] }
+    }
+
+    if (url) {
+      where.url = url
+    }
+
+    return await prisma.websiteAnalysis.findMany({
+      where,
+      orderBy: { createdAt: 'desc' }
+    })
+  } catch (error) {
+    console.error('Error fetching resumable analysis requests:', error)
+    throw error
+  }
+}
+
+/**
+ * Mark analysis as failed with detailed error information
+ * @param id - The analysis ID
+ * @param error - Error message
+ * @param processingTime - Optional processing time in seconds
+ * @returns The updated analysis record
+ */
+export async function markAnalysisAsFailed(
+  id: string,
+  error: string,
+  processingTime?: number
+) {
+  try {
+    return await updateWebsiteAnalysisStatus(id, 'FAILED', undefined, error, processingTime)
+  } catch (dbError) {
+    console.error('Error marking analysis as failed:', dbError)
+    throw dbError
   }
 }
 
