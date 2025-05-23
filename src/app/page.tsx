@@ -517,10 +517,10 @@ export default function HomePage() {
           </div>
 
           {/* Main Card */}
-          <div className="xrai-panel p-8">
-            <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="xrai-panel p-10">
+            <form onSubmit={handleSubmit} className="space-y-8">
               <div>
-                <label htmlFor="url" className="block text-xs text-mono text-neutral-400 mb-3 uppercase tracking-wider">
+                <label htmlFor="url" className="block text-xs text-neutral-400 mb-4 font-medium tracking-wide">
                   Target URL
                 </label>
                 <div className="relative">
@@ -531,12 +531,12 @@ export default function HomePage() {
                     required
                     value={url}
                     onChange={(e) => setUrl(e.target.value)}
-                    className="w-full px-4 py-4 bg-black/60 border border-neutral-600 rounded-lg text-white placeholder-neutral-500 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary transition-all duration-300 text-mono backdrop-blur-sm"
+                    className="xrai-input"
                     placeholder="stripe.com"
                     disabled={isLoading}
                   />
                   {error && (
-                    <p className="mt-2 text-xs text-red-400 bg-red-900/20 border border-red-400/30 rounded p-2">
+                    <p className="mt-3 text-xs text-red-400 bg-red-900/20 border border-red-400/30 rounded-lg p-3">
                       {error}
                     </p>
                   )}
@@ -561,35 +561,35 @@ export default function HomePage() {
 
             {/* Status Display */}
             {isLoading && (
-              <div className="mt-6 space-y-4">
+              <div className="mt-8 space-y-6">
                 {/* Current Task Progress */}
-                <div className="relative xrai-card p-6">
+                <div className="relative xrai-card p-8">
                   <div className="xray-scanner"></div>
-                  <div className="space-y-4">
+                  <div className="space-y-6">
                     {/* Current Task */}
                     <div className="flex items-center space-x-4">
                       <div className="xrai-status-dot"></div>
                       <div className="flex-1">
-                        <p className="text-white text-sm font-medium">{currentTask || statusMessage}</p>
+                        <p className="text-white text-sm font-medium leading-relaxed">{currentTask || statusMessage}</p>
                         {analysisId && (
-                          <p className="text-mono text-xs mt-1 text-neutral-500">
+                          <p className="text-xs mt-2 text-neutral-500 font-mono">
                             ID: {analysisId.slice(0, 8)}...
                           </p>
                         )}
                       </div>
-                      <div className="text-mono text-xs text-neutral-400">
+                      <div className="text-xs text-neutral-400 font-mono">
                         {taskIndex + 1}/{analysisTasksSequence.length}
                       </div>
                     </div>
 
                     {/* Progress Bar */}
                     {currentTask && (
-                      <div className="space-y-2">
+                      <div className="space-y-3">
                         <div className="flex justify-between text-xs">
-                          <span className="text-neutral-400">Progress</span>
-                          <span className="text-primary font-mono">{Math.round(taskProgress)}%</span>
+                          <span className="text-neutral-400 font-medium">Progress</span>
+                          <span className="text-primary font-mono font-medium">{Math.round(taskProgress)}%</span>
                         </div>
-                        <div className="w-full bg-neutral-800 rounded-full h-2 overflow-hidden">
+                        <div className="w-full bg-neutral-800/50 rounded-full h-2 overflow-hidden">
                           <div
                             className="h-full bg-gradient-to-r from-primary to-accent transition-all duration-300 ease-out"
                             style={{ width: `${taskProgress}%` }}
@@ -602,20 +602,20 @@ export default function HomePage() {
 
                 {/* Completed Tasks Summary */}
                 {completedTasks.length > 0 && (
-                  <div className="xrai-card p-4">
-                    <div className="flex items-center justify-between mb-3">
-                      <span className="text-mono text-xs text-neutral-400 uppercase tracking-wider">Completed Tasks</span>
-                      <span className="text-mono text-xs text-primary">{completedTasks.length} done</span>
+                  <div className="xrai-card p-6">
+                    <div className="flex items-center justify-between mb-4">
+                      <span className="text-xs text-neutral-400 font-medium tracking-wide">Completed Tasks</span>
+                      <span className="text-xs text-primary font-mono font-medium">{completedTasks.length} done</span>
                     </div>
-                    <div className="space-y-1 max-h-32 overflow-y-auto">
+                    <div className="space-y-2 max-h-32 overflow-y-auto">
                       {completedTasks.slice(-5).map((task, index) => (
-                        <div key={index} className="flex items-center space-x-2 text-xs text-neutral-500">
-                          <span className="text-primary">✓</span>
-                          <span>{task}</span>
+                        <div key={index} className="flex items-center space-x-3 text-xs text-neutral-500">
+                          <span className="text-primary text-sm">✓</span>
+                          <span className="leading-relaxed">{task}</span>
                         </div>
                       ))}
                       {completedTasks.length > 5 && (
-                        <div className="text-xs text-neutral-600 italic">
+                        <div className="text-xs text-neutral-600 italic mt-3">
                           ... and {completedTasks.length - 5} more
                         </div>
                       )}
@@ -625,13 +625,13 @@ export default function HomePage() {
 
                 {/* Timer and Estimate Card */}
                 <div className="xrai-card p-6">
-                  <div className="flex justify-between items-center mb-3">
-                    <span className="text-mono text-xs text-neutral-400 uppercase tracking-wider">Process Timer</span>
-                    <span className="text-primary text-mono text-lg font-bold">{elapsedTime}</span>
+                  <div className="flex justify-between items-center mb-4">
+                    <span className="text-xs text-neutral-400 font-medium tracking-wide">Process Timer</span>
+                    <span className="text-primary font-mono text-lg font-bold">{elapsedTime}</span>
                   </div>
-                  <div className="text-xs text-neutral-500">
-                    <p>Estimated completion: 5-10 minutes</p>
-                    <p className="mt-1">Deep x-ray analysis in progress...</p>
+                  <div className="text-xs text-neutral-500 space-y-1">
+                    <p className="leading-relaxed">Estimated completion: 5-10 minutes</p>
+                    <p className="leading-relaxed">Deep x-ray analysis in progress...</p>
                   </div>
                 </div>
               </div>
@@ -765,11 +765,11 @@ export default function HomePage() {
           </div>
 
           {/* Footer */}
-          <div className="mt-8 text-center">
-            <p className="text-mono text-xs text-neutral-500 max-w-sm mx-auto leading-relaxed">
+          <div className="mt-12 text-center">
+            <p className="text-xs text-neutral-500 max-w-sm mx-auto leading-relaxed font-medium">
               Advanced website x-ray analysis for elite developers
             </p>
-            <p className="text-mono text-xs text-neutral-600 mt-2">
+            <p className="text-xs text-neutral-600 mt-3 font-mono">
               Powered by Xrai™ • xrai.it.com
             </p>
           </div>
