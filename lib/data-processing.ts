@@ -175,6 +175,30 @@ export async function processContentData(rawData: unknown) {
       });
     });
 
+    // Extract font information from CSS
+    const fontData = extractFontInformation(cssContents, html);
+
+    // Add font files to assets
+    fontData.fontFiles.forEach(fontFile => {
+      assets.push({
+        url: fontFile.url,
+        type: 'font',
+        fontFamily: fontFile.fontFamily,
+        fontWeight: fontFile.fontWeight,
+        fontStyle: fontFile.fontStyle,
+        format: fontFile.format
+      });
+    });
+
+    // Add Google Fonts links to assets
+    fontData.googleFonts.forEach(googleFont => {
+      assets.push({
+        url: googleFont.url,
+        type: 'google-font',
+        families: googleFont.families
+      });
+    });
+
     // Extract metadata
     const metadata = extractMetadata(html);
 
@@ -183,8 +207,15 @@ export async function processContentData(rawData: unknown) {
       markdown,
       links,
       assets,
-      metadata,
+      metadata: {
+        ...metadata,
+        fontFamilies: fontData.fontFamilies,
+        totalFonts: fontData.totalFonts,
+        hasGoogleFonts: fontData.googleFonts.length > 0,
+        hasCustomFonts: fontData.fontFiles.length > 0
+      },
       cssContents, // Include extracted CSS contents
+      fontData, // Include comprehensive font information
       screenshot: (rawData as any).screenshot || (rawData as any).data?.screenshot || null, // Preserve screenshot data from both Firecrawl and fallback
       createdAt: new Date().toISOString(),
       version: '1.0.0'
@@ -285,7 +316,160 @@ function extractMetadata(html: string): Record<string, string> {
   return metadata;
 }
 
+/**
+ * Extract comprehensive font information from CSS and HTML
+ * @param cssContents - Object containing CSS file contents
+ * @param html - HTML content
+ * @returns Font data including font files, Google Fonts, and typography info
+ */
+function extractFontInformation(cssContents: Record<string, string>, html: string) {
+  const fontFiles: Array<{
+    url: string;
+    fontFamily: string;
+    fontWeight?: string;
+    fontStyle?: string;
+    format?: string;
+  }> = [];
 
+  const googleFonts: Array<{
+    url: string;
+    families: string[];
+  }> = [];
+
+  const fontFamilies = new Set<string>();
+
+  // Extract Google Fonts from HTML
+  const googleFontRegex = /<link[^>]*href=["']([^"']*fonts\.googleapis\.com[^"']*)["'][^>]*>/gi;
+  let googleFontMatch;
+
+  while ((googleFontMatch = googleFontRegex.exec(html)) !== null) {
+    const url = googleFontMatch[1];
+    const families = extractGoogleFontFamilies(url);
+    if (families.length > 0) {
+      googleFonts.push({ url, families });
+      families.forEach(family => fontFamilies.add(family));
+    }
+  }
+
+  // Extract @font-face rules and font-family declarations from CSS
+  Object.entries(cssContents).forEach(([cssUrl, cssContent]) => {
+    // Extract @font-face rules
+    const fontFaceRegex = /@font-face\s*\{([^}]+)\}/gi;
+    let fontFaceMatch;
+
+    while ((fontFaceMatch = fontFaceRegex.exec(cssContent)) !== null) {
+      const fontFaceContent = fontFaceMatch[1];
+
+      // Extract font-family
+      const familyMatch = fontFaceContent.match(/font-family\s*:\s*["']?([^"';]+)["']?/i);
+      const fontFamily = familyMatch ? familyMatch[1].trim() : 'Unknown';
+
+      // Extract font-weight
+      const weightMatch = fontFaceContent.match(/font-weight\s*:\s*([^;]+)/i);
+      const fontWeight = weightMatch ? weightMatch[1].trim() : undefined;
+
+      // Extract font-style
+      const styleMatch = fontFaceContent.match(/font-style\s*:\s*([^;]+)/i);
+      const fontStyle = styleMatch ? styleMatch[1].trim() : undefined;
+
+      // Extract src URLs
+      const srcMatch = fontFaceContent.match(/src\s*:\s*([^;]+)/i);
+      if (srcMatch) {
+        const srcContent = srcMatch[1];
+        const urlMatches = srcContent.match(/url\(["']?([^"')]+)["']?\)/gi);
+
+        if (urlMatches) {
+          urlMatches.forEach(urlMatch => {
+            const urlContent = urlMatch.match(/url\(["']?([^"')]+)["']?\)/i);
+            if (urlContent) {
+              const fontUrl = urlContent[1];
+              const format = extractFontFormat(fontUrl, srcContent);
+
+              fontFiles.push({
+                url: fontUrl,
+                fontFamily,
+                fontWeight,
+                fontStyle,
+                format
+              });
+
+              fontFamilies.add(fontFamily);
+            }
+          });
+        }
+      }
+    }
+
+    // Extract font-family declarations from regular CSS rules
+    const fontFamilyRegex = /font-family\s*:\s*([^;]+)/gi;
+    let familyMatch;
+
+    while ((familyMatch = fontFamilyRegex.exec(cssContent)) !== null) {
+      const families = familyMatch[1]
+        .split(',')
+        .map(f => f.trim().replace(/["']/g, ''))
+        .filter(f => f && !f.includes('serif') && !f.includes('sans-serif') && !f.includes('monospace'));
+
+      families.forEach(family => fontFamilies.add(family));
+    }
+  });
+
+  return {
+    fontFiles,
+    googleFonts,
+    fontFamilies: Array.from(fontFamilies),
+    totalFonts: fontFiles.length + googleFonts.length
+  };
+}
+
+/**
+ * Extract font families from Google Fonts URL
+ * @param url - Google Fonts URL
+ * @returns Array of font family names
+ */
+function extractGoogleFontFamilies(url: string): string[] {
+  try {
+    const urlObj = new URL(url);
+    const familyParam = urlObj.searchParams.get('family');
+
+    if (!familyParam) return [];
+
+    // Handle multiple families separated by |
+    const families = familyParam.split('|').map(family => {
+      // Remove weight and style specifications (e.g., "Inter:wght@400;700" -> "Inter")
+      return family.split(':')[0].replace(/\+/g, ' ');
+    });
+
+    return families;
+  } catch (error) {
+    console.warn('Failed to parse Google Fonts URL:', url);
+    return [];
+  }
+}
+
+/**
+ * Extract font format from URL and src content
+ * @param url - Font file URL
+ * @param srcContent - CSS src content
+ * @returns Font format (woff2, woff, ttf, etc.)
+ */
+function extractFontFormat(url: string, srcContent: string): string {
+  // Check for explicit format declaration
+  const formatMatch = srcContent.match(/format\(["']?([^"')]+)["']?\)/i);
+  if (formatMatch) {
+    return formatMatch[1];
+  }
+
+  // Infer from file extension
+  if (url.includes('.woff2')) return 'woff2';
+  if (url.includes('.woff')) return 'woff';
+  if (url.includes('.ttf')) return 'truetype';
+  if (url.includes('.otf')) return 'opentype';
+  if (url.includes('.eot')) return 'embedded-opentype';
+  if (url.includes('.svg')) return 'svg';
+
+  return 'unknown';
+}
 
 /**
  * Process Lighthouse performance metrics into a structured format

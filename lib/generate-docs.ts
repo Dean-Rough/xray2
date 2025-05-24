@@ -60,6 +60,10 @@ export async function generateWebsiteRebuildPackage(
   const cssFolder = assetsFolder!.folder('css');
   await saveCSSFiles(cssFolder!, contentData);
 
+  // 4.6. Save font information and files
+  const fontsFolder = assetsFolder!.folder('fonts');
+  await saveFontFiles(fontsFolder!, contentData);
+
   // 5. Generate technical documentation
   const docsFolder = zip.folder(`${packageName}/docs`);
   await generateTechnicalDocs(docsFolder!, siteMapData, contentData, performanceData, structuredData);
@@ -1244,6 +1248,159 @@ echo "Asset download complete!"
   // Create Windows batch file version
   const windowsScript = downloadScript.replace('#!/bin/bash', '@echo off');
   folder.file('download-assets.bat', windowsScript);
+}
+
+/**
+ * Save font files and font information
+ * @param folder - JSZip folder for fonts
+ * @param contentData - Processed content data for each page
+ */
+async function saveFontFiles(folder: JSZip, contentData: Record<string, unknown>) {
+  let fontFileCount = 0;
+  const allFontFamilies = new Set<string>();
+  const allGoogleFonts: Array<{ url: string; families: string[] }> = [];
+  const allFontFiles: Array<{ url: string; fontFamily: string; format?: string }> = [];
+
+  // Collect all font information from all pages
+  for (const [url, data] of Object.entries(contentData)) {
+    try {
+      const pageData = data as Record<string, unknown>;
+      const fontData = (pageData as any).fontData;
+
+      if (fontData) {
+        // Collect font families
+        if (fontData.fontFamilies && Array.isArray(fontData.fontFamilies)) {
+          fontData.fontFamilies.forEach((family: string) => allFontFamilies.add(family));
+        }
+
+        // Collect Google Fonts
+        if (fontData.googleFonts && Array.isArray(fontData.googleFonts)) {
+          fontData.googleFonts.forEach((gf: any) => {
+            const existing = allGoogleFonts.find(existing => existing.url === gf.url);
+            if (!existing) {
+              allGoogleFonts.push(gf);
+            }
+          });
+        }
+
+        // Collect font files
+        if (fontData.fontFiles && Array.isArray(fontData.fontFiles)) {
+          fontData.fontFiles.forEach((ff: any) => {
+            const existing = allFontFiles.find(existing => existing.url === ff.url);
+            if (!existing) {
+              allFontFiles.push(ff);
+            }
+          });
+        }
+      }
+    } catch (error) {
+      console.warn(`Error processing font data for: ${url}`, error);
+    }
+  }
+
+  // Create font manifest
+  const fontManifest = {
+    totalFonts: allFontFiles.length + allGoogleFonts.length,
+    fontFamilies: Array.from(allFontFamilies),
+    googleFonts: allGoogleFonts,
+    customFonts: allFontFiles,
+    extractedAt: new Date().toISOString(),
+    instructions: {
+      googleFonts: 'Add these Google Fonts links to your HTML <head> section',
+      customFonts: 'Download these font files and reference them in your CSS with @font-face rules',
+      fontFamilies: 'These are all the font families detected across the website'
+    }
+  };
+
+  // Save font manifest
+  folder.file('font-manifest.json', JSON.stringify(fontManifest, null, 2));
+
+  // Create Google Fonts HTML snippet
+  if (allGoogleFonts.length > 0) {
+    const googleFontsHtml = allGoogleFonts
+      .map(gf => `<link href="${gf.url}" rel="stylesheet">`)
+      .join('\n');
+
+    folder.file('google-fonts.html', `<!-- Google Fonts Links -->\n<!-- Add these to your HTML <head> section -->\n\n${googleFontsHtml}`);
+  }
+
+  // Create CSS @font-face rules for custom fonts
+  if (allFontFiles.length > 0) {
+    const fontFaceCSS = allFontFiles
+      .map(ff => {
+        return `@font-face {
+  font-family: '${ff.fontFamily}';
+  src: url('${ff.url}')${ff.format ? ` format('${ff.format}')` : ''};
+  /* Download this font file and update the URL path */
+}`;
+      })
+      .join('\n\n');
+
+    folder.file('custom-fonts.css', `/* Custom Font @font-face Rules */\n/* Add these to your CSS */\n\n${fontFaceCSS}`);
+  }
+
+  // Create font download script
+  if (allFontFiles.length > 0) {
+    const downloadScript = `#!/bin/bash
+# Font Download Script
+# Run this script to download all custom font files
+
+mkdir -p fonts
+
+${allFontFiles.map(ff => {
+  const filename = ff.url.split('/').pop() || `${ff.fontFamily.replace(/\s+/g, '-')}.${ff.format || 'woff2'}`;
+  return `curl -o "fonts/${filename}" "${ff.url}"`;
+}).join('\n')}
+
+echo "Downloaded ${allFontFiles.length} font files to ./fonts/"
+`;
+
+    folder.file('download-fonts.sh', downloadScript);
+    folder.file('download-fonts.bat', downloadScript.replace('#!/bin/bash', '@echo off').replace('mkdir -p', 'mkdir'));
+  }
+
+  // Create README with font information
+  const fontReadme = `# Font Information
+
+## Summary
+- **Total Fonts**: ${fontManifest.totalFonts}
+- **Google Fonts**: ${allGoogleFonts.length}
+- **Custom Fonts**: ${allFontFiles.length}
+- **Font Families**: ${allFontFamilies.size}
+
+## Font Families Used
+${Array.from(allFontFamilies).map(family => `- ${family}`).join('\n')}
+
+## Google Fonts
+${allGoogleFonts.length > 0 ?
+  allGoogleFonts.map(gf => `- **Families**: ${gf.families.join(', ')}\n  **URL**: ${gf.url}`).join('\n\n') :
+  'No Google Fonts detected'
+}
+
+## Custom Fonts
+${allFontFiles.length > 0 ?
+  allFontFiles.map(ff => `- **${ff.fontFamily}** (${ff.format || 'unknown format'})\n  **URL**: ${ff.url}`).join('\n\n') :
+  'No custom fonts detected'
+}
+
+## Implementation Instructions
+
+### Google Fonts
+1. Copy the links from \`google-fonts.html\` to your HTML \`<head>\` section
+2. Use the font families in your CSS
+
+### Custom Fonts
+1. Run \`download-fonts.sh\` (or \`download-fonts.bat\` on Windows) to download font files
+2. Copy the @font-face rules from \`custom-fonts.css\` to your CSS
+3. Update the font file paths in the CSS to match your project structure
+
+### Typography Reconstruction
+Use the font families listed above in your CSS to match the original website's typography.
+`;
+
+  folder.file('README.md', fontReadme);
+
+  console.log(`🔤 Saved font information: ${allFontFamilies.size} families, ${allGoogleFonts.length} Google Fonts, ${allFontFiles.length} custom fonts`);
 }
 
 /**
