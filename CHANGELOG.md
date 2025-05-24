@@ -84,9 +84,13 @@ All notable changes to the Xrai project will be documented in this file.
 
 #### Infrastructure
 - **Vercel Integration**: Seamless deployment with pre-configured environment variables
-- **Production URLs**: xrai.it.com and Vercel deployment URLs
+- **Production URLs**:
+  - Primary: xrai.it.com
+  - Latest: https://xray-6a157ajpc-dean-roughs-projects.vercel.app
+  - Vercel: xray2-git-main-dean-roughs-projects.vercel.app
 - **Environment Management**: Proper handling of API keys and database connections
 - **Git Integration**: Streamlined development and deployment workflow
+- **Deployment Date**: January 24, 2025
 
 ## [2.0.0] - Previous Release
 
