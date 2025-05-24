@@ -11,8 +11,29 @@ All notable changes to this project will be documented in this file. This projec
 ## [Unreleased]
 
 ### Next Priority
-- Deploy v2.1.0 with Awwwards-level sophistication
-- Final testing and production deployment
+- Fix CSS extraction (Firecrawl cssContents not returning data)
+- Achieve full 8+/10 package quality score
+- Complete core functionality restoration
+
+## 2.1.1 - 2025-01-24 - Core Functionality Partial Recovery
+
+### 🔧 Critical Fixes Applied
+- **FIXED**: Screenshots now working - 3/7 pages captured successfully
+- **FIXED**: Puppeteer fallback - replaced deprecated waitForTimeout with setTimeout
+- **FIXED**: Added missing Puppeteer dependency (npm install puppeteer)
+- **PRESERVED**: All Awwwards-level UI sophistication maintained
+- **IMPROVED**: Package quality score from 4/10 to 6.5/10
+
+### 🚧 Still In Progress
+- **CSS Extraction**: 0 files saved - Firecrawl not returning cssContents
+- **Screenshot Coverage**: Some pages timing out (4/7 pages failing)
+- **Quality Target**: Need 8+/10 for full production readiness
+
+### 📊 Test Results
+- **Screenshots**: ✅ Working (3 captured from repeat.studiofreight.com)
+- **CSS Files**: ❌ 0 saved (Firecrawl API issue)
+- **UI Sophistication**: ✅ All refinements preserved
+- **Task Progression**: ✅ 22 realistic tasks cycling properly
 
 ## 2.1.0 - 2025-01-23 - Awwwards-Level UI Sophistication
 

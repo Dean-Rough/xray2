@@ -125,7 +125,7 @@ async function captureScreenshotWithPuppeteer(url: string): Promise<string | nul
       });
 
       // Wait for page to fully load
-      await page.waitForTimeout(5000);
+      await new Promise(resolve => setTimeout(resolve, 5000));
 
       // Capture full-page screenshot
       const screenshot = await page.screenshot({

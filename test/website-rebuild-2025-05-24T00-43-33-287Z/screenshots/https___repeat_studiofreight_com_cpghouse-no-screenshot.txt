@@ -1,0 +1,5 @@
+Screenshot not available for https://repeat.studiofreight.com/cpghouse
+This may be due to:
+- Firecrawl API limitations
+- Website blocking screenshots
+- Configuration issues
