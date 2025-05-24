@@ -18,11 +18,26 @@ All notable changes to the Xrai project will be documented in this file.
 - **Zero Rate Limit Errors**: Eliminated 429 errors through proper request spacing
 - **Automatic Fallback**: Graceful degradation from Firecrawl to Puppeteer when needed
 
-#### Enhanced Screenshot Capture
-- **Improved Puppeteer Integration**: Better loading detection with `networkidle0` wait conditions
-- **Dynamic Content Waiting**: Enhanced detection of JavaScript-heavy sites and lazy-loaded content
-- **Fallback Screenshot System**: Graceful handling when screenshot capture fails
-- **Full-Page Capture**: Consistent full-page screenshots across all analyzed pages
+#### Enhanced Screenshot Capture v2.0
+- **Advanced Multi-Stage Loading Detection**:
+  - 8-second initial content rendering wait
+  - 15-second dynamic content detection timeout
+  - 10-second image loading validation
+  - 5-second final rendering wait (13+ seconds total)
+- **Comprehensive Wait Conditions**:
+  - `networkidle0` for network request completion
+  - `document.readyState === 'complete'` validation
+  - Body content existence verification
+  - All images loaded (`img.complete`) detection
+- **Smart Retry Logic**:
+  - Automatic retry with additional 10-second wait for failed captures
+  - Scroll-based lazy loading triggers for retry attempts
+  - Screenshot size validation to detect blank/failed captures
+- **Enhanced Error Handling**:
+  - Navigation timeout detection (60+ second sites)
+  - Frame detachment error recovery
+  - Comprehensive logging for debugging
+- **Full-Page Capture**: Consistent full-page screenshots with quality validation
 
 ### 🎨 UI/UX Improvements
 
@@ -59,10 +74,13 @@ All notable changes to the Xrai project will be documented in this file.
 - **Enhanced Retry Logic**: More robust retry mechanisms with exponential backoff
 - **Puppeteer API Compatibility**: Fixed deprecated `waitForTimeout` usage
 
-#### Screenshot Reliability
-- **Enhanced Loading Detection**: Better waiting for dynamic content and images
-- **Improved Error Recovery**: Graceful handling when screenshots fail
-- **Consistent Capture Quality**: More reliable full-page screenshot generation
+#### Screenshot Reliability v2.0
+- **Advanced Loading Detection**: Multi-stage loading with comprehensive wait conditions
+- **Intelligent Retry System**: Automatic retry with scroll-based lazy loading triggers
+- **Size Validation**: Detection of blank/failed screenshots with automatic retry
+- **Error Recovery**: Graceful handling of navigation timeouts and frame detachment
+- **Comprehensive Logging**: Step-by-step screenshot capture process tracking
+- **Quality Assurance**: Screenshot size validation and quality checks
 - **Base64 Encoding**: Proper handling of screenshot data in analysis packages
 
 ### 📊 Performance Metrics

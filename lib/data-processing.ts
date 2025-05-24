@@ -285,43 +285,7 @@ function extractMetadata(html: string): Record<string, string> {
   return metadata;
 }
 
-/**
- * Extract screenshot from Lighthouse results as fallback
- * @param lighthouseResult - Lighthouse audit results
- * @returns Base64 screenshot data or null
- */
-function extractLighthouseScreenshot(lighthouseResult: any): string | null {
-  try {
-    // Check for full page screenshot in Lighthouse results
-    if (lighthouseResult?.audits?.['full-page-screenshot']?.details?.screenshot?.data) {
-      const screenshotData = lighthouseResult.audits['full-page-screenshot'].details.screenshot.data;
-      console.log(`📸 Found Lighthouse full-page screenshot (${screenshotData.length} chars)`);
-      return screenshotData;
-    }
 
-    // Check for final screenshot
-    if (lighthouseResult?.audits?.['final-screenshot']?.details?.data) {
-      const screenshotData = lighthouseResult.audits['final-screenshot'].details.data;
-      console.log(`📸 Found Lighthouse final screenshot (${screenshotData.length} chars)`);
-      return screenshotData;
-    }
-
-    // Check for screenshot thumbnails
-    if (lighthouseResult?.audits?.['screenshot-thumbnails']?.details?.items?.length > 0) {
-      const lastThumbnail = lighthouseResult.audits['screenshot-thumbnails'].details.items.slice(-1)[0];
-      if (lastThumbnail?.data) {
-        console.log(`📸 Found Lighthouse thumbnail screenshot (${lastThumbnail.data.length} chars)`);
-        return lastThumbnail.data;
-      }
-    }
-
-    console.log('⚠️ No Lighthouse screenshot found in available audits');
-    return null;
-  } catch (error) {
-    console.error('Error extracting Lighthouse screenshot:', error);
-    return null;
-  }
-}
 
 /**
  * Process Lighthouse performance metrics into a structured format
@@ -788,24 +752,13 @@ export async function deepScrapeWebsite(url: string, options: {
         });
 
         const processedData = await processContentData(pageResult);
-
-        // If no screenshot from Puppeteer, try to extract from Lighthouse
-        if (options.includeScreenshots && !(processedData as any)?.screenshot && lighthouseResults[pageUrl]) {
-          console.log(`🔄 No Puppeteer screenshot for ${pageUrl}, checking Lighthouse...`);
-          const lighthouseScreenshot = extractLighthouseScreenshot(lighthouseResults[pageUrl]);
-          if (lighthouseScreenshot) {
-            (processedData as any).screenshot = lighthouseScreenshot;
-            console.log(`✅ Using Lighthouse screenshot for ${pageUrl}`);
-          }
-        }
-
         contentResults[pageUrl] = processedData;
 
         console.log(`Screenshot data for ${pageUrl}:`, {
           hasScreenshot: !!(processedData as any)?.screenshot,
           screenshotType: typeof (processedData as any)?.screenshot,
           screenshotLength: (processedData as any)?.screenshot?.length || 0,
-          source: (processedData as any)?.screenshot ? 'puppeteer-or-lighthouse' : 'none'
+          source: (processedData as any)?.screenshot ? 'puppeteer' : 'none'
         });
       }
     }

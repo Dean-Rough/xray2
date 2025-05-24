@@ -65,10 +65,20 @@ npm run dev
 - **Automatic fallback** to Puppeteer when Firecrawl fails
 - **Progress tracking** with database persistence for resume capability
 
-### **Screenshot Capture**
-- **Primary Method**: Puppeteer with full-page capture
-- **Enhanced Loading**: Waits for `networkidle0` + dynamic content detection
-- **Fallback Support**: Graceful degradation when screenshots fail
+### **Enhanced Screenshot Capture v2.0**
+- **Advanced Multi-Stage Loading**: 13+ second comprehensive loading detection
+  - 8s initial content rendering wait
+  - 15s dynamic content detection timeout
+  - 10s image loading validation
+  - 5s final rendering wait
+- **Intelligent Wait Conditions**:
+  - `networkidle0` for network request completion
+  - `document.readyState === 'complete'` validation
+  - Body content existence verification
+  - All images loaded (`img.complete`) detection
+- **Smart Retry Logic**: Automatic retry with scroll-based lazy loading triggers
+- **Quality Validation**: Screenshot size validation to detect blank/failed captures
+- **Enhanced Error Handling**: Navigation timeout, frame detachment recovery
 - **Base64 Encoding**: Embedded screenshots in analysis packages
 
 ## 📊 API Endpoints
@@ -137,19 +147,25 @@ vercel --prod
 
 ## 📈 Recent Improvements
 
-### **v2.1.0 - Smart Navigation Discovery**
+### **v2.1.0 - Smart Navigation Discovery & Enhanced Screenshots**
 - ✅ **Intelligent page selection** based on navigation analysis
 - ✅ **Rate limit compliance** with 6-second delays
 - ✅ **12-page maximum** to respect API constraints
 - ✅ **Enhanced UI messaging** about smart selection
-- ✅ **Improved Puppeteer screenshots** with better loading detection
+- ✅ **Advanced screenshot system v2.0** with 13+ second loading detection
+- ✅ **Multi-stage loading validation** with comprehensive wait conditions
+- ✅ **Smart retry logic** with scroll-based lazy loading triggers
+- ✅ **Quality validation** to detect and retry blank/failed screenshots
+- ✅ **Enhanced error handling** for navigation timeouts and frame detachment
 - ✅ **Fallback systems** for reliability
 
 ### **Performance Gains**
 - **8x fewer API calls** (from 77+ pages to 8-12 key pages)
 - **Zero rate limit errors** with intelligent delays
 - **Faster analysis completion** due to focused page selection
-- **Better screenshot quality** with enhanced loading detection
+- **Enhanced screenshot quality** with 13+ second loading detection and validation
+- **Improved reliability** with smart retry logic and error handling
+- **Better coverage** of slow-loading and JavaScript-heavy sites
 
 ## 🛠️ Development
 
