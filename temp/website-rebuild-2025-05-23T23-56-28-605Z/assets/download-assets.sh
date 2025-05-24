@@ -1,0 +1,15 @@
+#!/bin/bash
+# Asset Download Script
+# Run this script to download all assets from the original website
+
+mkdir -p images css javascript fonts videos other
+
+curl -o "other/image?url=https%3A%2F%2Fimages.ctfassets.net%2F3owzcimanmiu%2F1KlJw5SS07xiAV1kfYoUYK%2Fb4eb08264558371ad8657dd156512001%2FGroup_48096082.png&amp;w=3840&amp;q=75" "https://repeat.studiofreight.com/_next/image?url=https%3A%2F%2Fimages.ctfassets.net%2F3owzcimanmiu%2F1KlJw5SS07xiAV1kfYoUYK%2Fb4eb08264558371ad8657dd156512001%2FGroup_48096082.png&amp;w=3840&amp;q=75"
+curl -o "other/image?url=https%3A%2F%2Fimages.ctfassets.net%2F3owzcimanmiu%2F4z3QTVVDayq90DpRg9JIe1%2Ff98cfce144df02c1323dafad8732e550%2FRepeat_Homepage-03-Kopari.jpg&amp;w=3840&amp;q=90" "https://repeat.studiofreight.com/_next/image?url=https%3A%2F%2Fimages.ctfassets.net%2F3owzcimanmiu%2F4z3QTVVDayq90DpRg9JIe1%2Ff98cfce144df02c1323dafad8732e550%2FRepeat_Homepage-03-Kopari.jpg&amp;w=3840&amp;q=90"
+curl -o "images/youth_to_the_people.svg" "https://images.ctfassets.net/3owzcimanmiu/1oYqvD3Yt7YKWvLlN3kxtm/8d1eb60b8c83ebfe4b95bfb905daf908/youth_to_the_people.svg"
+curl -o "images/olipop.svg" "https://images.ctfassets.net/3owzcimanmiu/Lsd4HYKnD9J2xh4Rh1VeK/c8a442aa3b092215f7b6711b0f9c9fed/olipop.svg"
+curl -o "images/hydrant.svg" "https://images.ctfassets.net/3owzcimanmiu/1UAqae3P24plkTbpisaSka/472d66bb842b1378017125defc1cf281/hydrant.svg"
+curl -o "images/feastables_black.svg" "https://images.ctfassets.net/3owzcimanmiu/1fWohJsz75KK7xoFd1qgsg/9621d5951e2b38fe57f7afc0c8f3fe94/feastables_black.svg"
+curl -o "images/oseea.svg" "https://images.ctfassets.net/3owzcimanmiu/54oT7ucYj2a0mzBnadix1J/d1baa4dbc5a0fc1126f73ef73d43d743/oseea.svg"
+
+echo "Asset download complete!"

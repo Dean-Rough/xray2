@@ -96,45 +96,63 @@ export async function processContentData(rawData: unknown) {
     // Extract assets (CSS, JS, images, etc.)
     const assets: Record<string, unknown>[] = [];
 
-    // Process CSS links and extract actual CSS content
-    const cssLinks = extractResourceLinks(html, 'link[rel="stylesheet"]', 'href');
-    const cssContents: Record<string, string> = {};
+    // Use CSS content from Firecrawl if available, otherwise extract from HTML
+    let cssContents: Record<string, string> = {};
 
-    for (const cssUrl of cssLinks) {
-      try {
-        // Skip invalid URLs (like cid: URLs from MHTML, data: URLs, etc.)
-        if (cssUrl.startsWith('cid:') || cssUrl.startsWith('data:') || cssUrl.startsWith('blob:') || cssUrl.startsWith('javascript:')) {
-          console.log(`⚠️ Skipping invalid CSS URL: ${cssUrl}`);
+    // First, try to use cssContents from Firecrawl
+    if (data.cssContents && typeof data.cssContents === 'object') {
+      cssContents = data.cssContents as Record<string, string>;
+      console.log(`✅ Using CSS content from Firecrawl: ${Object.keys(cssContents).length} files`);
+
+      // Add CSS files to assets
+      Object.entries(cssContents).forEach(([cssUrl, cssContent]) => {
+        assets.push({
+          url: cssUrl,
+          type: 'css',
+          content: cssContent
+        });
+      });
+    } else {
+      // Fallback: Extract CSS links from HTML and fetch content manually
+      console.log('⚠️ No cssContents from Firecrawl, falling back to manual CSS extraction');
+      const cssLinks = extractResourceLinks(html, 'link[rel="stylesheet"]', 'href');
+
+      for (const cssUrl of cssLinks) {
+        try {
+          // Skip invalid URLs (like cid: URLs from MHTML, data: URLs, etc.)
+          if (cssUrl.startsWith('cid:') || cssUrl.startsWith('data:') || cssUrl.startsWith('blob:') || cssUrl.startsWith('javascript:')) {
+            console.log(`⚠️ Skipping invalid CSS URL: ${cssUrl}`);
+            assets.push({
+              url: cssUrl,
+              type: 'css',
+              error: 'Invalid URL format'
+            });
+            continue;
+          }
+
+          // Resolve relative URLs
+          const absoluteUrl = cssUrl.startsWith('http') ? cssUrl : new URL(cssUrl, data.url || '').href;
+
+          // Fetch CSS content
+          const cssContent = await fetchCSSContent(absoluteUrl);
+          if (cssContent) {
+            cssContents[cssUrl] = cssContent;
+            console.log(`✅ Extracted CSS content from: ${cssUrl} (${cssContent.length} chars)`);
+          }
+
           assets.push({
             url: cssUrl,
             type: 'css',
-            error: 'Invalid URL format'
+            content: cssContent || undefined
           });
-          continue;
+        } catch (error) {
+          console.error(`❌ Failed to fetch CSS from ${cssUrl}:`, error);
+          assets.push({
+            url: cssUrl,
+            type: 'css',
+            error: 'Failed to fetch content'
+          });
         }
-
-        // Resolve relative URLs
-        const absoluteUrl = cssUrl.startsWith('http') ? cssUrl : new URL(cssUrl, data.url || '').href;
-
-        // Fetch CSS content
-        const cssContent = await fetchCSSContent(absoluteUrl);
-        if (cssContent) {
-          cssContents[cssUrl] = cssContent;
-          console.log(`✅ Extracted CSS content from: ${cssUrl} (${cssContent.length} chars)`);
-        }
-
-        assets.push({
-          url: cssUrl,
-          type: 'css', // Use lowercase for consistency
-          content: cssContent || undefined
-        });
-      } catch (error) {
-        console.error(`❌ Failed to fetch CSS from ${cssUrl}:`, error);
-        assets.push({
-          url: cssUrl,
-          type: 'css', // Use lowercase for consistency
-          error: 'Failed to fetch content'
-        });
       }
     }
 

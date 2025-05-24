@@ -283,7 +283,8 @@ export async function scrapeWebpage(url: string, options?: {
 
         // Set formats - in Firecrawl v1, screenshot is a format, not a separate parameter
         // Use full-page screenshots by default for complete website capture
-        const formats = options?.formats || ['markdown', 'html', 'rawHtml', 'screenshot@fullPage', 'links'];
+        // Include cssContents to extract CSS files
+        const formats = options?.formats || ['markdown', 'html', 'rawHtml', 'screenshot@fullPage', 'links', 'cssContents'];
         scrapeOptions.formats = formats;
 
         const scrapeResult = await app.scrapeUrl(url, scrapeOptions);
