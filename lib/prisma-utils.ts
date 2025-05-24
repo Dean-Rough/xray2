@@ -22,7 +22,7 @@ export async function createWebsiteAnalysisRequest(url: string, options?: Record
     })
     return analysis
   } catch (error) {
-    console.error('Error creating website analysis request:', error)
+    console.error('Error creating website analysis request:', error?.toString() || 'Unknown error')
     throw error
   }
 }
@@ -38,7 +38,7 @@ export async function getWebsiteAnalysisById(id: string) {
       where: { id }
     })
   } catch (error) {
-    console.error('Error fetching website analysis:', error)
+    console.error('Error fetching website analysis:', error?.toString() || 'Unknown error')
     throw error
   }
 }
@@ -70,7 +70,7 @@ export async function updateWebsiteAnalysisStatus(
       }
     })
   } catch (dbError) {
-    console.error('Error updating website analysis:', dbError)
+    console.error('Error updating website analysis:', dbError?.toString() || 'Unknown error')
     throw dbError
   }
 }
@@ -89,7 +89,7 @@ export async function listWebsiteAnalysisRequests(limit = 10, skip = 0) {
       orderBy: { createdAt: 'desc' }
     })
   } catch (error) {
-    console.error('Error listing website analyses:', error)
+    console.error('Error listing website analyses:', error?.toString() || 'Unknown error')
     throw error
   }
 }
@@ -105,7 +105,7 @@ export async function deleteWebsiteAnalysisRequest(id: string) {
       where: { id }
     })
   } catch (error) {
-    console.error('Error deleting website analysis:', error)
+    console.error('Error deleting website analysis:', error?.toString() || 'Unknown error')
     throw error
   }
 }
@@ -123,7 +123,7 @@ export async function getFailedAnalysisRequests(limit = 10) {
       orderBy: { createdAt: 'desc' }
     })
   } catch (error) {
-    console.error('Error fetching failed analysis requests:', error)
+    console.error('Error fetching failed analysis requests:', error?.toString() || 'Unknown error')
     throw error
   }
 }
@@ -148,7 +148,7 @@ export async function getResumableAnalysisRequests(url?: string) {
       orderBy: { createdAt: 'desc' }
     })
   } catch (error) {
-    console.error('Error fetching resumable analysis requests:', error)
+    console.error('Error fetching resumable analysis requests:', error?.toString() || 'Unknown error')
     throw error
   }
 }
@@ -168,7 +168,7 @@ export async function markAnalysisAsFailed(
   try {
     return await updateWebsiteAnalysisStatus(id, 'FAILED', undefined, error, processingTime)
   } catch (dbError) {
-    console.error('Error marking analysis as failed:', dbError)
+    console.error('Error marking analysis as failed:', dbError?.toString() || 'Unknown error')
     throw dbError
   }
 }
@@ -191,7 +191,7 @@ export async function cleanupOldAnalysisRequests(daysOld = 7) {
       }
     })
   } catch (error) {
-    console.error('Error cleaning up old analysis requests:', error)
+    console.error('Error cleaning up old analysis requests:', error?.toString() || 'Unknown error')
     throw error
   }
 }

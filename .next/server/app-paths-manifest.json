@@ -1,5 +1,4 @@
 {
   "/api/resume-analysis/route": "app/api/resume-analysis/route.js",
-  "/api/generate-prompt/route": "app/api/generate-prompt/route.js",
   "/page": "app/page.js"
 }
