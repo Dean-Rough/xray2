@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
     // Check if it's a structured error from our scraping process
     if (typeof error === 'object' && error !== null && 'type' in error) {
       return NextResponse.json(
-        { 
+        {
           error: (error as any).message,
           type: (error as any).type,
           canResume: (error as any).canResume,
@@ -64,7 +64,7 @@ export async function GET(request: NextRequest) {
     const targetUrl = url.searchParams.get('url'); // Optional URL filter
 
     let analyses;
-    
+
     if (type === 'failed') {
       analyses = await getFailedAnalysisRequests(10);
     } else if (type === 'resumable') {
@@ -97,7 +97,7 @@ export async function GET(request: NextRequest) {
       targetUrl
     });
   } catch (error) {
-    console.error('Error fetching resumable analyses:', error);
+    console.error('Error fetching resumable analyses:', error?.toString() || 'Unknown error');
 
     return NextResponse.json(
       { error: error instanceof Error ? error.message : 'Failed to fetch resumable analyses' },

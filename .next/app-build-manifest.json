@@ -16,6 +16,16 @@
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/api/resume-analysis/route.js"
+    ],
+    "/api/generate-prompt/route": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/api/generate-prompt/route.js"
+    ],
+    "/api/download-package/route": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/api/download-package/route.js"
     ]
   }
 }
