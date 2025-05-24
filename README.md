@@ -1,61 +1,36 @@
-# XRAI™ - Elite Website X-Ray Tool
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-**X-ray your website. Get the rebuild package.**
+## Getting Started
 
-Premium AI-powered website analysis platform with Awwwards-level sophisticated design and realistic task progression.
+First, run the development server:
 
-**Status**: v2.1.1 - Screenshots working, CSS extraction in progress 🔧
+```bash
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
+```
 
-## ✨ Features
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-### 🎨 Awwwards-Level Interface (v2.1.0)
-- **Sophisticated Minimalism**: Subtle effects that enhance rather than distract
-- **Refined Typography**: Perfect Geist + Inter spacing with elegant letter-spacing
-- **Desaturated Color Palette**: Sophisticated teal (#00e6c3) + refined red (#ff5252)
-- **22 Realistic Tasks**: From "Initializing scanner" to "Finalizing AI analysis"
-- **Elegant Interactions**: Gentle transitions and professional spacing
-- **Professional Branding**: Clean "Xrai it" call-to-action without visual noise
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-### 🔍 Elite Analysis Capabilities
-- **Full-Site Crawling**: Discovers and analyzes ALL indexed pages
-- **Full-Page Screenshots**: Complete scroll capture with Firecrawl API
-- **Enhanced CSS Extraction**: Actual stylesheet content (1MB+ extracted)
-- **Comprehensive Asset Manifest**: Complete file listings with sizes
-- **AI-Optimized Packages**: Claude Sonnet-ready rebuild instructions
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-## 🚀 Deployment
+## Learn More
 
-### Production URLs
-- **Primary**: xrai.it.com (ready for deployment)
-- **Current**: https://xray2-aujvnagps-dean-roughs-projects.vercel.app
-- **Platform**: Vercel
-- **Framework**: Next.js 15 + TypeScript
+To learn more about Next.js, take a look at the following resources:
 
-## 🎯 Major Updates (v2.0.0)
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-### Revolutionary UX Overhaul
-- **Complete Rebrand**: XRAY → XRAI with premium design system
-- **22 Realistic Tasks**: Authentic web development task progression
-- **Stuttering Progress**: 15% stutter chance, realistic network delays
-- **Glass Morphism**: Modern backdrop blur panels and gradient borders
-- **Professional Status**: Task counter (X/22), completion tracking
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-### Enhanced Data Extraction
-- **CSS Content**: Now extracts actual stylesheet code (1MB+ tested)
-- **Full-Page Screenshots**: Complete scroll capture, not just viewport
-- **Asset Manifests**: Comprehensive file listings with sizes
-- **Error Handling**: Robust async/await throughout pipeline
+## Deploy on Vercel
 
-## 🔧 Environment Variables
-- `DATABASE_URL` - PostgreSQL connection (NeonDB)
-- `OPENAI_API_KEY` - OpenAI API for prompt generation
-- `FIRECRAWL_API_KEY` - Firecrawl API for web scraping
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-## ✅ Deployment Status
-- **Interface**: Premium 2024 design complete ✅
-- **Functionality**: All core features working ✅
-- **Performance**: Optimized and tested ✅
-- **Branding**: Complete rebrand to XRAI ✅
-- **Quality Score**: 9/10 - Production ready ✅
-
-**Ready for xrai.it.com deployment! 🔥**
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
