@@ -142,27 +142,49 @@ async function captureScreenshotWithPuppeteer(url: string): Promise<string | nul
       await page.setViewport({ width: 1920, height: 1080 });
 
       // Navigate to the page with extended timeout and better wait conditions
+      console.log(`📸 Loading page for screenshot: ${url}`);
       await page.goto(url, {
         waitUntil: 'networkidle0', // Wait for no network requests for 500ms
         timeout: 60000
       });
 
-      // Wait for page to fully load and any lazy-loaded content
-      await new Promise(resolve => setTimeout(resolve, 3000)); // Initial wait
+      console.log(`⏳ Page loaded, waiting for content to render...`);
+
+      // Extended wait for page to fully load and any lazy-loaded content
+      await new Promise(resolve => setTimeout(resolve, 8000)); // Increased from 3s to 8s
 
       // Wait for any dynamic content to load
       try {
         await page.waitForFunction(
           () => document.readyState === 'complete' &&
-                (!window.jQuery || window.jQuery.active === 0),
-          { timeout: 10000 }
+                (!window.jQuery || window.jQuery.active === 0) &&
+                document.body &&
+                document.body.children.length > 0,
+          { timeout: 15000 } // Increased timeout
         );
+        console.log(`✅ Dynamic content loaded`);
       } catch (e) {
-        console.log('Dynamic content wait timeout, proceeding with screenshot');
+        console.log('⚠️ Dynamic content wait timeout, proceeding with screenshot');
       }
 
-      // Additional wait for images and fonts to load
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      // Wait for images to load
+      try {
+        await page.waitForFunction(
+          () => {
+            const images = Array.from(document.images);
+            return images.every(img => img.complete);
+          },
+          { timeout: 10000 }
+        );
+        console.log(`🖼️ All images loaded`);
+      } catch (e) {
+        console.log('⚠️ Image loading timeout, proceeding with screenshot');
+      }
+
+      // Additional wait for fonts and final rendering
+      await new Promise(resolve => setTimeout(resolve, 5000)); // Increased from 2s to 5s
+
+      console.log(`📷 Taking screenshot after ${8 + 5}s+ loading time`);
 
       // Capture full-page screenshot
       const screenshot = await page.screenshot({
@@ -170,6 +192,42 @@ async function captureScreenshotWithPuppeteer(url: string): Promise<string | nul
         encoding: 'base64',
         type: 'png'
       });
+
+      console.log(`📊 Screenshot captured: ${screenshot.length} characters (base64)`);
+
+      // Check if screenshot is suspiciously small (likely blank)
+      const estimatedBytes = (screenshot.length * 3) / 4; // Rough base64 to bytes conversion
+      if (estimatedBytes < 15000) {
+        console.log(`⚠️ WARNING: Screenshot is very small (~${Math.round(estimatedBytes)} bytes) - likely blank or failed to load`);
+        console.log(`🔄 Attempting additional wait and retry...`);
+
+        // Additional wait and retry
+        await new Promise(resolve => setTimeout(resolve, 10000));
+
+        // Try to scroll to trigger any lazy loading
+        await page.evaluate(() => {
+          window.scrollTo(0, document.body.scrollHeight);
+          window.scrollTo(0, 0);
+        });
+
+        await new Promise(resolve => setTimeout(resolve, 3000));
+
+        const retryScreenshot = await page.screenshot({
+          fullPage: true,
+          encoding: 'base64',
+          type: 'png'
+        });
+
+        const retryEstimatedBytes = (retryScreenshot.length * 3) / 4;
+        console.log(`🔄 Retry screenshot: ~${Math.round(retryEstimatedBytes)} bytes`);
+
+        await browser.close();
+
+        const finalScreenshot = retryEstimatedBytes > estimatedBytes ? retryScreenshot : screenshot;
+        const screenshotData = `data:image/png;base64,${finalScreenshot}`;
+        console.log(`✅ Puppeteer screenshot captured (${retryEstimatedBytes > estimatedBytes ? 'retry' : 'original'} version)`);
+        return screenshotData;
+      }
 
       await browser.close();
 
