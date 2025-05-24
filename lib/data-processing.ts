@@ -3,7 +3,7 @@
  * Handles parsing and structuring data from Firecrawl and Lighthouse
  */
 
-import { mapWebsite, scrapeWebpage, extractStructuredData } from './mcp-utils';
+import { mapWebsite, scrapeWebpage, extractStructuredData, discoverNavigationPages } from './mcp-utils';
 import { batchScrapeWithMCP, scrapeWithMCP, mapWebsiteWithMCP, checkMCPAvailability } from './firecrawl-mcp-client';
 import { createWebsiteAnalysisRequest, updateWebsiteAnalysisStatus, markAnalysisAsFailed } from './prisma-utils';
 import { generateSonnetPrompt, generateWebsiteRebuildPackage } from './generate-docs';
@@ -619,8 +619,44 @@ export async function deepScrapeWebsite(url: string, options: {
     console.log(`Scraping ${siteMapData.pages.length} pages with MCP batch processing...`);
     const contentResults: Record<string, any> = {};
 
-    // If fullSite is true, scrape all pages; otherwise, just scrape the main URL
-    const pagesToScrape = options.fullSite ? siteMapData.pages : [url];
+    // Smart page selection based on navigation structure
+    let pagesToScrape: string[];
+    if (options.fullSite) {
+      // Intelligent selection: prioritize navigation pages over random discovered URLs
+      const navigationPages = await discoverNavigationPages(url, siteMapData.pages);
+
+      // Combine main navigation and key pages
+      const selectedPages = [
+        ...navigationPages.mainNavigation, // All main nav pages (up to 8)
+        ...navigationPages.keyPages // All key pages (up to 6)
+      ];
+
+      // Remove duplicates and ensure we don't exceed rate limits
+      pagesToScrape = [...new Set(selectedPages)].slice(0, 12); // Max 12 pages to respect rate limits
+
+      // If we still don't have enough pages, add some from the full site map
+      if (pagesToScrape.length < 6 && siteMapData.pages.length > pagesToScrape.length) {
+        const additionalPages = siteMapData.pages
+          .filter(page => !pagesToScrape.includes(page))
+          .slice(0, 6 - pagesToScrape.length);
+        pagesToScrape.push(...additionalPages);
+      }
+
+      console.log(`🎯 Smart selection: ${pagesToScrape.length} key pages from navigation`);
+      console.log('Selected pages:', pagesToScrape.map(p => {
+        try { return new URL(p).pathname; } catch { return p; }
+      }));
+      console.log(`📊 Selection breakdown:`, {
+        mainNavigation: navigationPages.mainNavigation.length,
+        keyPages: navigationPages.keyPages.length,
+        totalSelected: pagesToScrape.length,
+        totalAvailable: siteMapData.pages.length
+      });
+    } else {
+      // Single page analysis
+      pagesToScrape = [url];
+      console.log('📄 Single page analysis mode');
+    }
 
     console.log(`DEBUG: fullSite=${options.fullSite}, mapped pages=${siteMapData.pages.length}, pages to scrape=${pagesToScrape.length}`);
 

@@ -330,10 +330,10 @@ export default function HomePage() {
         },
         body: JSON.stringify({
           url: formattedUrl, // Use the formatted URL
-          fullSite: true, // ENABLE FULL SITE CRAWLING - screenshots of ALL indexed pages
+          fullSite: true, // ENABLE SMART SITE CRAWLING - key navigation pages only
           includeScreenshots: true,
           includeLighthouse: true,
-          maxPages: 100
+          maxPages: 12 // Respect API rate limits with smart page selection
         }),
       });
 
@@ -540,6 +540,19 @@ export default function HomePage() {
                       {error}
                     </p>
                   )}
+                </div>
+
+                {/* API Limitations Notice */}
+                <div className="mt-4 bg-blue-900/20 border border-blue-400/30 rounded-lg p-3">
+                  <div className="flex items-start space-x-2">
+                    <span className="text-blue-400 text-xs mt-0.5">ℹ️</span>
+                    <div className="text-xs text-blue-300 space-y-1">
+                      <p className="font-medium">Smart Page Selection</p>
+                      <p className="text-blue-400/80 leading-relaxed">
+                        Xrai intelligently selects up to 12 key pages from your site's navigation to respect API rate limits and ensure optimal analysis quality.
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
 

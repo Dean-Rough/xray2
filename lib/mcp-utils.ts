@@ -32,7 +32,26 @@ const getFirecrawlClient = () => {
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 /**
- * Retry wrapper with exponential backoff
+ * Rate limiting for Firecrawl API (Free plan: 10 requests/min)
+ */
+let lastRequestTime = 0;
+const MIN_REQUEST_INTERVAL = 6000; // 6 seconds between requests (10 requests/min)
+
+async function enforceRateLimit(): Promise<void> {
+  const now = Date.now();
+  const timeSinceLastRequest = now - lastRequestTime;
+
+  if (timeSinceLastRequest < MIN_REQUEST_INTERVAL) {
+    const waitTime = MIN_REQUEST_INTERVAL - timeSinceLastRequest;
+    console.log(`⏱️ Rate limiting: waiting ${waitTime}ms before next Firecrawl request`);
+    await sleep(waitTime);
+  }
+
+  lastRequestTime = Date.now();
+}
+
+/**
+ * Retry wrapper with exponential backoff and rate limiting
  */
 async function retryWithBackoff<T>(
   operation: () => Promise<T>,
@@ -44,6 +63,10 @@ async function retryWithBackoff<T>(
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     try {
       console.log(`${context} - Attempt ${attempt}/${maxAttempts}`);
+
+      // Enforce rate limiting before each attempt
+      await enforceRateLimit();
+
       return await operation();
     } catch (error) {
       lastError = error as Error;
@@ -118,14 +141,28 @@ async function captureScreenshotWithPuppeteer(url: string): Promise<string | nul
       // Set desktop viewport for full-page screenshot
       await page.setViewport({ width: 1920, height: 1080 });
 
-      // Navigate to the page with extended timeout
+      // Navigate to the page with extended timeout and better wait conditions
       await page.goto(url, {
-        waitUntil: 'networkidle2',
-        timeout: 60000 // Increased from 45s to 60s for slower sites
+        waitUntil: 'networkidle0', // Wait for no network requests for 500ms
+        timeout: 60000
       });
 
       // Wait for page to fully load and any lazy-loaded content
-      await new Promise(resolve => setTimeout(resolve, 8000)); // Increased from 5s to 8s
+      await new Promise(resolve => setTimeout(resolve, 3000)); // Initial wait
+
+      // Wait for any dynamic content to load
+      try {
+        await page.waitForFunction(
+          () => document.readyState === 'complete' &&
+                (!window.jQuery || window.jQuery.active === 0),
+          { timeout: 10000 }
+        );
+      } catch (e) {
+        console.log('Dynamic content wait timeout, proceeding with screenshot');
+      }
+
+      // Additional wait for images and fonts to load
+      await new Promise(resolve => setTimeout(resolve, 2000));
 
       // Capture full-page screenshot
       const screenshot = await page.screenshot({
@@ -183,10 +220,14 @@ async function scrapeWebpageWithFallback(url: string, options?: {
     // Basic markdown conversion (very simple)
     const markdown = `# ${title}\n\nContent scraped from ${url}\n\n[Original URL](${url})`;
 
-    // Try to capture screenshot with Puppeteer if requested
-    let screenshot = null;
-    if (options?.formats?.includes('screenshot') || options?.formats?.includes('screenshot@fullPage')) {
-      screenshot = await captureScreenshotWithPuppeteer(url);
+    // Check if screenshot was requested and capture with Puppeteer (primary method)
+    const screenshotRequested = options?.formats?.includes('screenshot') || options?.formats?.includes('screenshot@fullPage');
+    const screenshot = screenshotRequested ? await captureScreenshotWithPuppeteer(url) : null;
+
+    if (screenshotRequested && screenshot) {
+      console.log('✅ Puppeteer screenshot captured in fallback mode');
+    } else if (screenshotRequested) {
+      console.log('⚠️ Puppeteer screenshot failed in fallback mode');
     }
 
     return {
@@ -281,40 +322,43 @@ export async function scrapeWebpage(url: string, options?: {
           actions: options?.actions || []
         };
 
-        // Set formats - in Firecrawl v1, screenshot is a format, not a separate parameter
-        // Use full-page screenshots by default for complete website capture
-        // Note: cssContents format not supported in current Firecrawl API
-        const formats = options?.formats || ['markdown', 'html', 'rawHtml', 'screenshot@fullPage', 'links'];
-        scrapeOptions.formats = formats;
+        // OPTIMIZATION: Use Puppeteer for screenshots (more reliable) and Firecrawl for content
+        // Remove screenshot from Firecrawl formats since Puppeteer handles it better
+        const baseFormats = ['markdown', 'html', 'rawHtml', 'links'];
+        scrapeOptions.formats = baseFormats;
 
-        const scrapeResult = await app.scrapeUrl(url, scrapeOptions);
+        // Check if screenshot was requested
+        const screenshotRequested = options?.formats?.includes('screenshot') || options?.formats?.includes('screenshot@fullPage');
+
+        // Start both operations in parallel for speed
+        const [scrapeResult, puppeteerScreenshot] = await Promise.all([
+          app.scrapeUrl(url, scrapeOptions),
+          screenshotRequested ? captureScreenshotWithPuppeteer(url) : Promise.resolve(null)
+        ]);
 
         if (!scrapeResult.success) {
           throw new Error(`Firecrawl scraping failed: ${scrapeResult.error}`);
         }
 
-        // Debug: Log what Firecrawl actually returns
-        console.log(`Firecrawl result for ${url}:`, {
-          success: scrapeResult.success,
-          dataKeys: Object.keys(scrapeResult.data || {}),
-          hasScreenshot: !!(scrapeResult.data as any)?.screenshot,
-          screenshotType: typeof (scrapeResult.data as any)?.screenshot,
-          dataStructure: scrapeResult.data ? Object.keys(scrapeResult.data) : 'no data',
-          screenshotData: (scrapeResult.data as any)?.screenshot ? 'present' : 'missing'
-        });
-
-        // If screenshot was requested but not captured by Firecrawl, try Puppeteer fallback
-        const screenshotRequested = options?.formats?.includes('screenshot') || options?.formats?.includes('screenshot@fullPage');
-        if (screenshotRequested && !(scrapeResult.data as any)?.screenshot) {
-          console.log('🔄 Firecrawl failed to capture full-page screenshot, trying Puppeteer fallback...');
-          const puppeteerScreenshot = await captureScreenshotWithPuppeteer(url);
-          if (puppeteerScreenshot) {
-            (scrapeResult.data as any).screenshot = puppeteerScreenshot;
-            console.log('✅ Puppeteer fallback full-page screenshot successful');
-          } else {
-            console.log('❌ Both Firecrawl and Puppeteer full-page screenshot capture failed');
+        // Add Puppeteer screenshot to Firecrawl result
+        if (screenshotRequested && puppeteerScreenshot) {
+          // Ensure scrapeResult.data exists before setting screenshot
+          if (!scrapeResult.data) {
+            scrapeResult.data = {};
           }
+          (scrapeResult.data as any).screenshot = puppeteerScreenshot;
+          console.log('✅ Puppeteer screenshot captured successfully (primary method)');
+        } else if (screenshotRequested) {
+          console.log('⚠️ Puppeteer screenshot failed');
         }
+
+        // Debug: Log the optimized result
+        console.log(`Optimized scraping result for ${url}:`, {
+          success: scrapeResult.success,
+          hasContent: !!(scrapeResult.data),
+          hasScreenshot: !!(scrapeResult.data as any)?.screenshot,
+          screenshotMethod: screenshotRequested ? 'puppeteer-primary' : 'none-requested'
+        });
 
         return scrapeResult;
       }, `Firecrawl scraping for ${url}`);
@@ -422,4 +466,173 @@ export async function conductDeepResearch(query: string, options?: {
     console.error('Error conducting deep research:', error);
     throw new Error(`Failed to conduct deep research: ${error instanceof Error ? error.message : String(error)}`);
   }
+}
+
+/**
+ * Discover navigation structure by analyzing the homepage and categorizing pages
+ * @param homepageUrl - The homepage URL to analyze
+ * @param allPages - All discovered pages from site mapping
+ * @returns Categorized navigation structure
+ */
+export async function discoverNavigationPages(homepageUrl: string, allPages: string[]) {
+  try {
+    console.log(`🧭 Discovering navigation structure for: ${homepageUrl}`);
+
+    // Scrape the homepage to extract navigation links
+    const homepageData = await scrapeWebpage(homepageUrl, {
+      formats: ['html', 'links'],
+      onlyMainContent: false
+    });
+
+    // Extract navigation links from the homepage HTML
+    const navigationLinks = extractNavigationFromHTML(homepageData.data?.html || '', homepageUrl);
+
+    // Categorize all pages based on URL patterns and common page types
+    const categorizedPages = categorizePages(allPages, homepageUrl);
+
+    // Combine navigation analysis with URL pattern analysis
+    const result = {
+      mainNavigation: [...new Set([
+        ...navigationLinks.filter(link => allPages.includes(link)),
+        ...categorizedPages.mainNavigation
+      ])],
+      keyPages: categorizedPages.keyPages,
+      allPages: allPages
+    };
+
+    console.log(`✅ Navigation discovery complete:`, {
+      mainNavigation: result.mainNavigation.length,
+      keyPages: result.keyPages.length,
+      totalPages: allPages.length
+    });
+
+    return result;
+  } catch (error) {
+    console.error('Error discovering navigation pages:', error);
+
+    // Fallback: use simple URL pattern analysis
+    const categorizedPages = categorizePages(allPages, homepageUrl);
+    return {
+      mainNavigation: categorizedPages.mainNavigation,
+      keyPages: categorizedPages.keyPages,
+      allPages: allPages
+    };
+  }
+}
+
+/**
+ * Extract navigation links from HTML content
+ */
+function extractNavigationFromHTML(html: string, baseUrl: string): string[] {
+  const navigationLinks: string[] = [];
+
+  try {
+    // Look for common navigation patterns in HTML
+    const navPatterns = [
+      /<nav[^>]*>(.*?)<\/nav>/gis,
+      /<header[^>]*>(.*?)<\/header>/gis,
+      /<ul[^>]*class="[^"]*nav[^"]*"[^>]*>(.*?)<\/ul>/gis,
+      /<div[^>]*class="[^"]*nav[^"]*"[^>]*>(.*?)<\/div>/gis
+    ];
+
+    for (const pattern of navPatterns) {
+      const matches = html.match(pattern);
+      if (matches) {
+        for (const match of matches) {
+          // Extract href attributes from the navigation section
+          const hrefMatches = match.match(/href="([^"]+)"/g);
+          if (hrefMatches) {
+            for (const href of hrefMatches) {
+              const url = href.replace(/href="([^"]+)"/, '$1');
+              const absoluteUrl = new URL(url, baseUrl).href;
+              navigationLinks.push(absoluteUrl);
+            }
+          }
+        }
+      }
+    }
+  } catch (error) {
+    console.warn('Error extracting navigation from HTML:', error);
+  }
+
+  return [...new Set(navigationLinks)];
+}
+
+/**
+ * Categorize pages based on URL patterns and common page types
+ */
+function categorizePages(allPages: string[], baseUrl: string) {
+  const mainNavigation: string[] = [];
+  const keyPages: string[] = [];
+
+  try {
+    const baseDomain = new URL(baseUrl).origin;
+
+    for (const page of allPages) {
+      try {
+        const url = new URL(page);
+        const pathname = url.pathname.toLowerCase();
+
+        // Skip if not same domain
+        if (url.origin !== baseDomain) continue;
+
+        // Always include homepage
+        if (pathname === '/' || pathname === '') {
+          mainNavigation.push(page);
+          continue;
+        }
+
+        // Main navigation patterns (top-level pages) - be more inclusive
+        if (
+          /^\/(home|about|services|products|portfolio|work|projects|blog|news|contact|gallery|exhibitions)$/i.test(pathname) ||
+          /^\/(shop|store|buy|pricing|plans|collections)$/i.test(pathname) ||
+          /^\/(events|programs|education|visit|explore)$/i.test(pathname) ||
+          (/^\/[^\/]+$/.test(pathname) && pathname.length < 20 && !pathname.includes('.')) // Short top-level paths without file extensions
+        ) {
+          mainNavigation.push(page);
+        }
+
+        // Key pages (important secondary pages)
+        else if (
+          /\/(about|contact|privacy|terms|faq|help|support|info)$/i.test(pathname) ||
+          /\/(team|careers|jobs|press|media|history)$/i.test(pathname) ||
+          /\/(current|upcoming|past|archive)$/i.test(pathname) ||
+          /\/[^\/]+\/(about|info|details|overview)$/i.test(pathname) // Subsection about pages
+        ) {
+          keyPages.push(page);
+        }
+
+        // Include some deeper pages that might be important
+        else if (
+          pathname.split('/').length === 3 && // Two levels deep
+          !/\.(jpg|jpeg|png|gif|pdf|doc|zip)$/i.test(pathname) && // Not a file
+          pathname.length < 50 // Not too long
+        ) {
+          keyPages.push(page);
+        }
+      } catch (urlError) {
+        // Skip invalid URLs
+        continue;
+      }
+    }
+  } catch (error) {
+    console.warn('Error categorizing pages:', error);
+  }
+
+  // Ensure we have at least the homepage
+  if (mainNavigation.length === 0) {
+    mainNavigation.push(baseUrl);
+  }
+
+  console.log(`📊 Page categorization results:`, {
+    mainNavigation: mainNavigation.length,
+    keyPages: keyPages.length,
+    sampleMainNav: mainNavigation.slice(0, 3).map(url => new URL(url).pathname),
+    sampleKeyPages: keyPages.slice(0, 3).map(url => new URL(url).pathname)
+  });
+
+  return {
+    mainNavigation: mainNavigation.slice(0, 8), // Limit main nav to 8
+    keyPages: keyPages.slice(0, 6) // Limit key pages to 6
+  };
 }

@@ -289,6 +289,17 @@ export async function checkMCPAvailability(): Promise<boolean> {
 
     console.log('🔍 Testing MCP server availability...');
 
+    // TEMPORARY: Disable MCP to avoid connection issues
+    // The MCP integration has transport connection issues that need to be resolved
+    // For now, we'll use the standard Firecrawl API which is working perfectly
+    console.log('⚠️ MCP temporarily disabled - using standard Firecrawl API');
+    return false;
+
+    // TODO: Fix MCP client connection issues
+    // The error "The 'file' argument must be of type string. Received undefined"
+    // indicates the StdioClientTransport is not being set up correctly
+
+    /*
     // Try to initialize the MCP client
     const client = await initializeMCPClient();
 
@@ -303,6 +314,7 @@ export async function checkMCPAvailability(): Promise<boolean> {
       console.log('⚠️ MCP server connected but no tools available');
       return false;
     }
+    */
 
   } catch (error) {
     console.log('❌ MCP server not available:', error instanceof Error ? error.message : String(error));
