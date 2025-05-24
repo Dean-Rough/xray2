@@ -113,7 +113,7 @@ async function mapWebsiteWithFallback(url: string, _options?: {
 }
 
 /**
- * Puppeteer fallback for screenshot capture with multiple viewport sizes
+ * Puppeteer fallback for screenshot capture with enhanced loading detection
  */
 async function captureScreenshotWithPuppeteer(url: string): Promise<string | null> {
   try {
