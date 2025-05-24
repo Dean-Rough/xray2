@@ -752,6 +752,16 @@ export async function deepScrapeWebsite(url: string, options: {
         });
 
         const processedData = await processContentData(pageResult);
+
+        // Debug: Log the raw pageResult to see what we're getting
+        console.log(`Raw page result for ${pageUrl}:`, {
+          hasData: !!pageResult,
+          dataKeys: pageResult ? Object.keys(pageResult) : [],
+          hasScreenshot: !!(pageResult as any)?.screenshot,
+          screenshotType: typeof (pageResult as any)?.screenshot,
+          screenshotLength: (pageResult as any)?.screenshot?.length || 0
+        });
+
         contentResults[pageUrl] = processedData;
 
         console.log(`Screenshot data for ${pageUrl}:`, {

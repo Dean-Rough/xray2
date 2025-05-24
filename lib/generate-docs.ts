@@ -22,8 +22,23 @@ export async function generateWebsiteRebuildPackage(
   analysisId: string
 ) {
   const zip = new JSZip();
-  const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-  const packageName = `website-rebuild-${timestamp}`;
+
+  // Extract URL from siteMapData or contentData to create a clean filename
+  const firstUrl = Object.keys(contentData)[0] || Object.keys(siteMapData)[0] || 'unknown-site';
+  let siteName = 'unknown-site';
+
+  try {
+    const urlObj = new URL(firstUrl);
+    siteName = urlObj.hostname.replace(/[^a-zA-Z0-9]/g, '_');
+  } catch (error) {
+    console.warn('Could not parse URL for package name, using fallback');
+  }
+
+  // Create timestamp in format: YYYY-MM-DD_HH-MM-SS
+  const now = new Date();
+  const timestamp = now.toISOString().replace(/[:.]/g, '-').replace('T', '_').split('.')[0];
+
+  const packageName = `${siteName}_${timestamp}`;
 
   // 1. Generate the main AI prompt (Markdown)
   const promptMarkdown = generatePromptMarkdown(siteMapData, contentData, performanceData, structuredData);
