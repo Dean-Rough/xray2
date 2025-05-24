@@ -141,8 +141,8 @@ vercel --prod
 
 ### **Production URLs**
 - **Primary**: xrai.it.com
-- **Latest**: https://xray-kld7fd2ys-dean-roughs-projects.vercel.app
-- **Previous**: https://xray-kfqi0t8gt-dean-roughs-projects.vercel.app
+- **Latest**: https://xray-ga3sjsycn-dean-roughs-projects.vercel.app
+- **Previous**: https://xray-kld7fd2ys-dean-roughs-projects.vercel.app
 - **Vercel**: xray2-git-main-dean-roughs-projects.vercel.app
 
 ## 📈 Recent Improvements
@@ -160,6 +160,9 @@ vercel --prod
 - ✅ **Improved ZIP naming** with `sitename_YYYY-MM-DD_HH-MM-SS.zip` format
 - ✅ **Graceful degradation** for problematic sites
 - ✅ **Comprehensive debugging** and logging system
+- ✅ **Font & Typography Extraction** with comprehensive font analysis
+- ✅ **Google Fonts detection** and HTML snippet generation
+- ✅ **Custom font extraction** with @font-face rules and download scripts
 
 ### **Performance Gains**
 - **8x fewer API calls** (from 77+ pages to 8-12 key pages)
@@ -168,6 +171,14 @@ vercel --prod
 - **Enhanced screenshot quality** with 13+ second loading detection and validation
 - **Improved reliability** with smart retry logic and error handling
 - **Better coverage** of slow-loading and JavaScript-heavy sites
+
+### **🔤 Font & Typography Extraction (NEW)**
+- **Comprehensive Font Analysis**: Extract all fonts from CSS and HTML
+- **Google Fonts Detection**: Automatic detection and HTML snippet generation
+- **Custom Font Extraction**: @font-face rules with download scripts
+- **Font Family Lists**: Complete typography inventory for reconstruction
+- **Ready-to-Use Assets**: Generated CSS and HTML for easy implementation
+- **Cross-Platform Scripts**: Font download scripts for Windows and Unix
 
 ### **🔐 Next: Authentication System (v2.2.0)**
 - **User Authentication**: Secure login/logout functionality
