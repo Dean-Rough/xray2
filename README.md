@@ -131,7 +131,8 @@ vercel --prod
 
 ### **Production URLs**
 - **Primary**: xrai.it.com
-- **Latest**: https://xray-6a157ajpc-dean-roughs-projects.vercel.app
+- **Latest**: https://xray-2ggwhrlq0-dean-roughs-projects.vercel.app
+- **Previous**: https://xray-6a157ajpc-dean-roughs-projects.vercel.app
 - **Vercel**: xray2-git-main-dean-roughs-projects.vercel.app
 
 ## 📈 Recent Improvements
