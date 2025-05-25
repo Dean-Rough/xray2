@@ -1,22 +1,29 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+const styreneB = localFont({
+  src: [
+    {
+      path: "../brand/App-fonts/StyreneB-Regular.otf",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "../brand/App-fonts/StyreneB-Bold.otf",
+      weight: "700",
+      style: "normal",
+    },
+  ],
+  variable: "--font-styrene",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "X-RAI™ - AI Website Clone Generator",
-  description: "Drop any URL and our AI instantly breaks it down, crafting precision prompts for Claude Sonnet with screenshots, code, and everything needed to replicate and upgrade your site's magic.",
-  keywords: ["AI", "website cloning", "Claude Sonnet", "web scraping", "site analysis", "prompt generation"],
-  authors: [{ name: "X-RAI Team" }],
+  title: "Xrai - Website Analysis Tool",
+  description: "Professional website analysis and reconstruction package generator for developers.",
+  keywords: ["website analysis", "web development", "site reconstruction", "developer tools"],
+  authors: [{ name: "Xrai" }],
 };
 
 export const viewport = {
@@ -32,7 +39,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${styreneB.variable} antialiased`}
       >
         {children}
       </body>

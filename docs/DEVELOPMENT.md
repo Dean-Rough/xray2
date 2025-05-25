@@ -1,4 +1,4 @@
-# Development Guide: Website Rebuild Prompt Generator (WRPG)
+image.png# Development Guide: Website Rebuild Prompt Generator (WRPG)
 
 ## 🚀 DEPLOYMENT STATUS (Updated: May 23, 2025)
 

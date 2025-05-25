@@ -111,18 +111,18 @@ export async function GET(request: NextRequest) {
  */
 function getLastCompletedStep(status: string): string {
   switch (status) {
-    case 'PENDING':
+    case 'Pending':
       return 'None';
-    case 'MAPPING':
-      return 'Database record created';
-    case 'SCRAPING':
-      return 'Site mapping completed';
-    case 'PROCESSING':
-      return 'Content scraping completed';
-    case 'FAILED':
-      return 'Process failed at some point';
-    case 'COMPLETED':
-      return 'All steps completed';
+    case 'Mapping':
+      return 'Database created';
+    case 'Scraping':
+      return 'Mapping complete';
+    case 'Working':
+      return 'Scraping complete';
+    case 'Failed':
+      return 'Process failed';
+    case 'Complete':
+      return 'All complete';
     default:
       return 'Unknown';
   }
