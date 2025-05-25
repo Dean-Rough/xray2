@@ -3,7 +3,19 @@ import { PrismaClient } from '@prisma/client'
 // Define enum types until Prisma generates them
 type AnalysisStatus = 'PENDING' | 'MAPPING' | 'SCRAPING' | 'PROCESSING' | 'COMPLETED' | 'FAILED';
 
-const prisma = new PrismaClient()
+let prisma: PrismaClient | null = null;
+
+function getPrismaClient() {
+  if (!prisma) {
+    try {
+      prisma = new PrismaClient();
+    } catch (error) {
+      console.warn('Prisma client initialization failed:', error);
+      return null;
+    }
+  }
+  return prisma;
+}
 
 /**
  * Create a new website analysis request
@@ -13,7 +25,11 @@ const prisma = new PrismaClient()
  */
 export async function createWebsiteAnalysisRequest(url: string, options?: Record<string, unknown>) {
   try {
-    const analysis = await prisma.websiteAnalysis.create({
+    const client = getPrismaClient();
+    if (!client) {
+      throw new Error('Database not available');
+    }
+    const analysis = await client.websiteAnalysis.create({
       data: {
         url,
         status: 'PENDING' as AnalysisStatus,
