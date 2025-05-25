@@ -3,12 +3,16 @@
 import { useState, useCallback, useEffect } from 'react';
 import './globals.css';
 
-type AnalysisStatus = 'PENDING' | 'MAPPING' | 'SCRAPING' | 'PROCESSING' | 'COMPLETED' | 'FAILED';
+type AnalysisStatus = 'PENDING' | 'MAPPING' | 'SCRAPING' | 'PROCESSING' | 'COMPLETED' | 'FAILED' | 'processing_resumed';
 
 export default function HomePage() {
   const [url, setUrl] = useState('');
   const [error, setError] = useState('');
-  const [errorDetails, setErrorDetails] = useState<any>(null);
+  const [errorDetails, setErrorDetails] = useState<{
+    message?: string;
+    processingTime?: number;
+    suggestions?: string[];
+  } | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [analysisId, setAnalysisId] = useState<string | null>(null);
   const [analysisStatus, setAnalysisStatus] = useState<AnalysisStatus | null>(null);
@@ -18,7 +22,12 @@ export default function HomePage() {
   const [startTime, setStartTime] = useState<Date | null>(null);
   const [elapsedTime, setElapsedTime] = useState<string>('00:00');
   const [canResume, setCanResume] = useState<boolean>(false);
-  const [resumableAnalyses, setResumableAnalyses] = useState<any[]>([]);
+  const [resumableAnalyses, setResumableAnalyses] = useState<Array<{
+    id: string;
+    url: string;
+    status: string;
+    lastStep: string;
+  }>>([]);
   const [currentTask, setCurrentTask] = useState('');
   const [taskProgress, setTaskProgress] = useState(0);
   const [completedTasks, setCompletedTasks] = useState<string[]>([]);
@@ -379,26 +388,7 @@ export default function HomePage() {
     document.body.removeChild(a);
   }, [analysisId]);
 
-  // Function to download analysis result as JSON (legacy format)
-  const handleDownload = useCallback(() => {
-    if (!analysisResult) return;
 
-    // Extract legacy format from the result
-    const legacyData = (analysisResult as any)?.legacy || analysisResult;
-    const dataStr = JSON.stringify(legacyData, null, 2);
-    const dataBlob = new Blob([dataStr], { type: 'application/json' });
-    const url = URL.createObjectURL(dataBlob);
-
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `website-analysis-${analysisId}.json`;
-    document.body.appendChild(a);
-    a.click();
-
-    // Cleanup
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-  }, [analysisResult, analysisId]);
 
   // Function to play completion chime using Web Audio API
   const playCompletionChime = useCallback(() => {
