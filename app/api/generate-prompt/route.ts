@@ -14,7 +14,7 @@ export async function POST(request: NextRequest) {
       fullSite = true, // Default to TRUE - we want full site crawling with screenshots of ALL pages
       includeScreenshots = true,
       includeLighthouse = true,
-      maxPages = 100
+      maxPages = 10
     } = await request.json();
 
     // Validate URL format
@@ -26,14 +26,21 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Start the deep scraping process
+    // Start the deep scraping process with timeout protection
     // This will create a database record and begin processing
-    const { id } = await deepScrapeWebsite(url, {
-      fullSite,
-      includeScreenshots,
-      includeLighthouse,
-      maxPages
+    const timeoutPromise = new Promise((_, reject) => {
+      setTimeout(() => reject(new Error('Processing timeout - analysis taking too long')), 55000); // 55 second timeout
     });
+
+    const { id } = await Promise.race([
+      deepScrapeWebsite(url, {
+        fullSite,
+        includeScreenshots,
+        includeLighthouse,
+        maxPages
+      }),
+      timeoutPromise
+    ]) as any;
 
     return NextResponse.json({
       id,

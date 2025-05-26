@@ -5,5 +5,13 @@
       "src": "package.json",
       "use": "@vercel/next"
     }
-  ]
+  ],
+  "functions": {
+    "app/api/generate-prompt/route.ts": {
+      "maxDuration": 60
+    },
+    "app/api/resume-analysis/route.ts": {
+      "maxDuration": 60
+    }
+  }
 }

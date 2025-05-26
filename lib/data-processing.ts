@@ -817,8 +817,8 @@ export async function deepScrapeWebsite(url: string, options: {
         ...navigationPages.keyPages // All key pages (up to 6)
       ];
 
-      // Remove duplicates and ensure we don't exceed rate limits
-      pagesToScrape = [...new Set(selectedPages)].slice(0, 12); // Max 12 pages to respect rate limits
+      // Remove duplicates and ensure we don't exceed rate limits (reduced for Vercel timeout limits)
+      pagesToScrape = [...new Set(selectedPages)].slice(0, 6); // Max 6 pages to prevent Vercel timeouts
 
       // If we still don't have enough pages, add some from the full site map
       if (pagesToScrape.length < 6 && siteMapData.pages.length > pagesToScrape.length) {
