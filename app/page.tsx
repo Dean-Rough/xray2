@@ -542,7 +542,7 @@ export default function HomePage() {
             <div className="relative">
               <div className="xrai-separator-section"></div>
               <div className="absolute top-0 left-0 xrai-label opacity-30">
-                v2.1.9
+                v2.2.0
               </div>
             </div>
 

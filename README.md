@@ -154,7 +154,10 @@ vercel --prod
 
 ## 📈 Recent Improvements
 
-### **v2.1.9 - Complete Production Compatibility ✅ WORKING**
+### **v2.2.0 - Enhanced UI & Complete Production Compatibility ✅ WORKING**
+- ✅ **Version number display** - Added v2.2.0 to separator line for version tracking
+- ✅ **Removed task icons** - Cleaner, more minimal UI appearance
+- ✅ **Professional versioning** - Subtle version display using xrai-label styling
 - ✅ **Fixed undefined zipPath variable** - Replaced with zipBuffer for consistency
 - ✅ **Complete serverless compatibility** - All file system operations work in production
 - ✅ **Fixed serverless file system** - Use `/tmp` directory for Vercel compatibility

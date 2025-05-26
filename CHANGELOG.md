@@ -2,6 +2,21 @@
 
 All notable changes to the Xrai project will be documented in this file.
 
+## [2.2.0] - 2025-01-24
+
+### 🎨 Enhanced UI & Version Tracking
+
+#### UI Improvements
+- **Version Number Display**: Added version tracking to separator line for better deployment visibility
+- **Professional Styling**: Used xrai-label class with 30% opacity for subtle, consistent appearance
+- **Clean Task Display**: Removed all icons from analysis task sequence for minimal, professional look
+- **Reduced Bundle Size**: Eliminated emoji characters for better performance
+
+#### Version Management
+- **Deployment Tracking**: Version number now visible in UI for easy identification
+- **Consistent Branding**: Maintains design system consistency with existing typography
+- **Memory Integration**: Automated reminder system for version updates with each deployment
+
 ## [2.1.9] - 2025-01-24
 
 ### 🔧 Complete Production Compatibility
