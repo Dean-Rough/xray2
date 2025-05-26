@@ -2,7 +2,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   // External packages for server components
-  serverExternalPackages: ['lighthouse', '@modelcontextprotocol/sdk'],
+  serverExternalPackages: ['lighthouse', '@modelcontextprotocol/sdk', '@sparticuz/chromium'],
 
   eslint: {
     // Disable ESLint during builds for faster deployment

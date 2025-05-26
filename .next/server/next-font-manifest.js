@@ -1,1 +1,1 @@
-self.__NEXT_FONT_MANIFEST="{\"pages\":{},\"app\":{},\"appUsingSizeAdjust\":false,\"pagesUsingSizeAdjust\":false}"
+self.__NEXT_FONT_MANIFEST='{"pages":{},"app":{"/Users/deannewton/Documents/xray/app/layout":["static/media/fc47dc2fbf902da7-s.p.otf","static/media/41359f70ab11dfcd-s.p.otf"]},"appUsingSizeAdjust":true,"pagesUsingSizeAdjust":false}';

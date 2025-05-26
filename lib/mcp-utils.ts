@@ -122,7 +122,10 @@ async function captureScreenshotWithPuppeteer(url: string): Promise<string | nul
     // Import Puppeteer dynamically to avoid server-side issues
     const puppeteer = await import('puppeteer');
 
-    const browser = await puppeteer.default.launch({
+    // Enhanced Puppeteer configuration for serverless environments (Vercel)
+    const isProduction = process.env.NODE_ENV === 'production';
+
+    let launchOptions: any = {
       headless: true,
       args: [
         '--no-sandbox',
@@ -131,9 +134,51 @@ async function captureScreenshotWithPuppeteer(url: string): Promise<string | nul
         '--disable-accelerated-2d-canvas',
         '--no-first-run',
         '--no-zygote',
-        '--disable-gpu'
+        '--disable-gpu',
+        '--disable-web-security',
+        '--disable-features=VizDisplayCompositor',
+        '--disable-background-timer-throttling',
+        '--disable-backgrounding-occluded-windows',
+        '--disable-renderer-backgrounding',
+        '--disable-ipc-flooding-protection',
+        '--single-process', // Critical for serverless
+        '--no-default-browser-check',
+        '--disable-default-apps',
+        '--disable-extensions',
+        '--disable-plugins',
+        '--disable-sync',
+        '--disable-translate',
+        '--hide-scrollbars',
+        '--mute-audio',
+        '--disable-background-networking',
+        '--disable-client-side-phishing-detection',
+        '--disable-hang-monitor',
+        '--disable-popup-blocking',
+        '--disable-prompt-on-repost',
+        '--disable-web-resources',
+        '--metrics-recording-only',
+        '--safebrowsing-disable-auto-update',
+        '--enable-automation',
+        '--password-store=basic',
+        '--use-mock-keychain'
       ]
-    });
+    };
+
+    // Use serverless-optimized Chromium in production
+    if (isProduction) {
+      try {
+        const chromium = await import('@sparticuz/chromium');
+        launchOptions.executablePath = await chromium.executablePath();
+        launchOptions.args = chromium.args;
+        console.log(`🚀 Using serverless Chromium for production`);
+      } catch (error) {
+        console.warn('⚠️ Failed to load serverless Chromium, falling back to bundled:', error);
+      }
+    } else {
+      console.log(`🚀 Using bundled Chromium for development`);
+    }
+
+    const browser = await puppeteer.default.launch(launchOptions);
 
     try {
       const page = await browser.newPage();
@@ -358,6 +403,36 @@ async function captureScreenshotWithPuppeteer(url: string): Promise<string | nul
 
   } catch (error) {
     console.error('❌ Puppeteer screenshot failed:', error);
+    console.error('Error details:', {
+      message: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : 'No stack trace',
+      isProduction: process.env.NODE_ENV === 'production',
+      nodeVersion: process.version,
+      platform: process.platform
+    });
+
+    // In production, try a simpler fallback approach
+    if (process.env.NODE_ENV === 'production') {
+      console.log('🔄 Attempting simplified Puppeteer fallback for production...');
+      try {
+        const puppeteer = await import('puppeteer');
+        const browser = await puppeteer.default.launch({
+          headless: true,
+          args: ['--no-sandbox', '--disable-setuid-sandbox']
+        });
+
+        const page = await browser.newPage();
+        await page.goto(url, { waitUntil: 'networkidle2', timeout: 30000 });
+        const screenshot = await page.screenshot({ fullPage: true, encoding: 'base64' });
+        await browser.close();
+
+        console.log('✅ Simplified Puppeteer fallback succeeded');
+        return `data:image/png;base64,${screenshot}`;
+      } catch (fallbackError) {
+        console.error('❌ Simplified Puppeteer fallback also failed:', fallbackError);
+      }
+    }
+
     return null;
   }
 }
