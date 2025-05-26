@@ -501,7 +501,7 @@ export default function HomePage() {
               rel="noopener noreferrer"
               className="text-white text-sm hover:opacity-70 transition-opacity"
             >
-              A ROUGH tool
+              a Rough tool.
             </a>
           </div>
 

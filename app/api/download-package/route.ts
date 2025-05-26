@@ -39,26 +39,42 @@ export async function GET(request: NextRequest) {
 
     // Check if the result contains package information
     const result = analysis.result as any;
-    if (!result?.package?.zipPath) {
+    if (!result?.package?.zipBuffer && !result?.package?.zipPath) {
       return NextResponse.json(
         { error: 'Package not found or not generated' },
         { status: 404 }
       );
     }
 
-    const zipPath = result.package.zipPath;
+    let fileBuffer: Buffer;
+    let fileName: string;
 
-    // Check if the file exists
-    if (!fs.existsSync(zipPath)) {
+    // Try to get ZIP buffer from database first (new method)
+    if (result.package.zipBuffer) {
+      fileBuffer = Buffer.from(result.package.zipBuffer, 'base64');
+      fileName = `${result.package.name}.zip`;
+    }
+    // Fallback to file system (legacy method)
+    else if (result.package.zipPath) {
+      const zipPath = result.package.zipPath;
+
+      // Check if the file exists
+      if (!fs.existsSync(zipPath)) {
+        return NextResponse.json(
+          { error: 'Package file not found on server' },
+          { status: 404 }
+        );
+      }
+
+      // Read the file
+      fileBuffer = fs.readFileSync(zipPath);
+      fileName = path.basename(zipPath);
+    } else {
       return NextResponse.json(
-        { error: 'Package file not found on server' },
+        { error: 'Package data not available' },
         { status: 404 }
       );
     }
-
-    // Read the file
-    const fileBuffer = fs.readFileSync(zipPath);
-    const fileName = path.basename(zipPath);
 
     // Return the file as a download
     return new NextResponse(fileBuffer, {

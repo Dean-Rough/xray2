@@ -706,10 +706,10 @@ async function performAIAudit(
  */
 export async function runLighthouseAudit(url: string): Promise<Record<string, unknown>> {
   try {
-    // Create a temporary directory for the output
-    const tempDir = path.join(process.cwd(), 'temp');
+    // Create a temporary directory for the output (use /tmp for serverless compatibility)
+    const tempDir = process.env.NODE_ENV === 'production' ? '/tmp' : path.join(process.cwd(), 'temp');
     if (!fs.existsSync(tempDir)) {
-      fs.mkdirSync(tempDir);
+      fs.mkdirSync(tempDir, { recursive: true });
     }
 
     const outputPath = path.join(tempDir, `lighthouse-${Date.now()}.json`);
@@ -1025,15 +1025,9 @@ export async function deepScrapeWebsite(url: string, options: {
       analysis.id
     );
 
-    // Save the package as a ZIP file
-    const tempDir = path.join(process.cwd(), 'temp');
-    if (!fs.existsSync(tempDir)) {
-      fs.mkdirSync(tempDir);
-    }
-
+    // Generate the ZIP buffer (store in database instead of file system for serverless compatibility)
     const zipBuffer = await rebuildPackage.zip.generateAsync({ type: 'nodebuffer' });
-    const zipPath = path.join(tempDir, `${rebuildPackage.packageName}.zip`);
-    fs.writeFileSync(zipPath, zipBuffer);
+    const zipBase64 = zipBuffer.toString('base64');
 
     // Also generate the legacy JSON format for backward compatibility
     const legacyPrompt = generateSonnetPrompt(
@@ -1047,7 +1041,7 @@ export async function deepScrapeWebsite(url: string, options: {
     const finalResult = {
       package: {
         name: rebuildPackage.packageName,
-        zipPath,
+        zipBuffer: zipBase64, // Store as base64 string in database
         manifest: rebuildPackage.manifest
       },
       legacy: legacyPrompt
