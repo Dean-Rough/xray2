@@ -2,8 +2,8 @@
   "/_not-found/page": "app/_not-found/page.js",
   "/api/download-package/route": "app/api/download-package/route.js",
   "/api/generate-prompt/route": "app/api/generate-prompt/route.js",
-  "/api/resume-analysis/route": "app/api/resume-analysis/route.js",
   "/favicon.ico/route": "app/favicon.ico/route.js",
   "/icon/route": "app/icon/route.js",
+  "/api/resume-analysis/route": "app/api/resume-analysis/route.js",
   "/page": "app/page.js"
 }
