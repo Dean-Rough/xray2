@@ -890,7 +890,7 @@ export default function HomePage() {
                 </div>
                 <div className="flex items-start space-x-3">
                   <span className="text-black font-bold">02</span>
-                  <span className="text-sm font-normal">AI analyzes up to 12 key pages with intelligent selection</span>
+                  <span className="text-sm font-normal">AI analyzes up to 6 key pages with intelligent selection</span>
                 </div>
                 <div className="flex items-start space-x-3">
                   <span className="text-black font-bold">03</span>
