@@ -2,6 +2,23 @@
 
 All notable changes to the Xrai project will be documented in this file.
 
+## [2.1.6] - 2025-01-24
+
+### ✨ Scrolling Marquee Animation
+
+#### Animated Right Navigation Bar
+- **Scrolling Marquee Effect**: Implemented smooth scrolling animation for "website analysis tool" text
+- **Infinite Loop**: Text repeats continuously with bullet separators (•) for visual flow
+- **20-Second Animation**: Linear animation cycle using CSS keyframes and translateX
+- **Typography Refinement**: Removed font-bold for cleaner appearance, maintained text-sm sizing
+- **Overflow Management**: Added overflow-hidden to nav bar for proper text clipping
+
+#### CSS Animation Implementation
+- **Keyframe Animation**: Custom @keyframes marquee with 0% to -50% translateX movement
+- **Smooth Performance**: Linear timing function for consistent scrolling speed
+- **Responsive Design**: Animation works across all screen sizes and orientations
+- **Professional Polish**: Adds dynamic visual interest while maintaining sophistication
+
 ## [2.1.5] - 2025-01-24
 
 ### 🎨 Perfected Navigation Bar Spacing
