@@ -2,6 +2,21 @@
 
 All notable changes to the Xrai project will be documented in this file.
 
+## [2.1.5] - 2025-01-24
+
+### 🎨 Perfected Navigation Bar Spacing
+
+#### Fixed Padding Issues
+- **Increased Padding**: Enhanced from py-12 to py-20 (80px) for proper breathing room
+- **Eliminated Edge-Butting**: Logo and text elements no longer touch top/bottom edges
+- **Consistent Spacing**: Applied same padding to both left and right navigation bars
+- **Professional Layout**: Proper visual hierarchy with adequate white space
+
+#### Typography Refinements
+- **Restored Font Weight**: Ensured right nav bar text maintains font-bold styling
+- **Consistent Sizing**: Maintained text-sm sizing across all navigation elements
+- **Styrene Integration**: Proper font family application for brand consistency
+
 ## [2.1.4] - 2025-01-24
 
 ### 🎨 Dual Navigation Bar System

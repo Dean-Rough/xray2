@@ -519,11 +519,13 @@ export default function HomePage() {
         </div>
 
         {/* Right Side - Fixed Nav Bar */}
-        <div className="fixed right-0 top-0 h-screen w-32 bg-black flex flex-col justify-center items-center py-20 z-50">
+        <div className="fixed right-0 top-0 h-screen w-32 bg-black flex flex-col justify-center items-center py-20 z-50 overflow-hidden">
           <div className="transform rotate-90 whitespace-nowrap">
-            <span className="text-white text-sm font-bold tracking-wide" style={{ fontFamily: 'var(--font-styrene), sans-serif' }}>
-              website analysis tool
-            </span>
+            <div className="animate-marquee">
+              <span className="text-white text-sm tracking-wide" style={{ fontFamily: 'var(--font-styrene), sans-serif' }}>
+                website analysis tool • website analysis tool • website analysis tool • website analysis tool • website analysis tool • website analysis tool • website analysis tool • website analysis tool • website analysis tool •
+              </span>
+            </div>
           </div>
         </div>
 
