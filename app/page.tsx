@@ -492,7 +492,7 @@ export default function HomePage() {
     <div className="min-h-screen bg-white">
       <div className="min-h-screen flex">
         {/* Left Side - Fixed Nav Bar */}
-        <div className="fixed left-0 top-0 h-screen w-16 bg-black flex flex-col justify-between items-center py-6 z-50">
+        <div className="fixed left-0 top-0 h-screen w-32 bg-black flex flex-col justify-between items-center py-12 z-50">
           {/* Top - A ROUGH tool link */}
           <div className="transform -rotate-90 whitespace-nowrap">
             <a
@@ -513,13 +513,22 @@ export default function HomePage() {
             <img
               src="/xrai-dark.svg"
               alt="Xrai"
-              className="h-6 filter invert"
+              className="h-8 filter invert"
             />
           </div>
         </div>
 
+        {/* Right Side - Fixed Nav Bar */}
+        <div className="fixed right-0 top-0 h-screen w-32 bg-black flex flex-col justify-center items-center py-12 z-50">
+          <div className="transform rotate-90 whitespace-nowrap">
+            <span className="text-white text-sm font-bold tracking-wide" style={{ fontFamily: 'var(--font-styrene), sans-serif' }}>
+              website analysis tool
+            </span>
+          </div>
+        </div>
+
         {/* Main Content */}
-        <div className="flex-1 flex items-center justify-center py-16 px-8 ml-16">
+        <div className="flex-1 flex items-center justify-center py-16 px-8 mx-32">
           <div className="w-full max-w-6xl">
             {/* Header */}
 
