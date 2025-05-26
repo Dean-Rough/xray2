@@ -541,7 +541,7 @@ export default function HomePage() {
             {/* Version Number */}
             <div className="p-8">
               <div className="xrai-label text-black">
-                v2.2.0
+                v2.2.1
               </div>
             </div>
 

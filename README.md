@@ -154,10 +154,12 @@ vercel --prod
 
 ## 📈 Recent Improvements
 
-### **v2.2.0 - Enhanced UI & Complete Production Compatibility ✅ WORKING**
-- ✅ **Version number display** - Added v2.2.0 to separator line for version tracking
+### **v2.2.1 - Improved Version Display & Enhanced UI ✅ WORKING**
+- ✅ **Enhanced version positioning** - Moved v2.2.1 above separator with p-8 padding
+- ✅ **Dark color styling** - Changed to text-black for better visibility and brand alignment
+- ✅ **Improved visual hierarchy** - Version number now prominently displayed with proper spacing
 - ✅ **Removed task icons** - Cleaner, more minimal UI appearance
-- ✅ **Professional versioning** - Subtle version display using xrai-label styling
+- ✅ **Professional versioning** - Consistent with card padding and design system
 - ✅ **Fixed undefined zipPath variable** - Replaced with zipBuffer for consistency
 - ✅ **Complete serverless compatibility** - All file system operations work in production
 - ✅ **Fixed serverless file system** - Use `/tmp` directory for Vercel compatibility

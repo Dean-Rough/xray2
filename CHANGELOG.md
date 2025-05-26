@@ -2,6 +2,22 @@
 
 All notable changes to the Xrai project will be documented in this file.
 
+## [2.2.1] - 2025-01-24
+
+### 🎨 Improved Version Display & Visual Hierarchy
+
+#### Enhanced Version Positioning
+- **Repositioned Above Separator**: Moved version number from overlay to dedicated space above separator line
+- **Consistent Padding**: Added p-8 padding to match card spacing throughout the application
+- **Dark Color Styling**: Changed from opacity-based styling to solid text-black for better visibility
+- **Improved Readability**: Enhanced contrast and prominence for better user experience
+
+#### Visual Design Improvements
+- **Better Layout Flow**: Version number now leads content section with proper spacing
+- **Professional Appearance**: Maintains design system consistency with existing components
+- **Clean Separation**: Clear visual distinction between version info and main content
+- **Enhanced Hierarchy**: Improved information architecture and visual organization
+
 ## [2.2.0] - 2025-01-24
 
 ### 🎨 Enhanced UI & Version Tracking
