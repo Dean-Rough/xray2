@@ -147,7 +147,7 @@ export async function processContentData(rawData: unknown) {
             content: cssContent || undefined
           });
         } catch (error) {
-          console.error(`❌ Failed to fetch CSS from ${cssUrl}:`, error);
+          console.error(`❌ Failed to fetch CSS from ${cssUrl}:`, error?.toString() || 'Unknown error');
           assets.push({
             url: cssUrl,
             type: 'css',
@@ -221,7 +221,7 @@ export async function processContentData(rawData: unknown) {
       version: '1.0.0'
     };
   } catch (error) {
-    console.error('Error processing content data:', error);
+    console.error('Error processing content data:', error?.toString() || 'Unknown error');
     return {
       html: '',
       markdown: '',
@@ -261,7 +261,7 @@ async function fetchCSSContent(url: string): Promise<string | null> {
 
     return await response.text();
   } catch (error) {
-    console.error(`Failed to fetch CSS from ${url}:`, error);
+    console.error(`Failed to fetch CSS from ${url}:`, error?.toString() || 'Unknown error');
     return null;
   }
 }
@@ -731,7 +731,7 @@ export async function runLighthouseAudit(url: string): Promise<Record<string, un
 
     return JSON.parse(data);
   } catch (error) {
-    console.error('Error running Lighthouse audit:', error);
+    console.error('Error running Lighthouse audit:', error?.toString() || 'Unknown error');
     throw error;
   }
 }
@@ -1065,13 +1065,13 @@ export async function deepScrapeWebsite(url: string, options: {
     const processingTime = (Date.now() - startTime) / 1000;
     const errorMessage = error instanceof Error ? error.message : String(error);
 
-    console.error('Error performing deep scraping:', error);
+    console.error('Error performing deep scraping:', error?.toString() || 'Unknown error');
     console.error('Error stack:', error instanceof Error ? error.stack : 'No stack trace');
-    console.error('Environment variables check:', {
+    console.error('Environment variables check:', JSON.stringify({
       hasFirecrawlKey: !!process.env.FIRECRAWL_API_KEY,
       hasOpenAIKey: !!process.env.OPENAI_API_KEY,
       hasDatabaseUrl: !!process.env.DATABASE_URL
-    });
+    }));
 
     // Mark analysis as failed in database if we have an analysis ID
     if (analysis?.id) {

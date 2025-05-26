@@ -2,6 +2,35 @@
 
 All notable changes to the Xrai project will be documented in this file.
 
+## [2.1.1] - 2025-01-24
+
+### 🚀 Enhanced Screenshot Capture v2.1
+
+#### Progressive Scroll Loading System
+- **Intelligent Page Traversal**: Calculates optimal scroll steps based on page height and viewport
+- **Comprehensive Content Triggering**: 1.5s wait per scroll position to trigger lazy-loaded content
+- **Animation Library Support**: Automatic triggering of AOS, ScrollMagic, and other animation frameworks
+- **Intersection Observer Activation**: Forces visibility checks for scroll-based animations
+- **Lazy Loading Detection**: Targets `[data-src]`, `.lazy`, `.lazyload`, `[loading="lazy"]` elements
+- **Event Dispatching**: Triggers scroll and resize events to activate dynamic content
+
+#### Enhanced Loading Detection (20+ seconds total)
+- **Progressive Scroll Sequence**: Variable duration based on page complexity
+- **Scroll-Triggered Content**: Waits for animations and lazy content at each scroll position
+- **Image Loading Validation**: Checks for newly loaded images after each scroll step
+- **Final Rendering Wait**: 3s settling time after scroll completion
+
+#### Improved Retry Logic
+- **Aggressive Scroll Patterns**: Enhanced retry with up to 5 scroll steps
+- **Content Triggering**: Dispatches events and forces layout calculations during retry
+- **Layout Recalculation**: Forces `getBoundingClientRect()` calls to trigger observers
+
+### 📊 Performance Impact
+- **Longer capture times**: 20-40+ seconds depending on page complexity
+- **Higher content accuracy**: Captures scroll-triggered animations and lazy content
+- **Better mobile compatibility**: Handles progressive enhancement patterns
+- **Animation completeness**: Ensures all scroll-based animations are captured
+
 ## [2.1.0] - 2025-01-24
 
 ### 🎯 Major Features Added

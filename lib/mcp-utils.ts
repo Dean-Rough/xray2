@@ -181,10 +181,88 @@ async function captureScreenshotWithPuppeteer(url: string): Promise<string | nul
         console.log('⚠️ Image loading timeout, proceeding with screenshot');
       }
 
-      // Additional wait for fonts and final rendering
-      await new Promise(resolve => setTimeout(resolve, 5000)); // Increased from 2s to 5s
+      // ENHANCED: Progressive scroll loading to trigger all lazy content and animations
+      console.log(`🔄 Starting progressive scroll loading to trigger all content...`);
 
-      console.log(`📷 Taking screenshot after ${8 + 5}s+ loading time`);
+      // Get page dimensions for intelligent scrolling
+      const pageHeight = await page.evaluate(() => {
+        return Math.max(
+          document.body.scrollHeight,
+          document.body.offsetHeight,
+          document.documentElement.clientHeight,
+          document.documentElement.scrollHeight,
+          document.documentElement.offsetHeight
+        );
+      });
+
+      const viewportHeight = await page.evaluate(() => window.innerHeight);
+      console.log(`📏 Page height: ${pageHeight}px, Viewport: ${viewportHeight}px`);
+
+      // Progressive scroll through entire page to trigger lazy loading and animations
+      const scrollSteps = Math.ceil(pageHeight / (viewportHeight * 0.8)); // 80% overlap for safety
+      console.log(`📜 Performing ${scrollSteps} scroll steps to trigger all content`);
+
+      for (let i = 0; i <= scrollSteps; i++) {
+        const scrollPosition = Math.min((i * viewportHeight * 0.8), pageHeight - viewportHeight);
+
+        await page.evaluate((pos) => {
+          window.scrollTo(0, pos);
+        }, scrollPosition);
+
+        // Wait for scroll-triggered content and animations
+        await new Promise(resolve => setTimeout(resolve, 1500)); // 1.5s per scroll step
+
+        // Trigger intersection observers and lazy loading mechanisms
+        try {
+          await page.evaluate(() => {
+            // Dispatch scroll events to trigger any scroll-based animations
+            window.dispatchEvent(new Event('scroll'));
+            window.dispatchEvent(new Event('resize'));
+
+            // Force intersection observer checks
+            const lazyElements = document.querySelectorAll('[data-src], .lazy, .lazyload, [loading="lazy"]');
+            lazyElements.forEach(el => {
+              if (el.getBoundingClientRect) {
+                const rect = el.getBoundingClientRect();
+                // Force visibility check for intersection observers
+                if (rect.top < window.innerHeight && rect.bottom > 0) {
+                  el.dispatchEvent(new Event('load'));
+                }
+              }
+            });
+
+            // Trigger any animation libraries (AOS, ScrollMagic, etc.)
+            if (window.AOS && window.AOS.refresh) window.AOS.refresh();
+            if (window.ScrollMagic) window.dispatchEvent(new Event('scroll'));
+          });
+        } catch (e) {
+          // Continue if trigger fails
+        }
+
+        // Wait for any new images that might have loaded
+        try {
+          await page.waitForFunction(
+            () => {
+              const images = Array.from(document.images);
+              return images.every(img => img.complete || img.src === '');
+            },
+            { timeout: 3000 }
+          );
+        } catch (e) {
+          // Continue if image loading times out
+        }
+
+        console.log(`📍 Scroll step ${i + 1}/${scrollSteps + 1} - Position: ${scrollPosition}px`);
+      }
+
+      // Scroll back to top for final screenshot
+      await page.evaluate(() => window.scrollTo(0, 0));
+      console.log(`⬆️ Scrolled back to top for final screenshot`);
+
+      // Additional wait for fonts and final rendering after scroll sequence
+      await new Promise(resolve => setTimeout(resolve, 3000)); // Wait for final settling
+
+      console.log(`📷 Taking screenshot after comprehensive loading (${8 + 5 + (scrollSteps * 1.5) + 3}s+ total)`);
 
       // Capture full-page screenshot
       const screenshot = await page.screenshot({
@@ -201,15 +279,53 @@ async function captureScreenshotWithPuppeteer(url: string): Promise<string | nul
         console.log(`⚠️ WARNING: Screenshot is very small (~${Math.round(estimatedBytes)} bytes) - likely blank or failed to load`);
         console.log(`🔄 Attempting additional wait and retry...`);
 
-        // Additional wait and retry
-        await new Promise(resolve => setTimeout(resolve, 10000));
+        // Additional wait and retry with enhanced scroll sequence
+        await new Promise(resolve => setTimeout(resolve, 5000));
 
-        // Try to scroll to trigger any lazy loading
-        await page.evaluate(() => {
-          window.scrollTo(0, document.body.scrollHeight);
-          window.scrollTo(0, 0);
+        // Enhanced retry scroll sequence to trigger more content
+        console.log(`🔄 Retry: Enhanced scroll sequence to trigger lazy content`);
+
+        // Get updated page dimensions
+        const retryPageHeight = await page.evaluate(() => {
+          return Math.max(
+            document.body.scrollHeight,
+            document.body.offsetHeight,
+            document.documentElement.clientHeight,
+            document.documentElement.scrollHeight,
+            document.documentElement.offsetHeight
+          );
         });
 
+        // More aggressive scroll pattern for retry
+        const retryScrollSteps = Math.min(5, Math.ceil(retryPageHeight / viewportHeight)); // Max 5 steps for retry
+
+        for (let i = 0; i <= retryScrollSteps; i++) {
+          const scrollPos = (i / retryScrollSteps) * retryPageHeight;
+          await page.evaluate((pos) => window.scrollTo(0, pos), scrollPos);
+          await new Promise(resolve => setTimeout(resolve, 2000)); // 2s per retry step
+
+          // Trigger any click-to-load or hover content
+          try {
+            await page.evaluate(() => {
+              // Trigger any lazy loading by dispatching scroll events
+              window.dispatchEvent(new Event('scroll'));
+              window.dispatchEvent(new Event('resize'));
+
+              // Try to trigger intersection observers
+              const elements = document.querySelectorAll('[data-src], .lazy, .lazyload');
+              elements.forEach(el => {
+                if (el.getBoundingClientRect) {
+                  el.getBoundingClientRect(); // Force layout calculation
+                }
+              });
+            });
+          } catch (e) {
+            // Continue if trigger fails
+          }
+        }
+
+        // Return to top
+        await page.evaluate(() => window.scrollTo(0, 0));
         await new Promise(resolve => setTimeout(resolve, 3000));
 
         const retryScreenshot = await page.screenshot({
@@ -602,8 +718,14 @@ function extractNavigationFromHTML(html: string, baseUrl: string): string[] {
           if (hrefMatches) {
             for (const href of hrefMatches) {
               const url = href.replace(/href="([^"]+)"/, '$1');
-              const absoluteUrl = new URL(url, baseUrl).href;
-              navigationLinks.push(absoluteUrl);
+              try {
+                const formattedBaseUrl = baseUrl.startsWith('http') ? baseUrl : `https://${baseUrl}`;
+                const absoluteUrl = new URL(url, formattedBaseUrl).href;
+                navigationLinks.push(absoluteUrl);
+              } catch (urlError) {
+                // Skip invalid URLs
+                continue;
+              }
             }
           }
         }
@@ -624,7 +746,9 @@ function categorizePages(allPages: string[], baseUrl: string) {
   const keyPages: string[] = [];
 
   try {
-    const baseDomain = new URL(baseUrl).origin;
+    // Ensure baseUrl has protocol
+    const formattedBaseUrl = baseUrl.startsWith('http') ? baseUrl : `https://${baseUrl}`;
+    const baseDomain = new URL(formattedBaseUrl).origin;
 
     for (const page of allPages) {
       try {
@@ -679,14 +803,27 @@ function categorizePages(allPages: string[], baseUrl: string) {
 
   // Ensure we have at least the homepage
   if (mainNavigation.length === 0) {
-    mainNavigation.push(baseUrl);
+    const formattedBaseUrl = baseUrl.startsWith('http') ? baseUrl : `https://${baseUrl}`;
+    mainNavigation.push(formattedBaseUrl);
   }
 
   console.log(`📊 Page categorization results:`, {
     mainNavigation: mainNavigation.length,
     keyPages: keyPages.length,
-    sampleMainNav: mainNavigation.slice(0, 3).map(url => new URL(url).pathname),
-    sampleKeyPages: keyPages.slice(0, 3).map(url => new URL(url).pathname)
+    sampleMainNav: mainNavigation.slice(0, 3).map(url => {
+      try {
+        return new URL(url).pathname;
+      } catch {
+        return url;
+      }
+    }),
+    sampleKeyPages: keyPages.slice(0, 3).map(url => {
+      try {
+        return new URL(url).pathname;
+      } catch {
+        return url;
+      }
+    })
   });
 
   return {

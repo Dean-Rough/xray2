@@ -193,7 +193,8 @@ git push origin main
 
 ### 3. **Superior Data Extraction**
 - Actual CSS content (not just links)
-- Full-page screenshots (complete scroll)
+- Full-page screenshots with progressive scroll loading
+- Scroll-triggered animations and lazy content capture
 - Comprehensive asset manifests
 - AI-optimized rebuild packages
 
@@ -208,7 +209,7 @@ git push origin main
 ```bash
 # Deploy to production
 git add .
-git commit -m "🏆 XRAI v2.1.0: Awwwards-level UI sophistication"
+git commit -m "🚀 XRAI v2.1.1: Enhanced screenshot capture with progressive scroll loading"
 git push origin main
 
 # Test the live deployment

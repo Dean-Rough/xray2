@@ -65,18 +65,25 @@ npm run dev
 - **Automatic fallback** to Puppeteer when Firecrawl fails
 - **Progress tracking** with database persistence for resume capability
 
-### **Enhanced Screenshot Capture v2.0**
-- **Advanced Multi-Stage Loading**: 13+ second comprehensive loading detection
+### **Enhanced Screenshot Capture v2.1**
+- **Progressive Scroll Loading**: Comprehensive page traversal to trigger all content
+  - Intelligent scroll steps based on page height and viewport
+  - 1.5s wait per scroll position for content loading
+  - Scroll-triggered animation and lazy loading activation
+  - Intersection observer and animation library triggers
+- **Advanced Multi-Stage Loading**: 20+ second comprehensive loading detection
   - 8s initial content rendering wait
   - 15s dynamic content detection timeout
   - 10s image loading validation
-  - 5s final rendering wait
+  - Progressive scroll sequence (varies by page height)
+  - 3s final rendering wait after scroll completion
 - **Intelligent Wait Conditions**:
   - `networkidle0` for network request completion
   - `document.readyState === 'complete'` validation
   - Body content existence verification
   - All images loaded (`img.complete`) detection
-- **Smart Retry Logic**: Automatic retry with scroll-based lazy loading triggers
+  - Lazy loading element detection and triggering
+- **Smart Retry Logic**: Enhanced retry with aggressive scroll patterns
 - **Quality Validation**: Screenshot size validation to detect blank/failed captures
 - **Enhanced Error Handling**: Navigation timeout, frame detachment recovery
 - **Base64 Encoding**: Embedded screenshots in analysis packages
@@ -146,6 +153,16 @@ vercel --prod
 - **Vercel**: xray2-git-main-dean-roughs-projects.vercel.app
 
 ## 📈 Recent Improvements
+
+### **v2.1.1 - Progressive Scroll Loading Screenshots ✅ WORKING**
+- ✅ **Progressive scroll loading** with intelligent page traversal
+- ✅ **Scroll-triggered content capture** for animations and lazy loading
+- ✅ **Animation library support** (AOS, ScrollMagic, intersection observers)
+- ✅ **Enhanced loading detection** with 20-40+ second comprehensive capture
+- ✅ **Lazy loading element targeting** for complete content capture
+- ✅ **Improved retry logic** with aggressive scroll patterns
+- ✅ **Event dispatching** to trigger dynamic content loading
+- ✅ **Layout recalculation** forcing for intersection observer activation
 
 ### **v2.1.0 - Smart Navigation Discovery & Enhanced Screenshots ✅ WORKING**
 - ✅ **Intelligent page selection** based on navigation analysis

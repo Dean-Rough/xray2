@@ -50,7 +50,11 @@ export async function createWebsiteAnalysisRequest(url: string, options?: Record
  */
 export async function getWebsiteAnalysisById(id: string) {
   try {
-    return await prisma.websiteAnalysis.findUnique({
+    const client = getPrismaClient();
+    if (!client) {
+      throw new Error('Database not available');
+    }
+    return await client.websiteAnalysis.findUnique({
       where: { id }
     })
   } catch (error) {
@@ -76,7 +80,11 @@ export async function updateWebsiteAnalysisStatus(
   processingTime?: number
 ) {
   try {
-    return await prisma.websiteAnalysis.update({
+    const client = getPrismaClient();
+    if (!client) {
+      throw new Error('Database not available');
+    }
+    return await client.websiteAnalysis.update({
       where: { id },
       data: {
         status,
@@ -99,7 +107,11 @@ export async function updateWebsiteAnalysisStatus(
  */
 export async function listWebsiteAnalysisRequests(limit = 10, skip = 0) {
   try {
-    return await prisma.websiteAnalysis.findMany({
+    const client = getPrismaClient();
+    if (!client) {
+      throw new Error('Database not available');
+    }
+    return await client.websiteAnalysis.findMany({
       take: limit,
       skip,
       orderBy: { createdAt: 'desc' }
@@ -117,7 +129,11 @@ export async function listWebsiteAnalysisRequests(limit = 10, skip = 0) {
  */
 export async function deleteWebsiteAnalysisRequest(id: string) {
   try {
-    return await prisma.websiteAnalysis.delete({
+    const client = getPrismaClient();
+    if (!client) {
+      throw new Error('Database not available');
+    }
+    return await client.websiteAnalysis.delete({
       where: { id }
     })
   } catch (error) {
@@ -133,7 +149,11 @@ export async function deleteWebsiteAnalysisRequest(id: string) {
  */
 export async function getFailedAnalysisRequests(limit = 10) {
   try {
-    return await prisma.websiteAnalysis.findMany({
+    const client = getPrismaClient();
+    if (!client) {
+      throw new Error('Database not available');
+    }
+    return await client.websiteAnalysis.findMany({
       where: { status: 'FAILED' },
       take: limit,
       orderBy: { createdAt: 'desc' }
@@ -151,6 +171,10 @@ export async function getFailedAnalysisRequests(limit = 10) {
  */
 export async function getResumableAnalysisRequests(url?: string) {
   try {
+    const client = getPrismaClient();
+    if (!client) {
+      throw new Error('Database not available');
+    }
     const where: any = {
       status: { in: ['FAILED', 'MAPPING', 'SCRAPING', 'PROCESSING'] }
     }
@@ -159,7 +183,7 @@ export async function getResumableAnalysisRequests(url?: string) {
       where.url = url
     }
 
-    return await prisma.websiteAnalysis.findMany({
+    return await client.websiteAnalysis.findMany({
       where,
       orderBy: { createdAt: 'desc' }
     })
@@ -196,8 +220,12 @@ export async function markAnalysisAsFailed(
  */
 export async function cleanupOldAnalysisRequests(daysOld = 7) {
   try {
+    const client = getPrismaClient();
+    if (!client) {
+      throw new Error('Database not available');
+    }
     const cutoffDate = new Date(Date.now() - daysOld * 24 * 60 * 60 * 1000)
-    return await prisma.websiteAnalysis.deleteMany({
+    return await client.websiteAnalysis.deleteMany({
       where: {
         createdAt: { lt: cutoffDate },
         OR: [

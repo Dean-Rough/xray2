@@ -1,0 +1,239 @@
+/* XRAI UI Styles - Complete System */
+
+/* Brand Colors */
+:root {
+  --black: #212121;
+  --light-gray: #F7FDF4;
+  --yellow: #FCCC00;
+  --white: #FFFFFF;
+}
+
+/* Typography */
+.text-hero {
+  font-family: 'Styrene A', sans-serif;
+  font-weight: normal;
+  font-size: 2.5rem;
+  line-height: 1.2;
+  color: var(--black);
+}
+
+.text-section {
+  font-family: 'Styrene A', sans-serif;
+  font-weight: normal;
+  font-size: 1.5rem;
+  line-height: 1.3;
+  color: var(--black);
+}
+
+.text-body {
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--black);
+}
+
+.xrai-label {
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  font-size: 0.875rem;
+  color: var(--black);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Cards */
+.xrai-card {
+  background: var(--white);
+  border: 1px solid var(--black);
+  padding: 1rem;
+  transition: border-color 0.2s ease;
+}
+
+.xrai-card:hover {
+  border-color: var(--yellow);
+}
+
+.xrai-card-elevated {
+  background: var(--light-gray);
+  border: 1px solid var(--black);
+  padding: 1rem;
+}
+
+.xrai-card-yellow {
+  background: var(--yellow);
+  border: 1px solid var(--black);
+  padding: 1rem;
+}
+
+/* Buttons */
+.xrai-button {
+  background: var(--yellow);
+  color: var(--black);
+  border: 1px solid var(--black);
+  padding: 0.5rem 1.5rem;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.xrai-button:hover {
+  background: var(--black);
+  color: var(--yellow);
+}
+
+.xrai-button-secondary {
+  background: var(--white);
+  color: var(--black);
+  border: 1px solid var(--black);
+  padding: 0.5rem 1.5rem;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.xrai-button-secondary:hover {
+  background: var(--light-gray);
+}
+
+/* Inputs */
+.xrai-input {
+  background: var(--white);
+  border: 1px solid var(--black);
+  padding: 0.5rem 1rem;
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+  color: var(--black);
+  width: 100%;
+  transition: border-color 0.2s ease;
+}
+
+.xrai-input:focus {
+  outline: none;
+  border-color: var(--yellow);
+}
+
+.xrai-input::placeholder {
+  color: var(--black);
+  opacity: 0.6;
+}
+
+/* Separators */
+.xrai-separator-horizontal {
+  width: 100%;
+  height: 1px;
+  background: var(--black);
+  border: none;
+  margin: 1.5rem 0;
+}
+
+.xrai-separator-vertical {
+  width: 1px;
+  height: 100%;
+  background: var(--black);
+  margin: 0 1.5rem;
+}
+
+.xrai-separator-section {
+  width: 100%;
+  height: 2px;
+  background: var(--yellow);
+  border: none;
+  margin: 3rem 0;
+}
+
+/* Layout */
+.xrai-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.xrai-grid-two-col {
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+}
+
+.xrai-grid-two-col > * {
+  flex: 1;
+}
+
+/* Spacing */
+.xrai-mb-sm { margin-bottom: 0.5rem; }
+.xrai-mb-md { margin-bottom: 1rem; }
+.xrai-mb-lg { margin-bottom: 1.5rem; }
+.xrai-mb-xl { margin-bottom: 2rem; }
+
+.xrai-mt-sm { margin-top: 0.5rem; }
+.xrai-mt-md { margin-top: 1rem; }
+.xrai-mt-lg { margin-top: 1.5rem; }
+.xrai-mt-xl { margin-top: 2rem; }
+
+.xrai-p-sm { padding: 0.5rem; }
+.xrai-p-md { padding: 1rem; }
+.xrai-p-lg { padding: 1.5rem; }
+
+/* Utilities */
+.xrai-text-center { text-align: center; }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .xrai-grid-two-col {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .text-hero {
+    font-size: 2rem;
+  }
+
+  .xrai-separator-vertical {
+    display: none;
+  }
+}
+
+/* Global */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  color: var(--black);
+  background: var(--white);
+  margin: 0;
+  padding: 0;
+  line-height: 1.5;
+}
+
+/* Reset */
+button {
+  border: none;
+  background: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  cursor: pointer;
+}
+
+input, textarea, select {
+  border: none;
+  background: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+}
+
+*:focus-visible {
+  outline: 2px solid var(--yellow);
+  outline-offset: 2px;
+}
