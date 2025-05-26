@@ -491,8 +491,24 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-white">
       <div className="min-h-screen flex">
-        {/* Left Side - Logo */}
-        <div className="w-32 bg-black flex items-center justify-center">
+        {/* Left Side - Fixed Nav Bar */}
+        <div className="w-32 bg-black flex flex-col justify-between items-center py-8">
+          {/* Top - A ROUGH tool link */}
+          <div className="transform -rotate-90 whitespace-nowrap">
+            <a
+              href="https://www.rough.ink"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-white text-sm hover:opacity-70 transition-opacity"
+            >
+              A ROUGH tool
+            </a>
+          </div>
+
+          {/* Center - Vertical separator */}
+          <div className="w-px h-24 bg-white opacity-30"></div>
+
+          {/* Bottom - Logo */}
           <div className="transform -rotate-90 whitespace-nowrap">
             <img
               src="/xrai-dark.svg"
