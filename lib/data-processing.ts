@@ -747,7 +747,7 @@ export async function deepScrapeWebsite(url: string, options: {
   includeScreenshots?: boolean;
   includeLighthouse?: boolean;
   maxPages?: number;
-} = {}) {
+} = {}, existingAnalysisId?: string) {
   const startTime = Date.now();
   let analysis: any = null;
 
@@ -755,9 +755,15 @@ export async function deepScrapeWebsite(url: string, options: {
     console.log('Starting deepScrapeWebsite for:', url);
     console.log('Environment check - FIRECRAWL_API_KEY exists:', !!process.env.FIRECRAWL_API_KEY);
 
-    // Create a database record for the analysis
-    analysis = await createWebsiteAnalysisRequest(url, options);
-    console.log('Created analysis record:', analysis.id);
+    // Use existing analysis record or create a new one
+    if (existingAnalysisId) {
+      const { getWebsiteAnalysisById } = await import('./prisma-utils');
+      analysis = await getWebsiteAnalysisById(existingAnalysisId);
+      console.log('Using existing analysis record:', analysis.id);
+    } else {
+      analysis = await createWebsiteAnalysisRequest(url, options);
+      console.log('Created analysis record:', analysis.id);
+    }
 
     // Update status to MAPPING
     await updateWebsiteAnalysisStatus(analysis.id, 'MAPPING');

@@ -559,7 +559,7 @@ export default function HomePage() {
             {/* Header */}
             <div className="flex justify-between items-center p-8">
               <div className="xrai-label text-black">
-                v2.5.1
+                v2.6.0
               </div>
               <button
                 onClick={() => setShowHowItWorksModal(true)}

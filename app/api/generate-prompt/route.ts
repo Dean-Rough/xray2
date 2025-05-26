@@ -26,24 +26,27 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Start the deep scraping process with timeout protection
-    // This will create a database record and begin processing
-    const timeoutPromise = new Promise((_, reject) => {
-      setTimeout(() => reject(new Error('Processing timeout - analysis taking too long')), 55000); // 55 second timeout
+    // Create database record immediately for tracking
+    const { createWebsiteAnalysisRequest } = await import('../../../lib/prisma-utils');
+    const analysis = await createWebsiteAnalysisRequest(url, {
+      fullSite,
+      includeScreenshots,
+      includeLighthouse,
+      maxPages
     });
 
-    const { id } = await Promise.race([
-      deepScrapeWebsite(url, {
-        fullSite,
-        includeScreenshots,
-        includeLighthouse,
-        maxPages
-      }),
-      timeoutPromise
-    ]) as any;
+    // Start the deep scraping process in background (don't await)
+    deepScrapeWebsite(url, {
+      fullSite,
+      includeScreenshots,
+      includeLighthouse,
+      maxPages
+    }, analysis.id).catch(error => {
+      console.error('Background analysis failed:', error);
+    });
 
     return NextResponse.json({
-      id,
+      id: analysis.id,
       status: 'processing_started',
       url,
       fullSite,

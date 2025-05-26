@@ -2,6 +2,20 @@
 
 All notable changes to the XRAI project will be documented in this file.
 
+## [2.6.0] - 2025-05-26
+
+### 🚀 True Async Processing & Timeout Resolution
+- **BREAKING**: Removed 55-second timeout wrapper that was causing production failures
+- **FEATURE**: Implemented true asynchronous processing - API returns immediately with analysis ID
+- **ENHANCEMENT**: Database-first approach - analysis record created immediately for tracking
+- **IMPROVEMENT**: Background processing with proper error handling and logging
+- **OPTIMIZATION**: Status polling system for real-time progress updates
+- **RESOLVED**: All timeout issues in production environments (Vercel, etc.)
+- **MAINTAINED**: All existing functionality while eliminating timeout constraints
+- **TECHNICAL**: Modified `deepScrapeWebsite` to accept optional analysis ID parameter
+- **TECHNICAL**: Enhanced API route to create database record before starting processing
+- **TECHNICAL**: Improved error handling for background processing failures
+
 ## [2.5.1] - 2025-01-26
 
 ### 🚀 Critical Serverless Optimization
