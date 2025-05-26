@@ -538,13 +538,15 @@ export default function HomePage() {
             {/* Header */}
 
 
-            {/* Section Separator */}
-            <div className="relative">
-              <div className="xrai-separator-section"></div>
-              <div className="absolute top-0 left-0 xrai-label opacity-30">
+            {/* Version Number */}
+            <div className="p-8">
+              <div className="xrai-label text-black">
                 v2.2.0
               </div>
             </div>
+
+            {/* Section Separator */}
+            <div className="xrai-separator-section"></div>
 
             {/* Two Column Layout */}
             <div className="flex max-w-4xl mx-auto">
