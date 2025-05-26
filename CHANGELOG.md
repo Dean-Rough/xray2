@@ -2,6 +2,23 @@
 
 All notable changes to the Xrai project will be documented in this file.
 
+## [2.1.2] - 2025-01-24
+
+### 🎨 Fixed Navigation Bar Layout
+
+#### Left Nav Bar Improvements
+- **Proper Layout Structure**: Fixed left nav bar with flex column layout and proper spacing
+- **Bottom-Aligned Logo**: Xrai logo positioned at bottom of nav bar with 90-degree rotation
+- **Vertical Separator**: 100px vertical line in center of nav bar for visual balance
+- **Brand Attribution**: "A ROUGH tool" link at top of nav bar linking to https://www.rough.ink
+- **Hover Effects**: Added smooth opacity transitions for interactive elements
+- **Typography**: Proper text sizing and spacing for rotated elements
+
+#### UI/UX Enhancements
+- **Visual Hierarchy**: Clear separation between brand elements and logo
+- **Professional Branding**: Consistent brand attribution and linking
+- **Responsive Design**: Maintained responsive behavior across screen sizes
+
 ## [2.1.1] - 2025-01-24
 
 ### 🚀 Enhanced Screenshot Capture v2.1
