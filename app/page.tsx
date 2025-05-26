@@ -492,7 +492,7 @@ export default function HomePage() {
     <div className="min-h-screen bg-white">
       <div className="min-h-screen flex">
         {/* Left Side - Fixed Nav Bar */}
-        <div className="fixed left-0 top-0 h-screen w-32 bg-black flex flex-col justify-between items-center py-12 z-50">
+        <div className="fixed left-0 top-0 h-screen w-32 bg-black flex flex-col justify-between items-center py-20 z-50">
           {/* Top - A ROUGH tool link */}
           <div className="transform -rotate-90 whitespace-nowrap">
             <a
@@ -519,7 +519,7 @@ export default function HomePage() {
         </div>
 
         {/* Right Side - Fixed Nav Bar */}
-        <div className="fixed right-0 top-0 h-screen w-32 bg-black flex flex-col justify-center items-center py-12 z-50">
+        <div className="fixed right-0 top-0 h-screen w-32 bg-black flex flex-col justify-center items-center py-20 z-50">
           <div className="transform rotate-90 whitespace-nowrap">
             <span className="text-white text-sm font-bold tracking-wide" style={{ fontFamily: 'var(--font-styrene), sans-serif' }}>
               website analysis tool
