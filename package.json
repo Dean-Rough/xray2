@@ -27,6 +27,7 @@
     "openai": "^4.102.0",
     "prisma": "^6.8.2",
     "puppeteer": "^23.11.1",
+    "puppeteer-core": "^24.9.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "uuid": "^11.1.0"

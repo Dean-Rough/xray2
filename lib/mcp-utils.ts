@@ -120,10 +120,13 @@ async function captureScreenshotWithPuppeteer(url: string): Promise<string | nul
     console.log(`🔄 Attempting Puppeteer screenshot fallback for: ${url}`);
 
     // Import Puppeteer dynamically to avoid server-side issues
-    const puppeteer = await import('puppeteer');
+    // Use puppeteer-core in production for better serverless compatibility
+    const isProduction = process.env.NODE_ENV === 'production';
+    const puppeteer = isProduction
+      ? await import('puppeteer-core')
+      : await import('puppeteer');
 
     // Enhanced Puppeteer configuration for serverless environments (Vercel)
-    const isProduction = process.env.NODE_ENV === 'production';
 
     let launchOptions: any = {
       headless: true,
@@ -190,13 +193,13 @@ async function captureScreenshotWithPuppeteer(url: string): Promise<string | nul
       console.log(`📸 Loading page for screenshot: ${url}`);
       await page.goto(url, {
         waitUntil: 'networkidle0', // Wait for no network requests for 500ms
-        timeout: 60000
+        timeout: 30000 // Reduced timeout for serverless
       });
 
       console.log(`⏳ Page loaded, waiting for content to render...`);
 
       // Extended wait for page to fully load and any lazy-loaded content
-      await new Promise(resolve => setTimeout(resolve, 8000)); // Increased from 3s to 8s
+      await new Promise(resolve => setTimeout(resolve, 3000)); // Reduced for serverless
 
       // Wait for any dynamic content to load
       try {
@@ -415,11 +418,28 @@ async function captureScreenshotWithPuppeteer(url: string): Promise<string | nul
     if (process.env.NODE_ENV === 'production') {
       console.log('🔄 Attempting simplified Puppeteer fallback for production...');
       try {
-        const puppeteer = await import('puppeteer');
-        const browser = await puppeteer.default.launch({
+        const isProductionFallback = process.env.NODE_ENV === 'production';
+        const puppeteer = isProductionFallback
+          ? await import('puppeteer-core')
+          : await import('puppeteer');
+
+        let fallbackOptions: any = {
           headless: true,
           args: ['--no-sandbox', '--disable-setuid-sandbox']
-        });
+        };
+
+        // Use serverless Chromium for fallback too
+        if (isProductionFallback) {
+          try {
+            const chromium = await import('@sparticuz/chromium');
+            fallbackOptions.executablePath = await chromium.executablePath();
+            fallbackOptions.args = chromium.args;
+          } catch (chromiumError) {
+            console.warn('⚠️ Fallback: Failed to load serverless Chromium:', chromiumError);
+          }
+        }
+
+        const browser = await puppeteer.default.launch(fallbackOptions);
 
         const page = await browser.newPage();
         await page.goto(url, { waitUntil: 'networkidle2', timeout: 30000 });
