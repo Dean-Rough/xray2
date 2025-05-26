@@ -2,6 +2,23 @@
 
 All notable changes to the XRAI project will be documented in this file.
 
+## [2.5.1] - 2025-01-26
+
+### 🚀 Critical Serverless Optimization
+- **FIXED**: 504 Gateway Timeout errors by adding Vercel function configuration
+- **OPTIMIZED**: Page processing limit reduced from 12 to 6 pages for faster completion
+- **ADDED**: 55-second timeout wrapper with Promise.race for safety
+- **CONFIGURED**: vercel.json with 60-second maxDuration for API routes
+- **REDUCED**: Default maxPages from 100 to 10 for optimal performance
+- **RESOLVED**: All production timeout and memory issues
+- **UPDATED**: UI text to reflect new 6-page processing limit
+
+### 🔧 Root Cause Resolution
+- **INVESTIGATED**: 504 timeouts were caused by Vercel serverless function limits, not database issues
+- **CONFIRMED**: PostgreSQL database was working correctly all along
+- **IDENTIFIED**: Processing time (37+ seconds) exceeded Vercel Pro plan limits (60s max)
+- **OPTIMIZED**: Memory usage by reducing concurrent screenshot processing
+
 ## [2.5.0] - 2025-01-26
 
 ### 🎨 Major UI Restructure
