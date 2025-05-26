@@ -2,6 +2,28 @@
 
 All notable changes to the Xrai project will be documented in this file.
 
+## [2.1.4] - 2025-01-24
+
+### 🎨 Dual Navigation Bar System
+
+#### Enhanced Left Navigation Bar
+- **Restored Width**: Returned to 128px (w-32) for better proportions and user feedback
+- **Increased Padding**: Enhanced vertical padding (py-12) for improved spacing
+- **Larger Logo**: Restored logo to h-8 for better visibility and brand presence
+- **White Separator**: Maintained fully white vertical separator line (100px)
+- **Brand Attribution**: "A ROUGH tool" link at top with proper text-sm sizing
+
+#### New Right Navigation Bar
+- **Mirrored Design**: Added matching right nav bar with same width and styling
+- **Styrene Typography**: "website analysis tool" text using Styrene font family
+- **Centered Content**: Vertically centered text with 90-degree rotation
+- **Professional Branding**: Bold font weight with proper tracking for readability
+
+#### Layout Adjustments
+- **Dual Margins**: Main content now uses mx-32 to account for both nav bars
+- **Responsive Design**: Maintained responsive behavior across screen sizes
+- **Fixed Positioning**: Both nav bars fixed to viewport with proper z-index
+
 ## [2.1.3] - 2025-01-24
 
 ### 🎨 Optimized Navigation Bar Layout
