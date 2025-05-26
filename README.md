@@ -154,11 +154,13 @@ vercel --prod
 
 ## 📈 Recent Improvements
 
-### **v2.1.6 - Scrolling Marquee Animation & Progressive Screenshots ✅ WORKING**
+### **v2.1.7 - Fixed Production Database & Endless Marquee ✅ WORKING**
+- ✅ **Fixed production database** - Changed from SQLite to PostgreSQL for Vercel compatibility
+- ✅ **Resolved 500 API errors** - Database configuration now works in production
+- ✅ **Endless marquee animation** - Duplicated content for seamless infinite loop
+- ✅ **Smoother scrolling** - Increased animation duration to 30s for better flow
 - ✅ **Enhanced left navigation bar** (128px width, optimal padding)
 - ✅ **Animated right navigation bar** with scrolling marquee text
-- ✅ **Smooth scrolling animation** "website analysis tool •" repeating infinitely
-- ✅ **20-second linear animation** with bullet separators for visual flow
 - ✅ **Styrene font integration** for right nav bar typography (non-bold, text-sm)
 - ✅ **Restored logo sizing** (h-8) for better visibility
 - ✅ **Proper padding** (py-20 = 80px) preventing edge-butting

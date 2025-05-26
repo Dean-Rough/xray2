@@ -2,6 +2,22 @@
 
 All notable changes to the Xrai project will be documented in this file.
 
+## [2.1.7] - 2025-01-24
+
+### 🔧 Production Database Fix & Endless Marquee
+
+#### Database Configuration Fix
+- **PostgreSQL Migration**: Changed Prisma schema from SQLite to PostgreSQL for Vercel compatibility
+- **Production API Fix**: Resolved 500 errors in `/api/resume-analysis` and `/api/generate-prompt` endpoints
+- **Environment Compatibility**: Fixed database URL validation errors in production environment
+- **Prisma Client Update**: Generated new Prisma client for PostgreSQL support
+
+#### Endless Marquee Animation
+- **Seamless Loop**: Duplicated marquee content to eliminate visible animation restart
+- **Flex Layout**: Added flex display to marquee container for proper content flow
+- **Smoother Animation**: Increased duration from 20s to 30s for better visual experience
+- **Performance Optimization**: Maintained smooth CSS transform animations
+
 ## [2.1.6] - 2025-01-24
 
 ### ✨ Scrolling Marquee Animation
