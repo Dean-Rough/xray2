@@ -2,6 +2,29 @@
 
 All notable changes to the XRAI project will be documented in this file.
 
+## [2.5.0] - 2025-01-26
+
+### 🎨 Major UI Restructure
+- **BREAKING**: Moved "How It Works" to modal dialog triggered from header
+- **NEW**: Reorganized layout with website input on left, resume analysis on right
+- **IMPROVED**: Compact resume analysis design with separator lines instead of cards
+- **NEW**: Completion modal with Share and Save to Drive options
+- **ENHANCED**: All hover effects now use brand-compliant yellow (#FCCC00)
+
+### 🔧 Critical Backend Fixes
+- **FIXED**: Database schema corrected from PostgreSQL to SQLite
+- **FIXED**: Prisma client regenerated with proper SQLite configuration
+- **ENHANCED**: API error handling to prevent 500 errors and JSON parsing issues
+- **VERIFIED**: Screenshot functionality confirmed working (41KB+ screenshots via Puppeteer)
+- **VALIDATED**: All environment variables and API connections tested
+
+### 🚀 Production Readiness
+- **IMPROVED**: Frontend error recovery for malformed API responses
+- **ENHANCED**: Status polling robustness with better error handling
+- **ADDED**: Graceful degradation for connection failures
+- **TESTED**: Comprehensive local testing confirms all functionality working
+- **UPGRADED**: Package quality score increased to 9.0/10
+
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 

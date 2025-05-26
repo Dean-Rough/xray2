@@ -32,6 +32,8 @@ export default function HomePage() {
   const [taskProgress, setTaskProgress] = useState(0);
   const [completedTasks, setCompletedTasks] = useState<string[]>([]);
   const [taskIndex, setTaskIndex] = useState(0);
+  const [showHowItWorksModal, setShowHowItWorksModal] = useState(false);
+  const [showCompletionModal, setShowCompletionModal] = useState(false);
 
   // Comprehensive task progression system for authentic UX
   const analysisTasksSequence = [
@@ -213,7 +215,17 @@ export default function HomePage() {
       intervalId = setInterval(async () => {
         try {
           const response = await fetch(`/api/generate-prompt?id=${analysisId}`);
-          const data = await response.json();
+
+          let data;
+          try {
+            data = await response.json();
+          } catch (parseError) {
+            console.error('Failed to parse status response as JSON:', parseError);
+            setStatusMessage('Error checking status. Please try again.');
+            setIsLoading(false);
+            clearInterval(intervalId);
+            return;
+          }
 
           if (response.ok) {
             setAnalysisStatus(data.status);
@@ -233,6 +245,7 @@ export default function HomePage() {
                 setStatusMessage('✨ Your site clone package is ready!');
                 setAnalysisResult(data.result);
                 setIsLoading(false);
+                setShowCompletionModal(true);
                 // Play completion chime
                 if (!hasPlayedChime) {
                   playCompletionChime();
@@ -346,7 +359,15 @@ export default function HomePage() {
         }),
       });
 
-      const data = await response.json();
+      let data;
+      try {
+        data = await response.json();
+      } catch (parseError) {
+        console.error('Failed to parse response as JSON:', parseError);
+        setError('Server returned invalid response. Please try again.');
+        setIsLoading(false);
+        return;
+      }
 
       if (response.ok) {
         // Store the analysis ID for status polling
@@ -536,13 +557,19 @@ export default function HomePage() {
         <div className="flex-1 flex items-center justify-center py-16 px-8 mx-32">
           <div className="w-full max-w-6xl">
             {/* Header */}
-
-
-            {/* Version Number */}
-            <div className="p-8">
+            <div className="flex justify-between items-center p-8">
               <div className="xrai-label text-black">
-                v2.2.1
+                v2.5.0
               </div>
+              <button
+                onClick={() => setShowHowItWorksModal(true)}
+                className="xrai-label text-black hover:opacity-70 transition-opacity cursor-pointer"
+                style={{ color: '#212121' }}
+                onMouseEnter={(e) => (e.target as HTMLButtonElement).style.color = '#FCCC00'}
+                onMouseLeave={(e) => (e.target as HTMLButtonElement).style.color = '#212121'}
+              >
+                HOW IT WORKS
+              </button>
             </div>
 
             {/* Section Separator */}
@@ -551,35 +578,7 @@ export default function HomePage() {
             {/* Two Column Layout */}
             <div className="flex max-w-4xl mx-auto">
               <div className="flex-1">
-                {/* Left Card - Information */}
-                <div className="xrai-card-elevated p-8">
-                  <h2 className="xrai-label">How It Works</h2>
-
-                  {/* Horizontal Separator */}
-                  <div className="xrai-separator-horizontal"></div>
-
-                  <div className="space-y-4 text-body">
-                    <div className="flex items-start space-x-3">
-                      <span className="text-black font-bold">01</span>
-                      <span className="text-sm font-normal">Enter your target website URL</span>
-                    </div>
-                    <div className="flex items-start space-x-3">
-                      <span className="text-black font-bold">02</span>
-                      <span className="text-sm font-normal">AI analyzes up to 12 key pages with intelligent selection</span>
-                    </div>
-                    <div className="flex items-start space-x-3">
-                      <span className="text-black font-bold">03</span>
-                      <span className="text-sm font-normal">Download complete reconstruction package with screenshots, code, and documentation</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Vertical Separator */}
-              <div className="xrai-separator-vertical"></div>
-
-              <div className="flex-1">
-                {/* Right Card - Action */}
+                {/* Left Card - Website Input */}
                 <div className="xrai-card p-8">
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div>
@@ -803,40 +802,53 @@ export default function HomePage() {
               </div>
             )}
 
-            {/* Resumable analyses section */}
-            {!isLoading && resumableAnalyses.length > 0 && (
-              <div className="mt-6 xrai-card-elevated">
-                <h4 className="xrai-label">
-                  Resumable Analyses ({resumableAnalyses.length})
-                </h4>
-
-                {/* Horizontal Separator */}
-                <div className="xrai-separator-horizontal"></div>
-
-                <div className="space-y-3 max-h-40 overflow-y-auto">
-                  {resumableAnalyses.slice(0, 3).map((analysis) => (
-                    <div key={analysis.id} className="xrai-card">
-                      <div className="flex items-center justify-between">
-                        <div className="flex-1 min-w-0">
-                          <p className="text-xs font-normal truncate">
-                            {analysis.url}
-                          </p>
-                          <p className="text-xs text-black mt-1">
-                            {analysis.status} • {analysis.lastStep}
-                          </p>
-                        </div>
-                        <button
-                          onClick={() => handleResumeAnalysis(analysis.id)}
-                          className="ml-4 xrai-button text-xs px-4 py-2"
-                        >
-                          Resume
-                        </button>
-                      </div>
-                    </div>
-                  ))}
                 </div>
               </div>
-            )}
+
+              {/* Vertical Separator */}
+              <div className="xrai-separator-vertical"></div>
+
+              <div className="flex-1">
+                {/* Right Card - Resume Analysis */}
+                <div className="xrai-card-elevated p-8">
+                  <h4 className="xrai-label">
+                    Resume Analysis
+                  </h4>
+
+                  {/* Horizontal Separator */}
+                  <div className="xrai-separator-horizontal"></div>
+
+                  {!isLoading && resumableAnalyses.length > 0 ? (
+                    <div className="space-y-4 max-h-60 overflow-y-auto">
+                      {resumableAnalyses.slice(0, 5).map((analysis, index) => (
+                        <div key={analysis.id}>
+                          <div className="flex items-center justify-between py-2">
+                            <div className="flex-1 min-w-0 pr-4">
+                              <p className="text-xs font-normal truncate text-black">
+                                {analysis.url}
+                              </p>
+                              <p className="text-xs text-black opacity-70 mt-1">
+                                {analysis.status} • {analysis.lastStep}
+                              </p>
+                            </div>
+                            <button
+                              onClick={() => handleResumeAnalysis(analysis.id)}
+                              className="xrai-button text-xs px-3 py-1"
+                            >
+                              Resume
+                            </button>
+                          </div>
+                          {index < resumableAnalyses.length - 1 && index < 4 && (
+                            <div className="w-full h-px bg-black opacity-20"></div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-sm text-black opacity-50">
+                      No resumable analyses available
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -849,6 +861,135 @@ export default function HomePage() {
           </div>
         </div>
       </div>
+
+      {/* How It Works Modal */}
+      {showHowItWorksModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white border border-black max-w-md w-full mx-4">
+            <div className="p-8">
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="xrai-label">HOW IT WORKS</h2>
+                <button
+                  onClick={() => setShowHowItWorksModal(false)}
+                  className="text-black text-xl font-bold"
+                  style={{ color: '#212121' }}
+                  onMouseEnter={(e) => (e.target as HTMLButtonElement).style.color = '#FCCC00'}
+                  onMouseLeave={(e) => (e.target as HTMLButtonElement).style.color = '#212121'}
+                >
+                  ×
+                </button>
+              </div>
+
+              {/* Horizontal Separator */}
+              <div className="xrai-separator-horizontal"></div>
+
+              <div className="space-y-4 text-body">
+                <div className="flex items-start space-x-3">
+                  <span className="text-black font-bold">01</span>
+                  <span className="text-sm font-normal">Enter your target website URL</span>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <span className="text-black font-bold">02</span>
+                  <span className="text-sm font-normal">AI analyzes up to 12 key pages with intelligent selection</span>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <span className="text-black font-bold">03</span>
+                  <span className="text-sm font-normal">Download complete reconstruction package with screenshots, code, and documentation</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Completion Modal */}
+      {showCompletionModal && analysisResult && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white border border-black max-w-lg w-full mx-4">
+            <div className="p-8">
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="xrai-label">ANALYSIS COMPLETE</h2>
+                <button
+                  onClick={() => setShowCompletionModal(false)}
+                  className="text-black text-xl font-bold"
+                  style={{ color: '#212121' }}
+                  onMouseEnter={(e) => (e.target as HTMLButtonElement).style.color = '#FCCC00'}
+                  onMouseLeave={(e) => (e.target as HTMLButtonElement).style.color = '#212121'}
+                >
+                  ×
+                </button>
+              </div>
+
+              {/* Horizontal Separator */}
+              <div className="xrai-separator-horizontal"></div>
+
+              <div className="text-center mb-6">
+                <h3 className="text-section mb-2">Package Ready</h3>
+                <p className="text-body text-sm text-black">
+                  Your website analysis package is ready for download
+                </p>
+              </div>
+
+              <div className="mb-6">
+                <h4 className="xrai-label mb-2">Target Website</h4>
+                <p className="text-sm text-black xrai-card px-3 py-2 break-all">{url}</p>
+              </div>
+
+              {/* Package contents */}
+              <div className="mb-6">
+                <h4 className="xrai-label mb-3">Package Contents</h4>
+                <div className="grid grid-cols-1 gap-2 text-sm">
+                  {[
+                    "Screenshots",
+                    "HTML/Markdown",
+                    "Assets manifest",
+                    "AI prompt",
+                    "Documentation"
+                  ].map((item, index) => (
+                    <div key={index} className="flex items-center space-x-2 text-black xrai-card px-3 py-2">
+                      <span className="text-black font-bold">-</span>
+                      <span>{item}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Action buttons */}
+              <div className="space-y-3">
+                <button
+                  onClick={handleDownloadPackage}
+                  className="w-full xrai-button"
+                >
+                  Download Package
+                </button>
+
+                <div className="flex space-x-3">
+                  <button
+                    onClick={() => {
+                      // Share functionality - copy URL to clipboard
+                      navigator.clipboard.writeText(window.location.href);
+                      alert('Link copied to clipboard!');
+                    }}
+                    className="flex-1 xrai-button-secondary"
+                  >
+                    Share
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      // Save to Drive functionality - trigger download
+                      handleDownloadPackage();
+                    }}
+                    className="flex-1 xrai-button-secondary"
+                  >
+                    Save to Drive
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
