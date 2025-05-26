@@ -2,6 +2,22 @@
 
 All notable changes to the Xrai project will be documented in this file.
 
+## [2.1.3] - 2025-01-24
+
+### 🎨 Optimized Navigation Bar Layout
+
+#### Fixed Viewport Navigation
+- **Narrower Width**: Reduced from 128px to 64px (w-16) for better proportions
+- **Fixed Positioning**: Position fixed to viewport with full height coverage
+- **Dynamic Sizing**: Proper z-index (z-50) for layering above content
+- **Viewport Padding**: Improved vertical padding (py-6) for better spacing
+
+#### Visual Improvements
+- **White Separator**: Made vertical separator line fully white (removed opacity)
+- **Smaller Logo**: Reduced logo size (h-6) for better fit in narrower nav
+- **Content Adjustment**: Added left margin (ml-16) to main content for fixed nav
+- **Responsive Layout**: Maintained responsive behavior across screen sizes
+
 ## [2.1.2] - 2025-01-24
 
 ### 🎨 Fixed Navigation Bar Layout

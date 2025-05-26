@@ -154,11 +154,13 @@ vercel --prod
 
 ## 📈 Recent Improvements
 
-### **v2.1.2 - Fixed Nav Bar & Progressive Screenshots ✅ WORKING**
-- ✅ **Fixed left navigation bar** with proper layout structure
+### **v2.1.3 - Optimized Nav Bar & Progressive Screenshots ✅ WORKING**
+- ✅ **Fixed viewport navigation bar** (64px width, position fixed)
+- ✅ **Dynamic sizing** with proper padding and z-index layering
 - ✅ **Bottom-aligned logo** in left nav bar
-- ✅ **Vertical separator line** (100px) in nav center
+- ✅ **White vertical separator line** (100px) in nav center
 - ✅ **"A ROUGH tool" link** at top linking to https://www.rough.ink
+- ✅ **Responsive main content** with left margin adjustment
 - ✅ **Progressive scroll loading** with intelligent page traversal
 - ✅ **Scroll-triggered content capture** for animations and lazy loading
 - ✅ **Animation library support** (AOS, ScrollMagic, intersection observers)
