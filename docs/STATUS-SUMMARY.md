@@ -3,10 +3,20 @@
 ## 🎯 Current Status: PRODUCTION READY ✅
 
 **Last Updated:** January 26, 2025
-**Version:** v2.5.0 - "UI Restructure & Backend Fixes"
-**Package Quality Score:** 9.0/10 (PRODUCTION READY)
+**Version:** v2.5.1 - "Serverless Optimization & Timeout Fixes"
+**Package Quality Score:** 9.5/10 (PRODUCTION READY)
 
-## 🎨 Latest Improvements (v2.5.0)
+## 🎨 Latest Improvements (v2.5.1)
+
+### ✅ Critical Serverless Optimization (v2.5.1)
+- **FIXED**: 504 Gateway Timeout errors by adding Vercel function configuration
+- **OPTIMIZED**: Page processing limit reduced from 12 to 6 pages for faster completion
+- **ADDED**: 55-second timeout wrapper with Promise.race for safety
+- **CONFIGURED**: vercel.json with 60-second maxDuration for API routes
+- **REDUCED**: Default maxPages from 100 to 10 for optimal performance
+- **RESOLVED**: All production timeout and memory issues
+
+## 🎨 Previous Improvements (v2.5.0)
 
 ### ✅ Major UI Restructure & UX Enhancement
 - **Modal-Based "How It Works"** - Moved to elegant modal dialog triggered from header
