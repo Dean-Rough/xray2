@@ -2,6 +2,27 @@
 
 All notable changes to the Xrai project will be documented in this file.
 
+## [2.1.8] - 2025-01-24
+
+### 🔧 Serverless File System Compatibility
+
+#### File System Fixes
+- **Serverless Directory**: Changed temp directory from `./temp` to `/tmp` in production for Vercel compatibility
+- **EROFS Resolution**: Fixed "read-only file system" errors in serverless environment
+- **Recursive Directory Creation**: Added proper error handling for directory creation
+- **Environment Detection**: Automatic path selection based on NODE_ENV
+
+#### Database Storage Optimization
+- **ZIP Buffer Storage**: Store ZIP packages as base64 strings in database instead of file system
+- **Improved Reliability**: Eliminates dependency on persistent file storage in serverless environment
+- **Backward Compatibility**: Maintains support for existing file-based packages
+- **Download API Enhancement**: Updated to read ZIP data from database first, fallback to file system
+
+#### Production Stability
+- **API Error Resolution**: Fixed 500 errors in `/api/generate-prompt` and `/api/download-package` endpoints
+- **Serverless Optimization**: Improved performance and reliability in Vercel environment
+- **Storage Independence**: Reduced external storage dependencies for better scalability
+
 ## [2.1.7] - 2025-01-24
 
 ### 🔧 Production Database Fix & Endless Marquee

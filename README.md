@@ -154,7 +154,11 @@ vercel --prod
 
 ## 📈 Recent Improvements
 
-### **v2.1.7 - Fixed Production Database & Endless Marquee ✅ WORKING**
+### **v2.1.8 - Serverless File System Compatibility ✅ WORKING**
+- ✅ **Fixed serverless file system** - Use `/tmp` directory for Vercel compatibility
+- ✅ **Database ZIP storage** - Store ZIP packages as base64 in database instead of file system
+- ✅ **Resolved EROFS errors** - No more read-only file system errors in production
+- ✅ **Improved reliability** - Eliminates dependency on persistent file storage
 - ✅ **Fixed production database** - Changed from SQLite to PostgreSQL for Vercel compatibility
 - ✅ **Resolved 500 API errors** - Database configuration now works in production
 - ✅ **Endless marquee animation** - Duplicated content for seamless infinite loop
