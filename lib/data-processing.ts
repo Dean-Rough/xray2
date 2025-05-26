@@ -1052,7 +1052,7 @@ export async function deepScrapeWebsite(url: string, options: {
     return {
       id: analysis.id,
       package: rebuildPackage,
-      zipPath,
+      zipBuffer: zipBase64,
       prompt: legacyPrompt
     };
   } catch (error) {
