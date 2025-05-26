@@ -35,28 +35,28 @@ export default function HomePage() {
 
   // Comprehensive task progression system for authentic UX
   const analysisTasksSequence = [
-    { name: "Initializing scanner", icon: "🔍", duration: 2000 },
-    { name: "Mapping site architecture", icon: "🗺️", duration: 3500 },
-    { name: "Scanning fonts & typography", icon: "🔤", duration: 2800 },
-    { name: "Extracting CSS stylesheets", icon: "🎨", duration: 4200 },
-    { name: "Capturing full-page screenshots", icon: "📸", duration: 5500 },
-    { name: "Indexing file directory", icon: "📁", duration: 3200 },
-    { name: "Examining DOM structure", icon: "🏗️", duration: 2900 },
-    { name: "Analyzing component hierarchy", icon: "🧩", duration: 3800 },
-    { name: "Linking image assets", icon: "🖼️", duration: 2600 },
-    { name: "Parsing JavaScript modules", icon: "⚡", duration: 4100 },
-    { name: "Measuring responsive breakpoints", icon: "📱", duration: 3400 },
-    { name: "Detecting animation frameworks", icon: "🎪", duration: 2700 },
-    { name: "Mapping color palette", icon: "🎨", duration: 2300 },
-    { name: "Analyzing layout grids", icon: "📐", duration: 3100 },
-    { name: "Extracting SVG graphics", icon: "🎯", duration: 2800 },
-    { name: "Scanning meta tags", icon: "🏷️", duration: 1900 },
-    { name: "Profiling performance metrics", icon: "📊", duration: 3600 },
-    { name: "Detecting third-party scripts", icon: "🔌", duration: 2400 },
-    { name: "Analyzing accessibility features", icon: "♿", duration: 3300 },
-    { name: "Compiling rebuild package", icon: "📦", duration: 4500 },
-    { name: "Optimizing delivery", icon: "🚀", duration: 2200 },
-    { name: "Finalizing AI analysis", icon: "🤖", duration: 3000 }
+    { name: "Initializing scanner", duration: 2000 },
+    { name: "Mapping site architecture", duration: 3500 },
+    { name: "Scanning fonts & typography", duration: 2800 },
+    { name: "Extracting CSS stylesheets", duration: 4200 },
+    { name: "Capturing full-page screenshots", duration: 5500 },
+    { name: "Indexing file directory", duration: 3200 },
+    { name: "Examining DOM structure", duration: 2900 },
+    { name: "Analyzing component hierarchy", duration: 3800 },
+    { name: "Linking image assets", duration: 2600 },
+    { name: "Parsing JavaScript modules", duration: 4100 },
+    { name: "Measuring responsive breakpoints", duration: 3400 },
+    { name: "Detecting animation frameworks", duration: 2700 },
+    { name: "Mapping color palette", duration: 2300 },
+    { name: "Analyzing layout grids", duration: 3100 },
+    { name: "Extracting SVG graphics", duration: 2800 },
+    { name: "Scanning meta tags", duration: 1900 },
+    { name: "Profiling performance metrics", duration: 3600 },
+    { name: "Detecting third-party scripts", duration: 2400 },
+    { name: "Analyzing accessibility features", duration: 3300 },
+    { name: "Compiling rebuild package", duration: 4500 },
+    { name: "Optimizing delivery", duration: 2200 },
+    { name: "Finalizing AI analysis", duration: 8000 }
   ];
 
   // Enhanced URL formatting and validation with preprocessing
@@ -155,7 +155,7 @@ export default function HomePage() {
 
     if (isLoading && analysisStatus !== 'COMPLETED' && analysisStatus !== 'FAILED' && taskIndex < analysisTasksSequence.length) {
       const currentTaskData = analysisTasksSequence[taskIndex];
-      setCurrentTask(`${currentTaskData.icon} ${currentTaskData.name}`);
+      setCurrentTask(currentTaskData.name);
       setTaskProgress(0);
 
       // Simulate realistic progress with stuttering
