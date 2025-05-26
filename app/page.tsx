@@ -492,7 +492,7 @@ export default function HomePage() {
     <div className="min-h-screen bg-white">
       <div className="min-h-screen flex">
         {/* Left Side - Fixed Nav Bar */}
-        <div className="w-32 bg-black flex flex-col justify-between items-center py-8">
+        <div className="fixed left-0 top-0 h-screen w-16 bg-black flex flex-col justify-between items-center py-6 z-50">
           {/* Top - A ROUGH tool link */}
           <div className="transform -rotate-90 whitespace-nowrap">
             <a
@@ -506,20 +506,20 @@ export default function HomePage() {
           </div>
 
           {/* Center - Vertical separator */}
-          <div className="w-px h-24 bg-white opacity-30"></div>
+          <div className="w-px h-24 bg-white"></div>
 
           {/* Bottom - Logo */}
           <div className="transform -rotate-90 whitespace-nowrap">
             <img
               src="/xrai-dark.svg"
               alt="Xrai"
-              className="h-8 filter invert"
+              className="h-6 filter invert"
             />
           </div>
         </div>
 
         {/* Main Content */}
-        <div className="flex-1 flex items-center justify-center py-16 px-8">
+        <div className="flex-1 flex items-center justify-center py-16 px-8 ml-16">
           <div className="w-full max-w-6xl">
             {/* Header */}
 
