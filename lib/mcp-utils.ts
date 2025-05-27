@@ -112,39 +112,7 @@ async function mapWebsiteWithFallback(url: string, _options?: {
   }
 }
 
-/**
- * Capture screenshot using a third-party API service (fallback for serverless)
- */
-async function captureScreenshotViaAPI(url: string): Promise<string | null> {
-  try {
-    console.log(`🌐 Attempting screenshot via API service for: ${url}`);
-
-    // Use a simple screenshot API service
-    // This is a free service that works well for basic screenshots
-    const apiUrl = `https://api.screenshotmachine.com/?key=demo&url=${encodeURIComponent(url)}&dimension=1920x1080&format=png&cacheLimit=0&delay=3000`;
-
-    const response = await fetch(apiUrl, {
-      timeout: 30000,
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
-      }
-    });
-
-    if (!response.ok) {
-      throw new Error(`Screenshot API failed: ${response.status} ${response.statusText}`);
-    }
-
-    const imageBuffer = await response.arrayBuffer();
-    const base64Image = Buffer.from(imageBuffer).toString('base64');
-
-    console.log(`✅ Screenshot captured via API service: ${base64Image.length} characters`);
-    return `data:image/png;base64,${base64Image}`;
-
-  } catch (error) {
-    console.error('❌ Screenshot API failed:', error);
-    return null;
-  }
-}
+// Removed API screenshot function - using Puppeteer as primary method
 
 /**
  * Puppeteer fallback for screenshot capture with enhanced loading detection
@@ -528,17 +496,8 @@ async function scrapeWebpageWithFallback(url: string, options?: {
     let screenshot = null;
 
     if (screenshotRequested) {
-      if (process.env.NODE_ENV === 'production') {
-        console.log('🌐 Fallback: Trying API screenshot first...');
-        screenshot = await captureScreenshotViaAPI(url);
-        if (!screenshot) {
-          console.log('⚠️ Fallback: API screenshot failed, trying Puppeteer...');
-          screenshot = await captureScreenshotWithPuppeteer(url);
-        }
-      } else {
-        console.log('🔧 Fallback: Using Puppeteer directly');
-        screenshot = await captureScreenshotWithPuppeteer(url);
-      }
+      console.log('📸 Fallback: Using Puppeteer for screenshot capture...');
+      screenshot = await captureScreenshotWithPuppeteer(url);
     }
 
     if (screenshotRequested && screenshot) {
@@ -648,22 +607,11 @@ export async function scrapeWebpage(url: string, options?: {
         const screenshotRequested = options?.formats?.includes('screenshot') || options?.formats?.includes('screenshot@fullPage');
 
         // Start both operations in parallel for speed
-        // In production, try API screenshot first, then fallback to Puppeteer
+        // Use Puppeteer as primary screenshot method (now working reliably with serverless Chromium)
         const screenshotPromise = screenshotRequested
           ? (async () => {
-              if (process.env.NODE_ENV === 'production') {
-                console.log('🌐 Production: Trying API screenshot first...');
-                const apiScreenshot = await captureScreenshotViaAPI(url);
-                if (apiScreenshot) {
-                  console.log('✅ API screenshot successful');
-                  return apiScreenshot;
-                }
-                console.log('⚠️ API screenshot failed, trying Puppeteer...');
-                return await captureScreenshotWithPuppeteer(url);
-              } else {
-                console.log('🔧 Development: Using Puppeteer directly');
-                return await captureScreenshotWithPuppeteer(url);
-              }
+              console.log('📸 Using Puppeteer for screenshot capture...');
+              return await captureScreenshotWithPuppeteer(url);
             })()
           : Promise.resolve(null);
 
