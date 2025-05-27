@@ -112,7 +112,53 @@ async function mapWebsiteWithFallback(url: string, _options?: {
   }
 }
 
-// Removed API screenshot function - using Puppeteer as primary method
+/**
+ * Capture screenshot using a reliable external API service
+ */
+async function captureScreenshotViaExternalAPI(url: string): Promise<string | null> {
+  try {
+    console.log(`🌐 Attempting screenshot via external API for: ${url}`);
+
+    // Use shot.screenshotapi.net - a free, reliable service
+    const apiUrl = `https://shot.screenshotapi.net/screenshot`;
+    const params = new URLSearchParams({
+      url: url,
+      width: '1920',
+      height: '1080',
+      output: 'image',
+      file_type: 'png',
+      wait_for_event: 'load',
+      ttl: '3600'
+    });
+
+    const response = await fetch(`${apiUrl}?${params.toString()}`, {
+      method: 'GET',
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
+      },
+      timeout: 30000
+    });
+
+    if (!response.ok) {
+      throw new Error(`Screenshot API failed: ${response.status} ${response.statusText}`);
+    }
+
+    const imageBuffer = await response.arrayBuffer();
+    const base64Image = Buffer.from(imageBuffer).toString('base64');
+
+    // Verify it's actually an image (PNG should start with specific bytes)
+    if (base64Image.length < 100) {
+      throw new Error('Screenshot too small, likely failed');
+    }
+
+    console.log(`✅ Screenshot captured via external API: ${base64Image.length} characters`);
+    return `data:image/png;base64,${base64Image}`;
+
+  } catch (error) {
+    console.error('❌ External API screenshot failed:', error);
+    return null;
+  }
+}
 
 /**
  * Puppeteer fallback for screenshot capture with enhanced loading detection
@@ -496,8 +542,12 @@ async function scrapeWebpageWithFallback(url: string, options?: {
     let screenshot = null;
 
     if (screenshotRequested) {
-      console.log('📸 Fallback: Using Puppeteer for screenshot capture...');
-      screenshot = await captureScreenshotWithPuppeteer(url);
+      console.log('📸 Fallback: Using external API for screenshot capture...');
+      screenshot = await captureScreenshotViaExternalAPI(url);
+      if (!screenshot) {
+        console.log('📸 External API failed, trying Puppeteer fallback...');
+        screenshot = await captureScreenshotWithPuppeteer(url);
+      }
     }
 
     if (screenshotRequested && screenshot) {
@@ -607,10 +657,16 @@ export async function scrapeWebpage(url: string, options?: {
         const screenshotRequested = options?.formats?.includes('screenshot') || options?.formats?.includes('screenshot@fullPage');
 
         // Start both operations in parallel for speed
-        // Use Puppeteer as primary screenshot method (now working reliably with serverless Chromium)
+        // Use external API as primary method since Puppeteer is unreliable in serverless
         const screenshotPromise = screenshotRequested
           ? (async () => {
-              console.log('📸 Using Puppeteer for screenshot capture...');
+              console.log('📸 Using external API for screenshot capture...');
+              const apiScreenshot = await captureScreenshotViaExternalAPI(url);
+              if (apiScreenshot) {
+                console.log('✅ External API screenshot successful');
+                return apiScreenshot;
+              }
+              console.log('⚠️ External API failed, trying Puppeteer fallback...');
               return await captureScreenshotWithPuppeteer(url);
             })()
           : Promise.resolve(null);
