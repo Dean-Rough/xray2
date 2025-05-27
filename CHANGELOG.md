@@ -2,6 +2,35 @@
 
 All notable changes to the Xrai project will be documented in this file.
 
+## [2.2.0] - 2025-05-27
+
+### 🎯 Critical Production Fixes - Screenshots Now Working!
+
+#### Database & Infrastructure
+- **Fixed Database Provider Mismatch**: Switched Prisma schema from SQLite to PostgreSQL for production compatibility
+- **Resolved Serverless Processing**: Changed from async background to synchronous processing to prevent function termination
+- **Added Serverless Chromium**: Integrated @sparticuz/chromium for reliable screenshot capture in serverless environments
+- **Enhanced Error Handling**: Comprehensive logging and fallback mechanisms for production debugging
+
+#### Screenshot Capture System ✅ WORKING
+- **Dual Screenshot Strategy**: API service (screenshotmachine.com) as primary, Puppeteer as fallback
+- **Production Optimization**: Reduced timeouts and wait times for Vercel compatibility
+- **Serverless Compatibility**: puppeteer-core integration with serverless Chromium binaries
+- **Reliability Improvements**: Multiple fallback layers ensure screenshot capture success
+
+#### Performance Optimizations
+- **Reduced Page Limits**: Max 2 pages instead of 6 to prevent timeouts
+- **Disabled Lighthouse**: Temporarily removed for faster processing
+- **Optimized Wait Times**: Reduced scraping delays from 5s to 2s
+- **Streamlined Processing**: Focus on core functionality for reliable delivery
+
+#### Production Status
+- **Database**: PostgreSQL connection working ✅
+- **API Endpoints**: All responding correctly ✅
+- **Screenshot Capture**: WORKING with dual fallback system ✅
+- **Package Generation**: Complete ZIP files with all assets ✅
+- **Processing Time**: Under 2 minutes ✅
+
 ## [2.2.1] - 2025-01-24
 
 ### 🎨 Improved Version Display & Visual Hierarchy

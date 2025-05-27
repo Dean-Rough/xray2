@@ -154,15 +154,15 @@ vercel --prod
 
 ## 📈 Recent Improvements
 
-### **v2.2.1 - Improved Version Display & Enhanced UI ✅ WORKING**
-- ✅ **Enhanced version positioning** - Moved v2.2.1 above separator with p-8 padding
-- ✅ **Dark color styling** - Changed to text-black for better visibility and brand alignment
-- ✅ **Improved visual hierarchy** - Version number now prominently displayed with proper spacing
-- ✅ **Removed task icons** - Cleaner, more minimal UI appearance
-- ✅ **Professional versioning** - Consistent with card padding and design system
-- ✅ **Fixed undefined zipPath variable** - Replaced with zipBuffer for consistency
-- ✅ **Complete serverless compatibility** - All file system operations work in production
-- ✅ **Fixed serverless file system** - Use `/tmp` directory for Vercel compatibility
+### **v2.2.0 - Critical Production Fixes - Screenshots Working! ✅ WORKING**
+- ✅ **Fixed Database Provider Mismatch** - PostgreSQL now working in production
+- ✅ **Resolved Serverless Processing** - Synchronous processing prevents function termination
+- ✅ **Dual Screenshot System** - API service + Puppeteer fallback for reliability
+- ✅ **Serverless Chromium** - @sparticuz/chromium for production compatibility
+- ✅ **Performance Optimization** - Reduced timeouts and page limits for Vercel
+- ✅ **Enhanced Error Handling** - Comprehensive logging and fallback mechanisms
+- ✅ **Screenshots Now Working** - Verified successful capture in production
+- ✅ **Complete Package Generation** - ZIP files with all assets and documentation
 - ✅ **Database ZIP storage** - Store ZIP packages as base64 in database instead of file system
 - ✅ **Resolved EROFS errors** - No more read-only file system errors in production
 - ✅ **Improved reliability** - Eliminates dependency on persistent file storage
