@@ -35,15 +35,23 @@ export async function POST(request: NextRequest) {
       maxPages
     });
 
-    // Start the deep scraping process in background (don't await)
-    deepScrapeWebsite(url, {
-      fullSite,
-      includeScreenshots,
-      includeLighthouse,
-      maxPages
-    }, analysis.id).catch(error => {
-      console.error('Background analysis failed:', error);
-    });
+    // Start the deep scraping process synchronously for serverless compatibility
+    // Note: This runs in the same request context to avoid serverless termination issues
+    console.log('🚀 Starting synchronous analysis for serverless compatibility');
+
+    try {
+      await deepScrapeWebsite(url, {
+        fullSite,
+        includeScreenshots,
+        includeLighthouse,
+        maxPages
+      }, analysis.id);
+
+      console.log('✅ Analysis completed successfully');
+    } catch (error) {
+      console.error('❌ Analysis failed:', error);
+      // The error handling is already done in deepScrapeWebsite
+    }
 
     return NextResponse.json({
       id: analysis.id,

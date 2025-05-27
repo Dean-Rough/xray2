@@ -824,13 +824,13 @@ export async function deepScrapeWebsite(url: string, options: {
       ];
 
       // Remove duplicates and ensure we don't exceed rate limits (reduced for Vercel timeout limits)
-      pagesToScrape = [...new Set(selectedPages)].slice(0, 6); // Max 6 pages to prevent Vercel timeouts
+      pagesToScrape = [...new Set(selectedPages)].slice(0, 2); // Max 2 pages to prevent Vercel timeouts
 
       // If we still don't have enough pages, add some from the full site map
-      if (pagesToScrape.length < 6 && siteMapData.pages.length > pagesToScrape.length) {
+      if (pagesToScrape.length < 2 && siteMapData.pages.length > pagesToScrape.length) {
         const additionalPages = siteMapData.pages
           .filter(page => !pagesToScrape.includes(page))
-          .slice(0, 6 - pagesToScrape.length);
+          .slice(0, 2 - pagesToScrape.length);
         pagesToScrape.push(...additionalPages);
       }
 
@@ -938,7 +938,7 @@ export async function deepScrapeWebsite(url: string, options: {
         const pageResult = await scrapeWebpage(pageUrl, {
           formats,
           onlyMainContent: false,
-          waitFor: 5000
+          waitFor: 2000 // Reduced wait time for serverless
         });
 
         const processedData = await processContentData(pageResult);
@@ -969,18 +969,19 @@ export async function deepScrapeWebsite(url: string, options: {
       content: contentResults
     });
 
-    // Step 3: Run Lighthouse for performance metrics (if enabled)
+    // Step 3: Skip Lighthouse for now to speed up processing in serverless environment
     let performanceData = null;
-    if (options.includeLighthouse) {
-      console.log(`Running Lighthouse audit for: ${url}`);
-      try {
-        const lighthouseResult = await runLighthouseAudit(url);
-        performanceData = processPerformanceData(lighthouseResult);
-      } catch (error) {
-        console.error('Error running Lighthouse audit:', error);
-        performanceData = processPerformanceData(null);
-      }
-    }
+    console.log('⚡ Skipping Lighthouse audit for faster serverless processing');
+    // if (options.includeLighthouse) {
+    //   console.log(`Running Lighthouse audit for: ${url}`);
+    //   try {
+    //     const lighthouseResult = await runLighthouseAudit(url);
+    //     performanceData = processPerformanceData(lighthouseResult);
+    //   } catch (error) {
+    //     console.error('Error running Lighthouse audit:', error);
+    //     performanceData = processPerformanceData(null);
+    //   }
+    // }
 
     // Step 4: Extract structured data about the website
     console.log(`Extracting structured data for: ${url}`);
