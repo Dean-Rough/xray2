@@ -58,7 +58,7 @@ async function retryWithBackoff<T>(
   context: string,
   maxAttempts = RETRY_CONFIG.maxAttempts
 ): Promise<T> {
-  let lastError: Error;
+  let lastError: Error = new Error('No attempts made');
 
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     try {
@@ -131,13 +131,18 @@ async function captureScreenshotViaExternalAPI(url: string): Promise<string | nu
       ttl: '3600'
     });
 
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 30000);
+    
     const response = await fetch(`${apiUrl}?${params.toString()}`, {
       method: 'GET',
       headers: {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
       },
-      timeout: 30000
+      signal: controller.signal
     });
+    
+    clearTimeout(timeoutId);
 
     if (!response.ok) {
       throw new Error(`Screenshot API failed: ${response.status} ${response.statusText}`);
@@ -167,17 +172,14 @@ async function captureScreenshotWithPuppeteer(url: string): Promise<string | nul
   try {
     console.log(`🔄 Attempting Puppeteer screenshot fallback for: ${url}`);
 
-    // Import Puppeteer dynamically to avoid server-side issues
-    // Use puppeteer-core in production for better serverless compatibility
+    // Always use puppeteer-core for consistency
+    const puppeteer = await import('puppeteer-core');
     const isProduction = process.env.NODE_ENV === 'production';
-    const puppeteer = isProduction
-      ? await import('puppeteer-core')
-      : await import('puppeteer');
 
-    // Enhanced Puppeteer configuration for serverless environments (Vercel)
-
+    // Enhanced Puppeteer configuration for serverless environments
     let launchOptions: any = {
-      headless: true,
+      headless: 'new', // Use new headless mode
+      timeout: 30000,
       args: [
         '--no-sandbox',
         '--disable-setuid-sandbox',
@@ -211,7 +213,9 @@ async function captureScreenshotWithPuppeteer(url: string): Promise<string | nul
         '--safebrowsing-disable-auto-update',
         '--enable-automation',
         '--password-store=basic',
-        '--use-mock-keychain'
+        '--use-mock-keychain',
+        '--memory-pressure-off',
+        '--max_old_space_size=4096'
       ]
     };
 
@@ -219,15 +223,52 @@ async function captureScreenshotWithPuppeteer(url: string): Promise<string | nul
     if (isProduction) {
       try {
         const chromium = await import('@sparticuz/chromium');
-        launchOptions.executablePath = await chromium.executablePath();
-        launchOptions.args = chromium.args;
+        launchOptions.executablePath = await chromium.default.executablePath();
+        // Use chromium args but add our custom ones
+        launchOptions.args = [...chromium.default.args, ...launchOptions.args];
         console.log(`🚀 Using serverless Chromium for production`);
       } catch (error) {
-        console.warn('⚠️ Failed to load serverless Chromium, falling back to bundled:', error);
+        console.warn('⚠️ Failed to load serverless Chromium, using system Chrome:', error);
+        // Try to find system Chrome
+        const possiblePaths = [
+          '/usr/bin/google-chrome',
+          '/usr/bin/chromium-browser',
+          '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
+        ];
+        
+        for (const path of possiblePaths) {
+          try {
+            const fs = await import('fs');
+            if (fs.existsSync(path)) {
+              launchOptions.executablePath = path;
+              console.log(`✅ Found system Chrome at: ${path}`);
+              break;
+            }
+          } catch (fsError) {
+            continue;
+          }
+        }
       }
     } else {
-      console.log(`🚀 Using bundled Chromium for development`);
+      console.log(`🚀 Using development Chromium`);
+      // In development, try to use system Chrome for better compatibility
+      try {
+        const fs = await import('fs');
+        const macChromePath = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
+        if (fs.existsSync(macChromePath)) {
+          launchOptions.executablePath = macChromePath;
+          console.log(`✅ Using system Chrome for development`);
+        }
+      } catch (error) {
+        console.log(`📦 Using bundled Chromium for development`);
+      }
     }
+
+    console.log(`🚀 Launching browser with options:`, {
+      executablePath: launchOptions.executablePath || 'bundled',
+      headless: launchOptions.headless,
+      argsCount: launchOptions.args.length
+    });
 
     const browser = await puppeteer.default.launch(launchOptions);
 
@@ -237,42 +278,57 @@ async function captureScreenshotWithPuppeteer(url: string): Promise<string | nul
       // Set desktop viewport for full-page screenshot
       await page.setViewport({ width: 1920, height: 1080 });
 
-      // Navigate to the page with extended timeout and better wait conditions
+      // Navigate to the page with optimized timeout and wait conditions
       console.log(`📸 Loading page for screenshot: ${url}`);
-      await page.goto(url, {
-        waitUntil: 'networkidle0', // Wait for no network requests for 500ms
-        timeout: 30000 // Reduced timeout for serverless
-      });
+      
+      try {
+        await page.goto(url, {
+          waitUntil: 'domcontentloaded', // Faster than networkidle0
+          timeout: 20000 // Reduced timeout for serverless
+        });
+        console.log(`✅ Page DOM loaded successfully`);
+      } catch (gotoError) {
+        console.warn(`⚠️ Page load timeout, attempting with reduced wait conditions`);
+        try {
+          await page.goto(url, {
+            waitUntil: 'load',
+            timeout: 15000
+          });
+          console.log(`✅ Page loaded with reduced conditions`);
+        } catch (fallbackError) {
+          console.error(`❌ Failed to load page: ${fallbackError}`);
+          throw new Error(`Page load failed: ${fallbackError instanceof Error ? fallbackError.message : String(fallbackError)}`);
+        }
+      }
 
-      console.log(`⏳ Page loaded, waiting for content to render...`);
+      console.log(`⏳ Waiting for content to render...`);
 
-      // Extended wait for page to fully load and any lazy-loaded content
-      await new Promise(resolve => setTimeout(resolve, 3000)); // Reduced for serverless
+      // Optimized wait for page content
+      await new Promise(resolve => setTimeout(resolve, 2000)); // Reduced wait time
 
-      // Wait for any dynamic content to load
+      // Wait for basic page readiness with shorter timeout
       try {
         await page.waitForFunction(
           () => document.readyState === 'complete' &&
-                (!window.jQuery || window.jQuery.active === 0) &&
                 document.body &&
                 document.body.children.length > 0,
-          { timeout: 15000 } // Increased timeout
+          { timeout: 8000 } // Reduced timeout
         );
-        console.log(`✅ Dynamic content loaded`);
+        console.log(`✅ Page content ready`);
       } catch (e) {
-        console.log('⚠️ Dynamic content wait timeout, proceeding with screenshot');
+        console.log('⚠️ Page readiness timeout, proceeding with screenshot');
       }
 
-      // Wait for images to load
+      // Quick image load check with shorter timeout
       try {
         await page.waitForFunction(
           () => {
             const images = Array.from(document.images);
-            return images.every(img => img.complete);
+            return images.length === 0 || images.every(img => img.complete || img.naturalWidth > 0);
           },
-          { timeout: 10000 }
+          { timeout: 5000 } // Much shorter timeout
         );
-        console.log(`🖼️ All images loaded`);
+        console.log(`🖼️ Images loaded or skipped`);
       } catch (e) {
         console.log('⚠️ Image loading timeout, proceeding with screenshot');
       }
@@ -328,8 +384,8 @@ async function captureScreenshotWithPuppeteer(url: string): Promise<string | nul
             });
 
             // Trigger any animation libraries (AOS, ScrollMagic, etc.)
-            if (window.AOS && window.AOS.refresh) window.AOS.refresh();
-            if (window.ScrollMagic) window.dispatchEvent(new Event('scroll'));
+            if ((window as any).AOS && (window as any).AOS.refresh) (window as any).AOS.refresh();
+            if ((window as any).ScrollMagic) window.dispatchEvent(new Event('scroll'));
           });
         } catch (e) {
           // Continue if trigger fails
@@ -480,8 +536,8 @@ async function captureScreenshotWithPuppeteer(url: string): Promise<string | nul
         if (isProductionFallback) {
           try {
             const chromium = await import('@sparticuz/chromium');
-            fallbackOptions.executablePath = await chromium.executablePath();
-            fallbackOptions.args = chromium.args;
+            fallbackOptions.executablePath = await chromium.default.executablePath();
+            fallbackOptions.args = chromium.default.args;
           } catch (chromiumError) {
             console.warn('⚠️ Fallback: Failed to load serverless Chromium:', chromiumError);
           }
@@ -517,12 +573,17 @@ async function scrapeWebpageWithFallback(url: string, options?: {
     console.log(`Using fallback scraping for: ${url}`);
 
     // Try to get basic HTML content
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 30000);
+    
     const response = await fetch(url, {
       headers: {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
       },
-      timeout: 30000
+      signal: controller.signal
     });
+    
+    clearTimeout(timeoutId);
 
     if (!response.ok) {
       throw new Error(`HTTP ${response.status}: ${response.statusText}`);
@@ -542,12 +603,8 @@ async function scrapeWebpageWithFallback(url: string, options?: {
     let screenshot = null;
 
     if (screenshotRequested) {
-      console.log('📸 Fallback: Using external API for screenshot capture...');
-      screenshot = await captureScreenshotViaExternalAPI(url);
-      if (!screenshot) {
-        console.log('📸 External API failed, trying Puppeteer fallback...');
-        screenshot = await captureScreenshotWithPuppeteer(url);
-      }
+      console.log('📸 Using Puppeteer for screenshot capture...');
+      screenshot = await captureScreenshotWithPuppeteer(url);
     }
 
     if (screenshotRequested && screenshot) {
@@ -683,10 +740,10 @@ export async function scrapeWebpage(url: string, options?: {
         // Add Puppeteer screenshot to Firecrawl result
         if (screenshotRequested && puppeteerScreenshot) {
           // Ensure scrapeResult.data exists before setting screenshot
-          if (!scrapeResult.data) {
-            scrapeResult.data = {};
+          if (!(scrapeResult as any).data) {
+            (scrapeResult as any).data = {};
           }
-          (scrapeResult.data as any).screenshot = puppeteerScreenshot;
+          ((scrapeResult as any).data as any).screenshot = puppeteerScreenshot;
           console.log('✅ Puppeteer screenshot captured successfully (primary method)');
         } else if (screenshotRequested) {
           console.log('⚠️ Puppeteer screenshot failed');
@@ -695,8 +752,8 @@ export async function scrapeWebpage(url: string, options?: {
         // Debug: Log the optimized result
         console.log(`Optimized scraping result for ${url}:`, {
           success: scrapeResult.success,
-          hasContent: !!(scrapeResult.data),
-          hasScreenshot: !!(scrapeResult.data as any)?.screenshot,
+          hasContent: !!((scrapeResult as any).data),
+          hasScreenshot: !!((scrapeResult as any).data as any)?.screenshot,
           screenshotMethod: screenshotRequested ? 'puppeteer-primary' : 'none-requested'
         });
 
@@ -825,7 +882,7 @@ export async function discoverNavigationPages(homepageUrl: string, allPages: str
     });
 
     // Extract navigation links from the homepage HTML
-    const navigationLinks = extractNavigationFromHTML(homepageData.data?.html || '', homepageUrl);
+    const navigationLinks = extractNavigationFromHTML((homepageData as any).data?.html || '', homepageUrl);
 
     // Categorize all pages based on URL patterns and common page types
     const categorizedPages = categorizePages(allPages, homepageUrl);
@@ -869,10 +926,10 @@ function extractNavigationFromHTML(html: string, baseUrl: string): string[] {
   try {
     // Look for common navigation patterns in HTML
     const navPatterns = [
-      /<nav[^>]*>(.*?)<\/nav>/gis,
-      /<header[^>]*>(.*?)<\/header>/gis,
-      /<ul[^>]*class="[^"]*nav[^"]*"[^>]*>(.*?)<\/ul>/gis,
-      /<div[^>]*class="[^"]*nav[^"]*"[^>]*>(.*?)<\/div>/gis
+      /<nav[^>]*>(.*?)<\/nav>/gi,
+      /<header[^>]*>(.*?)<\/header>/gi,
+      /<ul[^>]*class="[^"]*nav[^"]*"[^>]*>(.*?)<\/ul>/gi,
+      /<div[^>]*class="[^"]*nav[^"]*"[^>]*>(.*?)<\/div>/gi
     ];
 
     for (const pattern of navPatterns) {

@@ -26,8 +26,6 @@
     "next": "^15.1.8",
     "openai": "^4.102.0",
     "prisma": "^6.8.2",
-    "puppeteer": "^23.11.1",
-    "puppeteer-core": "^24.9.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "uuid": "^11.1.0"
@@ -35,13 +33,16 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
-    "@types/node": "^20",
+    "@types/node": "^20.17.50",
+    "@types/puppeteer-core": "^5.4.0",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@types/uuid": "^10.0.0",
     "eslint": "^9",
     "eslint-config-next": "15.3.2",
+    "puppeteer-core": "^24.9.0",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
   }
 }
