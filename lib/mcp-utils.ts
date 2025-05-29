@@ -95,21 +95,197 @@ async function retryWithBackoff<T>(
 // Note: Puppeteer is commented out for server-side compatibility
 // import puppeteer from 'puppeteer';
 
-// Fallback function for mapping websites with simple HTTP
-async function mapWebsiteWithFallback(url: string, _options?: {
+// Enhanced fallback function for mapping websites with navigation discovery
+async function mapWebsiteWithFallback(url: string, options?: {
   includeSubdomains?: boolean;
   limit?: number;
   search?: string;
 }) {
   try {
-    // For MVP, return a simple list with just the main URL
-    // In production, this would use a proper web scraping service
-    console.log('Using simple fallback for website mapping');
-    return [url];
+    console.log('🔍 Using enhanced fallback for website mapping with navigation discovery');
+    
+    // Start with the homepage
+    const discoveredUrls = [url];
+    
+    try {
+      // Fetch the homepage HTML directly to extract navigation links
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 15000);
+      
+      const response = await fetch(url, {
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+        },
+        signal: controller.signal
+      });
+      
+      clearTimeout(timeoutId);
+
+      if (response.ok) {
+        const html = await response.text();
+        console.log(`✅ Fetched homepage HTML (${html.length} chars)`);
+        
+        // Extract navigation links from HTML
+        const navLinks = extractNavigationLinksFromHTML(html, url);
+        console.log(`🧭 Found ${navLinks.length} navigation links:`, navLinks.map(link => {
+          try { return new URL(link).pathname; } catch { return link; }
+        }));
+        
+        // Add unique navigation links
+        navLinks.forEach(link => {
+          if (!discoveredUrls.includes(link)) {
+            discoveredUrls.push(link);
+          }
+        });
+        
+        // Also extract common page patterns from the HTML
+        const commonPages = extractCommonPageLinks(html, url);
+        console.log(`📄 Found ${commonPages.length} common page links:`, commonPages.map(link => {
+          try { return new URL(link).pathname; } catch { return link; }
+        }));
+        
+        commonPages.forEach(link => {
+          if (!discoveredUrls.includes(link)) {
+            discoveredUrls.push(link);
+          }
+        });
+        
+      } else {
+        console.warn(`⚠️ Failed to fetch homepage: ${response.status} ${response.statusText}`);
+      }
+    } catch (fetchError) {
+      console.warn('⚠️ Failed to fetch homepage for navigation discovery:', fetchError);
+    }
+    
+    // Limit results based on options
+    const limit = options?.limit || 20;
+    const finalUrls = discoveredUrls.slice(0, limit);
+    
+    console.log(`✅ Enhanced fallback mapping discovered ${finalUrls.length} URLs`);
+    return finalUrls;
+    
   } catch (error) {
-    console.error('Error in fallback mapping:', error);
-    return [url];
+    console.error('Error in enhanced fallback mapping:', error);
+    return [url]; // Fallback to just the homepage
   }
+}
+
+/**
+ * Extract navigation links from HTML content using comprehensive patterns
+ */
+function extractNavigationLinksFromHTML(html: string, baseUrl: string): string[] {
+  const navigationLinks: string[] = [];
+  
+  try {
+    const formattedBaseUrl = baseUrl.startsWith('http') ? baseUrl : `https://${baseUrl}`;
+    const baseDomain = new URL(formattedBaseUrl).origin;
+    
+    // Enhanced navigation patterns - look for common navigation structures
+    const navPatterns = [
+      // Standard navigation elements
+      /<nav[^>]*>(.*?)<\/nav>/gi,
+      /<header[^>]*>(.*?)<\/header>/gi,
+      
+      // Navigation by class names (more comprehensive)
+      /<[^>]*class="[^"]*\b(?:nav|navigation|menu|header-menu|main-menu|primary-menu|site-nav)\b[^"]*"[^>]*>(.*?)<\/[^>]+>/gi,
+      
+      // Navigation by ID
+      /<[^>]*id="[^"]*\b(?:nav|navigation|menu|header-menu|main-menu|primary-menu|site-nav)\b[^"]*"[^>]*>(.*?)<\/[^>]+>/gi,
+      
+      // Common navigation list patterns
+      /<ul[^>]*class="[^"]*\b(?:nav|menu|navigation)\b[^"]*"[^>]*>(.*?)<\/ul>/gi,
+      
+      // Header sections that often contain navigation
+      /<div[^>]*class="[^"]*\b(?:header|top-bar|navbar|nav-bar)\b[^"]*"[^>]*>(.*?)<\/div>/gi
+    ];
+
+    for (const pattern of navPatterns) {
+      const matches = html.match(pattern);
+      if (matches) {
+        for (const match of matches) {
+          // Extract all href attributes from the navigation section
+          const hrefMatches = match.match(/href\s*=\s*["']([^"']+)["']/gi);
+          if (hrefMatches) {
+            for (const hrefMatch of hrefMatches) {
+              const urlMatch = hrefMatch.match(/href\s*=\s*["']([^"']+)["']/i);
+              if (urlMatch && urlMatch[1]) {
+                const url = urlMatch[1];
+                
+                // Skip invalid URLs
+                if (url.startsWith('#') || url.startsWith('javascript:') || url.startsWith('mailto:') || url.startsWith('tel:')) {
+                  continue;
+                }
+                
+                try {
+                  const absoluteUrl = url.startsWith('http') ? url : new URL(url, formattedBaseUrl).href;
+                  const urlObj = new URL(absoluteUrl);
+                  
+                  // Only include same-domain links
+                  if (urlObj.origin === baseDomain) {
+                    navigationLinks.push(absoluteUrl);
+                  }
+                } catch (urlError) {
+                  // Skip invalid URLs
+                  continue;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  } catch (error) {
+    console.warn('Error extracting navigation from HTML:', error);
+  }
+
+  return [...new Set(navigationLinks)]; // Remove duplicates
+}
+
+/**
+ * Extract common page links from HTML (about, contact, services, etc.)
+ */
+function extractCommonPageLinks(html: string, baseUrl: string): string[] {
+  const commonPages: string[] = [];
+  
+  try {
+    const formattedBaseUrl = baseUrl.startsWith('http') ? baseUrl : `https://${baseUrl}`;
+    const baseDomain = new URL(formattedBaseUrl).origin;
+    
+    // Look for common page keywords in href attributes
+    const commonPagePatterns = [
+      /href\s*=\s*["']([^"']*\b(?:about|contact|services|products|portfolio|work|blog|news|gallery|team|careers|pricing|shop|store)\b[^"']*)["']/gi,
+      /href\s*=\s*["']([^"']*\/(?:about|contact|services|products|portfolio|work|blog|news|gallery|team|careers|pricing|shop|store)(?:\/|$)[^"']*)["']/gi
+    ];
+    
+    for (const pattern of commonPagePatterns) {
+      const matches = html.match(pattern);
+      if (matches) {
+        for (const match of matches) {
+          const urlMatch = match.match(/href\s*=\s*["']([^"']+)["']/i);
+          if (urlMatch && urlMatch[1]) {
+            const url = urlMatch[1];
+            
+            try {
+              const absoluteUrl = url.startsWith('http') ? url : new URL(url, formattedBaseUrl).href;
+              const urlObj = new URL(absoluteUrl);
+              
+              // Only include same-domain links
+              if (urlObj.origin === baseDomain) {
+                commonPages.push(absoluteUrl);
+              }
+            } catch (urlError) {
+              // Skip invalid URLs
+              continue;
+            }
+          }
+        }
+      }
+    }
+  } catch (error) {
+    console.warn('Error extracting common pages from HTML:', error);
+  }
+
+  return [...new Set(commonPages)]; // Remove duplicates
 }
 
 /**
@@ -713,25 +889,28 @@ export async function scrapeWebpage(url: string, options?: {
           actions: options?.actions || []
         };
 
-        // OPTIMIZATION: Use Puppeteer as PRIMARY screenshot method (more reliable than external APIs)
-        // Remove screenshot from Firecrawl formats since Puppeteer handles it better
-        const baseFormats = ['markdown', 'html', 'rawHtml', 'links'];
-        scrapeOptions.formats = baseFormats;
+        // CRITICAL: Firecrawl should NEVER handle screenshots - only Puppeteer
+        // Firecrawl formats: only content, no screenshots
+        const firecrawlFormats = ['markdown', 'html', 'rawHtml', 'links'];
+        scrapeOptions.formats = firecrawlFormats;
+
+        console.log('🔥 Firecrawl scraping content only (NO screenshots)');
+        console.log('📸 Puppeteer will handle ALL screenshot requests separately');
 
         // Check if screenshot was requested
         const screenshotRequested = options?.formats?.includes('screenshot') || options?.formats?.includes('screenshot@fullPage');
 
-        // Start both operations in parallel for speed
-        // Use Puppeteer as PRIMARY method - no external API fallback needed
+        // Start both operations in parallel for efficiency
+        const firecrawlPromise = app.scrapeUrl(url, scrapeOptions);
         const screenshotPromise = screenshotRequested
           ? (async () => {
-              console.log('📸 Using Puppeteer for screenshot capture (primary method)...');
+              console.log('📸 Puppeteer handling screenshot capture (ONLY method)...');
               return await captureScreenshotWithPuppeteer(url);
             })()
           : Promise.resolve(null);
 
         const [scrapeResult, puppeteerScreenshot] = await Promise.all([
-          app.scrapeUrl(url, scrapeOptions),
+          firecrawlPromise,
           screenshotPromise
         ]);
 
@@ -746,17 +925,18 @@ export async function scrapeWebpage(url: string, options?: {
             (scrapeResult as any).data = {};
           }
           ((scrapeResult as any).data as any).screenshot = puppeteerScreenshot;
-          console.log('✅ Puppeteer screenshot captured successfully (primary method)');
+          console.log('✅ Puppeteer screenshot captured successfully (ONLY screenshot method)');
         } else if (screenshotRequested) {
-          console.log('❌ Puppeteer screenshot failed - no fallback available');
+          console.log('❌ Puppeteer screenshot failed - no other screenshot methods available');
         }
 
-        // Debug: Log the optimized result
-        console.log(`Optimized scraping result for ${url}:`, {
+        // Debug: Log the result with clear separation of responsibilities
+        console.log(`Scraping result for ${url}:`, {
           success: scrapeResult.success,
           hasContent: !!((scrapeResult as any).data),
           hasScreenshot: !!((scrapeResult as any).data as any)?.screenshot,
-          screenshotMethod: screenshotRequested ? 'puppeteer-only' : 'none-requested'
+          contentSource: 'firecrawl',
+          screenshotSource: screenshotRequested ? 'puppeteer-only' : 'none-requested'
         });
 
         return scrapeResult;

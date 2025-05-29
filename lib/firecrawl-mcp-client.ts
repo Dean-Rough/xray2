@@ -153,11 +153,20 @@ export async function batchScrapeWithMCP(urls: string[], options?: {
   try {
     console.log(`🚀 Starting MCP batch scrape for ${urls.length} URLs`);
 
+    // CRITICAL: Filter out screenshot formats - MCP/Firecrawl should NEVER handle screenshots
+    const requestedFormats = options?.formats || ['markdown', 'html', 'links'];
+    const firecrawlFormats = requestedFormats.filter(format => !format.includes('screenshot'));
+    
+    console.log('🔥 MCP batch scraping - Firecrawl formats only (NO screenshots):', firecrawlFormats);
+    if (requestedFormats.some(f => f.includes('screenshot'))) {
+      console.log('📸 Screenshot formats filtered out - Puppeteer will handle screenshots separately');
+    }
+
     // Prepare MCP batch scrape arguments
     const mcpArgs = {
       urls,
       options: {
-        formats: options?.formats || ['markdown', 'html', 'screenshot@fullPage', 'links'],
+        formats: firecrawlFormats,
         onlyMainContent: options?.onlyMainContent || false,
         waitFor: options?.waitFor || 5000,
         mobile: options?.mobile || false
@@ -166,7 +175,7 @@ export async function batchScrapeWithMCP(urls: string[], options?: {
 
     const result = await executeMCPTool('firecrawl_batch_scrape', mcpArgs);
 
-    console.log(`✅ MCP batch scrape completed for ${urls.length} URLs`);
+    console.log(`✅ MCP batch scrape completed for ${urls.length} URLs (content only)`);
     return result;
 
   } catch (error) {
@@ -189,10 +198,19 @@ export async function scrapeWithMCP(url: string, options?: {
   try {
     console.log(`🔄 Starting MCP scrape for: ${url}`);
 
+    // CRITICAL: Filter out screenshot formats - MCP/Firecrawl should NEVER handle screenshots
+    const requestedFormats = options?.formats || ['markdown', 'html', 'links'];
+    const firecrawlFormats = requestedFormats.filter(format => !format.includes('screenshot'));
+    
+    console.log('🔥 MCP scraping - Firecrawl formats only (NO screenshots):', firecrawlFormats);
+    if (requestedFormats.some(f => f.includes('screenshot'))) {
+      console.log('📸 Screenshot formats filtered out - Puppeteer will handle screenshots separately');
+    }
+
     // Prepare MCP scrape arguments
     const mcpArgs = {
       url,
-      formats: options?.formats || ['markdown', 'html', 'screenshot@fullPage', 'links'],
+      formats: firecrawlFormats,
       onlyMainContent: options?.onlyMainContent || false,
       waitFor: options?.waitFor || 5000,
       mobile: options?.mobile || false,
@@ -201,7 +219,7 @@ export async function scrapeWithMCP(url: string, options?: {
 
     const result = await executeMCPTool('firecrawl_scrape', mcpArgs);
 
-    console.log(`✅ MCP scrape completed for: ${url}`);
+    console.log(`✅ MCP scrape completed for: ${url} (content only)`);
     return result;
 
   } catch (error) {
