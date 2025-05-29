@@ -169,8 +169,10 @@ async function captureScreenshotViaExternalAPI(url: string): Promise<string | nu
  * Puppeteer fallback for screenshot capture with enhanced loading detection
  */
 async function captureScreenshotWithPuppeteer(url: string): Promise<string | null> {
+  let browser: any = null;
+  
   try {
-    console.log(`🔄 Attempting Puppeteer screenshot fallback for: ${url}`);
+    console.log(`🔄 Attempting Puppeteer screenshot for: ${url}`);
 
     // Always use puppeteer-core for consistency
     const puppeteer = await import('puppeteer-core');
@@ -270,7 +272,7 @@ async function captureScreenshotWithPuppeteer(url: string): Promise<string | nul
       argsCount: launchOptions.args.length
     });
 
-    const browser = await puppeteer.default.launch(launchOptions);
+    browser = await puppeteer.default.launch(launchOptions);
 
     try {
       const page = await browser.newPage();
@@ -357,7 +359,7 @@ async function captureScreenshotWithPuppeteer(url: string): Promise<string | nul
       for (let i = 0; i <= scrollSteps; i++) {
         const scrollPosition = Math.min((i * viewportHeight * 0.8), pageHeight - viewportHeight);
 
-        await page.evaluate((pos) => {
+        await page.evaluate((pos: number) => {
           window.scrollTo(0, pos);
         }, scrollPosition);
 
@@ -421,7 +423,7 @@ async function captureScreenshotWithPuppeteer(url: string): Promise<string | nul
         fullPage: true,
         encoding: 'base64',
         type: 'png'
-      });
+      }) as string;
 
       console.log(`📊 Screenshot captured: ${screenshot.length} characters (base64)`);
 
@@ -453,7 +455,7 @@ async function captureScreenshotWithPuppeteer(url: string): Promise<string | nul
 
         for (let i = 0; i <= retryScrollSteps; i++) {
           const scrollPos = (i / retryScrollSteps) * retryPageHeight;
-          await page.evaluate((pos) => window.scrollTo(0, pos), scrollPos);
+          await page.evaluate((pos: number) => window.scrollTo(0, pos), scrollPos);
           await new Promise(resolve => setTimeout(resolve, 2000)); // 2s per retry step
 
           // Trigger any click-to-load or hover content
@@ -484,7 +486,7 @@ async function captureScreenshotWithPuppeteer(url: string): Promise<string | nul
           fullPage: true,
           encoding: 'base64',
           type: 'png'
-        });
+        }) as string;
 
         const retryEstimatedBytes = (retryScreenshot.length * 3) / 4;
         console.log(`🔄 Retry screenshot: ~${Math.round(retryEstimatedBytes)} bytes`);
@@ -504,7 +506,7 @@ async function captureScreenshotWithPuppeteer(url: string): Promise<string | nul
       return screenshotData;
 
     } catch (pageError) {
-      await browser.close();
+      if (browser) await browser.close();
       throw pageError;
     }
 
@@ -521,6 +523,7 @@ async function captureScreenshotWithPuppeteer(url: string): Promise<string | nul
     // In production, try a simpler fallback approach
     if (process.env.NODE_ENV === 'production') {
       console.log('🔄 Attempting simplified Puppeteer fallback for production...');
+      let fallbackBrowser: any = null;
       try {
         const isProductionFallback = process.env.NODE_ENV === 'production';
         const puppeteer = isProductionFallback
@@ -543,17 +546,22 @@ async function captureScreenshotWithPuppeteer(url: string): Promise<string | nul
           }
         }
 
-        const browser = await puppeteer.default.launch(fallbackOptions);
+        fallbackBrowser = await puppeteer.default.launch(fallbackOptions);
 
-        const page = await browser.newPage();
+        const page = await fallbackBrowser.newPage();
         await page.goto(url, { waitUntil: 'networkidle2', timeout: 30000 });
-        const screenshot = await page.screenshot({ fullPage: true, encoding: 'base64' });
-        await browser.close();
+        const screenshot = await page.screenshot({ 
+          fullPage: true, 
+          encoding: 'base64',
+          type: 'png'
+        }) as string;
+        await fallbackBrowser.close();
 
         console.log('✅ Simplified Puppeteer fallback succeeded');
         return `data:image/png;base64,${screenshot}`;
       } catch (fallbackError) {
         console.error('❌ Simplified Puppeteer fallback also failed:', fallbackError);
+        if (fallbackBrowser) await fallbackBrowser.close();
       }
     }
 
@@ -705,7 +713,7 @@ export async function scrapeWebpage(url: string, options?: {
           actions: options?.actions || []
         };
 
-        // OPTIMIZATION: Use Puppeteer for screenshots (more reliable) and Firecrawl for content
+        // OPTIMIZATION: Use Puppeteer as PRIMARY screenshot method (more reliable than external APIs)
         // Remove screenshot from Firecrawl formats since Puppeteer handles it better
         const baseFormats = ['markdown', 'html', 'rawHtml', 'links'];
         scrapeOptions.formats = baseFormats;
@@ -714,16 +722,10 @@ export async function scrapeWebpage(url: string, options?: {
         const screenshotRequested = options?.formats?.includes('screenshot') || options?.formats?.includes('screenshot@fullPage');
 
         // Start both operations in parallel for speed
-        // Use external API as primary method since Puppeteer is unreliable in serverless
+        // Use Puppeteer as PRIMARY method - no external API fallback needed
         const screenshotPromise = screenshotRequested
           ? (async () => {
-              console.log('📸 Using external API for screenshot capture...');
-              const apiScreenshot = await captureScreenshotViaExternalAPI(url);
-              if (apiScreenshot) {
-                console.log('✅ External API screenshot successful');
-                return apiScreenshot;
-              }
-              console.log('⚠️ External API failed, trying Puppeteer fallback...');
+              console.log('📸 Using Puppeteer for screenshot capture (primary method)...');
               return await captureScreenshotWithPuppeteer(url);
             })()
           : Promise.resolve(null);
@@ -746,7 +748,7 @@ export async function scrapeWebpage(url: string, options?: {
           ((scrapeResult as any).data as any).screenshot = puppeteerScreenshot;
           console.log('✅ Puppeteer screenshot captured successfully (primary method)');
         } else if (screenshotRequested) {
-          console.log('⚠️ Puppeteer screenshot failed');
+          console.log('❌ Puppeteer screenshot failed - no fallback available');
         }
 
         // Debug: Log the optimized result
@@ -754,7 +756,7 @@ export async function scrapeWebpage(url: string, options?: {
           success: scrapeResult.success,
           hasContent: !!((scrapeResult as any).data),
           hasScreenshot: !!((scrapeResult as any).data as any)?.screenshot,
-          screenshotMethod: screenshotRequested ? 'puppeteer-primary' : 'none-requested'
+          screenshotMethod: screenshotRequested ? 'puppeteer-only' : 'none-requested'
         });
 
         return scrapeResult;
