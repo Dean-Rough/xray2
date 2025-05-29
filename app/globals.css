@@ -284,3 +284,105 @@ h1, h2, h3, h4, h5, h6 {
   animation: marquee 30s linear infinite;
   display: flex;
 }
+
+/* Mobile Responsive Improvements */
+@media (max-width: 768px) {
+  /* Adjust spacing for mobile */
+  :root {
+    --space-xs: 6px;
+    --space-sm: 12px;
+    --space-md: 16px;
+    --space-lg: 24px;
+    --space-xl: 32px;
+    --space-2xl: 48px;
+    --space-3xl: 64px;
+  }
+
+  /* Mobile typography adjustments */
+  .text-hero {
+    font-size: clamp(1.25rem, 6vw, 1.75rem);
+  }
+
+  .text-section {
+    font-size: 0.9rem;
+  }
+
+  .text-body {
+    font-size: 0.9rem;
+  }
+
+  .xrai-label {
+    font-size: 0.8rem;
+  }
+
+  /* Mobile button adjustments */
+  .xrai-button {
+    padding: var(--space-sm) var(--space-md);
+    font-size: 0.8rem;
+    min-height: 48px; /* Larger touch target for mobile */
+  }
+
+  .xrai-button-secondary {
+    min-height: 48px;
+  }
+
+  /* Mobile input adjustments */
+  .xrai-input {
+    padding: var(--space-sm);
+    font-size: 16px; /* Prevent zoom on iOS */
+    min-height: 48px;
+  }
+
+  /* Mobile card adjustments */
+  .xrai-card {
+    padding: var(--space-md);
+  }
+
+  .xrai-card-elevated {
+    padding: var(--space-md);
+  }
+
+  /* Mobile modal adjustments */
+  .fixed.inset-0 .bg-white {
+    margin: var(--space-sm);
+    max-height: calc(100vh - 32px);
+    overflow-y: auto;
+  }
+
+  /* Ensure proper spacing on mobile */
+  .space-y-6 > * + * {
+    margin-top: var(--space-md);
+  }
+
+  .space-y-4 > * + * {
+    margin-top: var(--space-sm);
+  }
+
+  .space-y-3 > * + * {
+    margin-top: var(--space-xs);
+  }
+}
+
+/* Touch-friendly improvements */
+@media (hover: none) and (pointer: coarse) {
+  /* Remove hover effects on touch devices */
+  .xrai-card:hover {
+    border-color: var(--color-black);
+  }
+
+  .xrai-button:hover {
+    opacity: 1;
+  }
+
+  .xrai-button-secondary:hover {
+    background: var(--color-white);
+    opacity: 1;
+  }
+
+  /* Larger touch targets */
+  .xrai-button,
+  .xrai-button-secondary,
+  .xrai-input {
+    min-height: 48px;
+  }
+}

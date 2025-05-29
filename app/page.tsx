@@ -511,9 +511,29 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-white">
+      {/* Mobile Header - Only visible on mobile */}
+      <div className="md:hidden fixed top-0 left-0 right-0 h-16 bg-black flex items-center justify-between px-6 z-50">
+        {/* Logo */}
+        <img
+          src="/xrai-dark.svg"
+          alt="Xrai"
+          className="h-6 filter invert"
+        />
+        
+        {/* A ROUGH tool link */}
+        <a
+          href="https://www.rough.ink"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-white text-sm hover:opacity-70 transition-opacity"
+        >
+          a Rough tool.
+        </a>
+      </div>
+
       <div className="min-h-screen flex">
-        {/* Left Side - Fixed Nav Bar */}
-        <div className="fixed left-0 top-0 h-screen w-32 bg-black flex flex-col justify-between items-center py-20 z-50">
+        {/* Left Side - Fixed Nav Bar (Desktop Only) */}
+        <div className="hidden md:flex fixed left-0 top-0 h-screen w-32 bg-black flex-col justify-between items-center py-20 z-50">
           {/* Top - A ROUGH tool link */}
           <div className="transform -rotate-90 whitespace-nowrap">
             <a
@@ -539,8 +559,8 @@ export default function HomePage() {
           </div>
         </div>
 
-        {/* Right Side - Fixed Nav Bar */}
-        <div className="fixed right-0 top-0 h-screen w-32 bg-black flex flex-col justify-center items-center py-20 z-50 overflow-hidden">
+        {/* Right Side - Fixed Nav Bar (Desktop Only) */}
+        <div className="hidden md:flex fixed right-0 top-0 h-screen w-32 bg-black flex-col justify-center items-center py-20 z-50 overflow-hidden">
           <div className="transform rotate-90 whitespace-nowrap">
             <div className="animate-marquee flex">
               <span className="text-white text-sm tracking-wide" style={{ fontFamily: 'var(--font-styrene), sans-serif' }}>
@@ -554,10 +574,10 @@ export default function HomePage() {
         </div>
 
         {/* Main Content */}
-        <div className="flex-1 flex items-center justify-center py-16 px-8 mx-32">
+        <div className="flex-1 flex items-center justify-center py-16 px-4 md:px-8 md:mx-32 pt-20 md:pt-16">
           <div className="w-full max-w-6xl">
             {/* Header */}
-            <div className="flex justify-between items-center p-8">
+            <div className="flex justify-between items-center p-4 md:p-8">
               <div className="xrai-label text-black">
                 v2.2.0
               </div>
@@ -575,11 +595,11 @@ export default function HomePage() {
             {/* Section Separator */}
             <div className="xrai-separator-section"></div>
 
-            {/* Two Column Layout */}
-            <div className="flex max-w-4xl mx-auto">
+            {/* Two Column Layout - Stack on mobile */}
+            <div className="flex flex-col md:flex-row max-w-4xl mx-auto gap-6 md:gap-0">
               <div className="flex-1">
                 {/* Left Card - Website Input */}
-                <div className="xrai-card p-8">
+                <div className="xrai-card p-4 md:p-8">
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div>
                     <label htmlFor="url" className="xrai-label">
@@ -805,12 +825,12 @@ export default function HomePage() {
                 </div>
               </div>
 
-              {/* Vertical Separator */}
-              <div className="xrai-separator-vertical"></div>
+              {/* Vertical Separator - Hidden on mobile */}
+              <div className="hidden md:block xrai-separator-vertical"></div>
 
               <div className="flex-1">
                 {/* Right Card - Resume Analysis */}
-                <div className="xrai-card-elevated p-8">
+                <div className="xrai-card-elevated p-4 md:p-8">
                   <h4 className="xrai-label">
                     Resume Analysis
                   </h4>
