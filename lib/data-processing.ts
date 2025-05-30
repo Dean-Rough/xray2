@@ -5,7 +5,7 @@
 
 import { mapWebsite, scrapeWebpage, extractStructuredData, discoverNavigationPages } from './mcp-utils';
 import { batchScrapeWithMCP, scrapeWithMCP, mapWebsiteWithMCP, checkMCPAvailability } from './firecrawl-mcp-client';
-import { createWebsiteAnalysisRequest, updateWebsiteAnalysisStatus, markAnalysisAsFailed } from './prisma-utils';
+import { UniversalDb } from './database-fallback';
 import { generateSonnetPrompt, generateWebsiteRebuildPackage } from './generate-docs';
 import { exec } from 'child_process';
 import { promisify } from 'util';
@@ -132,7 +132,7 @@ export async function processContentData(rawData: unknown) {
           }
 
           // Resolve relative URLs
-          const absoluteUrl = cssUrl.startsWith('http') ? cssUrl : new URL(cssUrl, data.url || '').href;
+          const absoluteUrl = cssUrl.startsWith('http') ? cssUrl : new URL(cssUrl, (data.url as string) || 'https://example.com').href;
 
           // Fetch CSS content
           const cssContent = await fetchCSSContent(absoluteUrl);
@@ -243,12 +243,17 @@ export async function processContentData(rawData: unknown) {
  */
 async function fetchCSSContent(url: string): Promise<string | null> {
   try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000);
+    
     const response = await fetch(url, {
       headers: {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
       },
-      timeout: 10000
+      signal: controller.signal
     });
+    
+    clearTimeout(timeoutId);
 
     if (!response.ok) {
       throw new Error(`HTTP ${response.status}: ${response.statusText}`);
@@ -757,16 +762,19 @@ export async function deepScrapeWebsite(url: string, options: {
 
     // Use existing analysis record or create a new one
     if (existingAnalysisId) {
-      const { getWebsiteAnalysisById } = await import('./prisma-utils');
-      analysis = await getWebsiteAnalysisById(existingAnalysisId);
+      analysis = await UniversalDb.findWebsiteAnalysis(existingAnalysisId);
       console.log('Using existing analysis record:', analysis.id);
     } else {
-      analysis = await createWebsiteAnalysisRequest(url, options);
+      analysis = await UniversalDb.createWebsiteAnalysis({
+        url,
+        status: 'PENDING',
+        options
+      });
       console.log('Created analysis record:', analysis.id);
     }
 
     // Update status to MAPPING
-    await updateWebsiteAnalysisStatus(analysis.id, 'MAPPING');
+    await UniversalDb.updateWebsiteAnalysis(analysis.id, { status: 'MAPPING' });
 
     // Step 1: Map the website to discover all URLs (try MCP first)
     console.log(`Mapping website: ${url}`);
@@ -805,7 +813,10 @@ export async function deepScrapeWebsite(url: string, options: {
     console.log('Processed site map data - pages:', siteMapData.pages?.length || 0);
 
     // Update status to SCRAPING
-    await updateWebsiteAnalysisStatus(analysis.id, 'SCRAPING', { siteMap: siteMapData });
+    await UniversalDb.updateWebsiteAnalysis(analysis.id, { 
+      status: 'SCRAPING', 
+      result: { siteMap: siteMapData } 
+    });
 
     // Step 2: Scrape pages using MCP batch processing for efficiency
     console.log(`Scraping ${siteMapData.pages.length} pages with MCP batch processing...`);
@@ -853,7 +864,7 @@ export async function deepScrapeWebsite(url: string, options: {
     console.log(`DEBUG: fullSite=${options.fullSite}, mapped pages=${siteMapData.pages.length}, pages to scrape=${pagesToScrape.length}`);
 
     // Check if MCP is available and use it for batch processing
-    const mcpAvailableForBatch = await checkMCPAvailability();
+    let mcpAvailableForBatch = await checkMCPAvailability();
 
     if (mcpAvailableForBatch && pagesToScrape.length > 1) {
       console.log('🚀 Using MCP batch scraping for efficient processing');
@@ -964,9 +975,12 @@ export async function deepScrapeWebsite(url: string, options: {
     }
 
     // Update status to PROCESSING
-    await updateWebsiteAnalysisStatus(analysis.id, 'PROCESSING', {
-      siteMap: siteMapData,
-      content: contentResults
+    await UniversalDb.updateWebsiteAnalysis(analysis.id, { 
+      status: 'PROCESSING',
+      result: {
+        siteMap: siteMapData,
+        content: contentResults
+      }
     });
 
     // Step 3: Skip Lighthouse for now to speed up processing in serverless environment
@@ -1054,7 +1068,10 @@ export async function deepScrapeWebsite(url: string, options: {
       legacy: legacyPrompt
     };
 
-    await updateWebsiteAnalysisStatus(analysis.id, 'COMPLETED', finalResult);
+    await UniversalDb.updateWebsiteAnalysis(analysis.id, { 
+      status: 'COMPLETED', 
+      result: finalResult 
+    });
 
     return {
       id: analysis.id,
@@ -1077,7 +1094,11 @@ export async function deepScrapeWebsite(url: string, options: {
     // Mark analysis as failed in database if we have an analysis ID
     if (analysis?.id) {
       try {
-        await markAnalysisAsFailed(analysis.id, errorMessage, processingTime);
+        await UniversalDb.updateWebsiteAnalysis(analysis.id, { 
+          status: 'FAILED', 
+          error: errorMessage,
+          processingTime 
+        });
         console.log(`Marked analysis ${analysis.id} as failed in database`);
       } catch (dbError) {
         console.error('Failed to update database with error status:', dbError);
@@ -1117,8 +1138,7 @@ export async function resumeFailedAnalysis(analysisId: string) {
     console.log('Resuming failed analysis:', analysisId);
 
     // Get the existing analysis record
-    const { getWebsiteAnalysisById } = await import('./prisma-utils');
-    const analysis = await getWebsiteAnalysisById(analysisId);
+    const analysis = await UniversalDb.findWebsiteAnalysis(analysisId);
 
     if (!analysis) {
       throw new Error(`Analysis with ID ${analysisId} not found`);
@@ -1144,7 +1164,7 @@ export async function resumeFailedAnalysis(analysisId: string) {
     } else if (analysis.status === 'MAPPING') {
       // Resume from mapping step
       console.log('Resuming from mapping step');
-      await updateWebsiteAnalysisStatus(analysisId, 'MAPPING');
+      await UniversalDb.updateWebsiteAnalysis(analysisId, { status: 'MAPPING' });
       return await deepScrapeWebsite(analysis.url, options);
     } else if (analysis.status === 'SCRAPING' && existingResult.siteMap) {
       // Resume from scraping step with existing site map
@@ -1172,7 +1192,11 @@ export async function resumeFailedAnalysis(analysisId: string) {
 
     // Mark as failed again
     try {
-      await markAnalysisAsFailed(analysisId, `Resume failed: ${errorMessage}`, processingTime);
+      await UniversalDb.updateWebsiteAnalysis(analysisId, { 
+        status: 'FAILED', 
+        error: `Resume failed: ${errorMessage}`,
+        processingTime 
+      });
     } catch (dbError) {
       console.error('Failed to update database with resume error:', dbError);
     }

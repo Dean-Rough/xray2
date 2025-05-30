@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { resumeFailedAnalysis } from '../../../lib/data-processing';
-import { getResumableAnalysisRequests, getFailedAnalysisRequests } from '../../../lib/prisma-utils';
+import { UniversalDb } from '../../../lib/database-fallback';
 
 /**
  * POST handler for resuming failed analyses
@@ -65,15 +65,22 @@ export async function GET(request: NextRequest) {
 
     let analyses;
 
+    // Get all analyses and filter based on type
+    const allAnalyses = await UniversalDb.listWebsiteAnalyses();
+    
     if (type === 'failed') {
-      analyses = await getFailedAnalysisRequests(10);
+      analyses = allAnalyses.filter(a => a.status === 'FAILED').slice(0, 10);
     } else if (type === 'resumable') {
-      analyses = await getResumableAnalysisRequests(targetUrl || undefined);
+      analyses = allAnalyses.filter(a => 
+        ['FAILED', 'MAPPING', 'SCRAPING', 'PROCESSING'].includes(a.status) &&
+        (!targetUrl || a.url === targetUrl)
+      );
     } else {
       // Get both failed and resumable
-      const failed = await getFailedAnalysisRequests(5);
-      const resumable = await getResumableAnalysisRequests(targetUrl || undefined);
-      analyses = [...failed, ...resumable.filter(r => r.status !== 'FAILED')];
+      analyses = allAnalyses.filter(a => 
+        ['FAILED', 'MAPPING', 'SCRAPING', 'PROCESSING'].includes(a.status) &&
+        (!targetUrl || a.url === targetUrl)
+      ).slice(0, 15);
     }
 
     // Format the response with useful information

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getWebsiteAnalysisById } from '../../../lib/prisma-utils';
+import { UniversalDb } from '../../../lib/database-fallback';
 import { deepScrapeWebsite } from '../../../lib/data-processing';
 
 /**
@@ -27,12 +27,15 @@ export async function POST(request: NextRequest) {
     }
 
     // Create database record immediately for tracking
-    const { createWebsiteAnalysisRequest } = await import('../../../lib/prisma-utils');
-    const analysis = await createWebsiteAnalysisRequest(url, {
-      fullSite,
-      includeScreenshots,
-      includeLighthouse,
-      maxPages
+    const analysis = await UniversalDb.createWebsiteAnalysis({
+      url,
+      status: 'PENDING',
+      options: {
+        fullSite,
+        includeScreenshots,
+        includeLighthouse,
+        maxPages
+      }
     });
 
     // Start the deep scraping process synchronously for serverless compatibility
@@ -105,7 +108,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Get the analysis record from the database
-    const analysis = await getWebsiteAnalysisById(id);
+    const analysis = await UniversalDb.findWebsiteAnalysis(id);
 
     if (!analysis) {
       return NextResponse.json(
