@@ -34,6 +34,7 @@ export default function HomePage() {
   const [taskIndex, setTaskIndex] = useState(0);
   const [showHowItWorksModal, setShowHowItWorksModal] = useState(false);
   const [showCompletionModal, setShowCompletionModal] = useState(false);
+  const [showShareModal, setShowShareModal] = useState(false);
 
   // Comprehensive task progression system for authentic UX
   const analysisTasksSequence = [
@@ -725,8 +726,9 @@ export default function HomePage() {
             {analysisStatus === 'COMPLETED' && analysisResult && (
               <div className="mt-6 xrai-card-elevated">
                 <div className="text-center mb-6">
-                  <h3 className="text-section mb-2">Analysis Complete - Package Ready</h3>
+                  <h3 className="text-section mb-2">Analysis Complete</h3>
                   <p className="text-body text-sm text-black">
+                    Your website analysis package is ready
                   </p>
                 </div>
 
@@ -744,7 +746,7 @@ export default function HomePage() {
                   <div className="grid grid-cols-1 gap-2 text-sm">
                     {[
                       "Screenshots",
-                      "HTML/Markdown",
+                      "HTML/Markdown", 
                       "Assets manifest",
                       "AI prompt",
                       "Documentation"
@@ -757,13 +759,22 @@ export default function HomePage() {
                   </div>
                 </div>
 
-                {/* Download button */}
-                <button
-                  onClick={handleDownloadPackage}
-                  className="w-full xrai-button"
-                >
-                  Download Package
-                </button>
+                {/* Action buttons */}
+                <div className="space-y-3">
+                  <button
+                    onClick={handleDownloadPackage}
+                    className="w-full xrai-button"
+                  >
+                    Download Package
+                  </button>
+
+                  <button
+                    onClick={() => setShowShareModal(true)}
+                    className="w-full xrai-button-secondary"
+                  >
+                    Share Analysis
+                  </button>
+                </div>
               </div>
             )}
 
@@ -983,27 +994,97 @@ export default function HomePage() {
                   Download Package
                 </button>
 
-                <div className="flex space-x-3">
-                  <button
-                    onClick={() => {
-                      // Share functionality - copy URL to clipboard
-                      navigator.clipboard.writeText(window.location.href);
-                      alert('Link copied to clipboard!');
-                    }}
-                    className="flex-1 xrai-button-secondary"
-                  >
-                    Share
-                  </button>
+                <button
+                  onClick={() => setShowShareModal(true)}
+                  className="w-full xrai-button-secondary"
+                >
+                  Share Analysis
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
-                  <button
-                    onClick={() => {
-                      // Save to Drive functionality - trigger download
-                      handleDownloadPackage();
-                    }}
-                    className="flex-1 xrai-button-secondary"
-                  >
-                    Save to Drive
-                  </button>
+      {/* Share Modal */}
+      {showShareModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white border border-black max-w-md w-full mx-4">
+            <div className="p-8">
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="xrai-label">SHARE ANALYSIS</h2>
+                <button
+                  onClick={() => setShowShareModal(false)}
+                  className="text-black text-xl font-bold"
+                  style={{ color: '#212121' }}
+                  onMouseEnter={(e) => (e.target as HTMLButtonElement).style.color = '#FCCC00'}
+                  onMouseLeave={(e) => (e.target as HTMLButtonElement).style.color = '#212121'}
+                >
+                  ×
+                </button>
+              </div>
+
+              {/* Horizontal Separator */}
+              <div className="xrai-separator-horizontal"></div>
+
+              <div className="space-y-4">
+                <div>
+                  <h4 className="xrai-label mb-2">Analysis URL</h4>
+                  <div className="flex items-center space-x-2">
+                    <input
+                      type="text"
+                      value={`${window.location.origin}?analysis=${analysisId}`}
+                      readOnly
+                      className="flex-1 text-sm text-black xrai-card px-3 py-2 bg-gray-50"
+                    />
+                    <button
+                      onClick={() => {
+                        navigator.clipboard.writeText(`${window.location.origin}?analysis=${analysisId}`);
+                        alert('Link copied to clipboard!');
+                      }}
+                      className="xrai-button-secondary text-xs px-3 py-2"
+                    >
+                      Copy
+                    </button>
+                  </div>
+                </div>
+
+                <div>
+                  <h4 className="xrai-label mb-3">Share Options</h4>
+                  <div className="space-y-2">
+                    <button
+                      onClick={() => {
+                        const shareUrl = `${window.location.origin}?analysis=${analysisId}`;
+                        const shareText = `Check out this website analysis: ${url}`;
+                        if (navigator.share) {
+                          navigator.share({
+                            title: 'Website Analysis',
+                            text: shareText,
+                            url: shareUrl,
+                          });
+                        } else {
+                          // Fallback for browsers without Web Share API
+                          navigator.clipboard.writeText(`${shareText} ${shareUrl}`);
+                          alert('Share text copied to clipboard!');
+                        }
+                      }}
+                      className="w-full xrai-button-secondary text-sm"
+                    >
+                      Share via System
+                    </button>
+
+                    <button
+                      onClick={() => {
+                        const shareUrl = `${window.location.origin}?analysis=${analysisId}`;
+                        const emailSubject = encodeURIComponent('Website Analysis Results');
+                        const emailBody = encodeURIComponent(`I've analyzed ${url} using Xrai. View the results here: ${shareUrl}`);
+                        window.open(`mailto:?subject=${emailSubject}&body=${emailBody}`);
+                      }}
+                      className="w-full xrai-button-secondary text-sm"
+                    >
+                      Share via Email
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
